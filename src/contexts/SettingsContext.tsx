@@ -1,14 +1,22 @@
 import { createContext, useContext, useState, ReactNode } from 'react';
 
+interface Department {
+  id: string;
+  name: string;
+  managerName: string;
+  managerEmployeeNumber: string;
+}
+
 interface SettingsContextType {
   jobTitles: string[];
-  departments: string[];
+  departments: Department[];
   groups: string[];
   maxClassification: number;
   addJobTitle: (title: string) => void;
   removeJobTitle: (title: string) => void;
-  addDepartment: (dept: string) => void;
-  removeDepartment: (dept: string) => void;
+  addDepartment: (dept: Department) => void;
+  updateDepartment: (id: string, dept: Department) => void;
+  removeDepartment: (id: string) => void;
   addGroup: (group: string) => void;
   removeGroup: (group: string) => void;
   setMaxClassification: (max: number) => void;
@@ -26,10 +34,14 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
     ];
   });
 
-  const [departments, setDepartments] = useState<string[]>(() => {
+  const [departments, setDepartments] = useState<Department[]>(() => {
     const stored = localStorage.getItem('phoenix-hr-departments');
     return stored ? JSON.parse(stored) : [
-      'Human Resources', 'Engineering', 'Design', 'Marketing', 'Finance'
+      { id: '1', name: 'Human Resources', managerName: 'Sarah Mitchell', managerEmployeeNumber: '0001' },
+      { id: '2', name: 'Engineering', managerName: 'James Rodriguez', managerEmployeeNumber: '0002' },
+      { id: '3', name: 'Design', managerName: 'Emily Chen', managerEmployeeNumber: '0003' },
+      { id: '4', name: 'Marketing', managerName: 'Lisa Park', managerEmployeeNumber: '0005' },
+      { id: '5', name: 'Finance', managerName: 'David Wilson', managerEmployeeNumber: '0006' },
     ];
   });
 
@@ -58,14 +70,20 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
     localStorage.setItem('phoenix-hr-job-titles', JSON.stringify(updated));
   };
 
-  const addDepartment = (dept: string) => {
+  const addDepartment = (dept: Department) => {
     const updated = [...departments, dept];
     setDepartments(updated);
     localStorage.setItem('phoenix-hr-departments', JSON.stringify(updated));
   };
 
-  const removeDepartment = (dept: string) => {
-    const updated = departments.filter(d => d !== dept);
+  const updateDepartment = (id: string, dept: Department) => {
+    const updated = departments.map(d => d.id === id ? dept : d);
+    setDepartments(updated);
+    localStorage.setItem('phoenix-hr-departments', JSON.stringify(updated));
+  };
+
+  const removeDepartment = (id: string) => {
+    const updated = departments.filter(d => d.id !== id);
     setDepartments(updated);
     localStorage.setItem('phoenix-hr-departments', JSON.stringify(updated));
   };
@@ -96,6 +114,7 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
       addJobTitle,
       removeJobTitle,
       addDepartment,
+      updateDepartment,
       removeDepartment,
       addGroup,
       removeGroup,

@@ -572,7 +572,7 @@ export default function EmployeesList() {
                     style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-primary)' }}
                   >
                     <option value="">All Departments</option>
-                    {departments.map(d => <option key={d} value={d}>{d}</option>)}
+                    {departments.map(d => <option key={d.id} value={d.name}>{d.name}</option>)}
                   </select>
                 </div>
 
