@@ -138,15 +138,6 @@ export default function DepartmentsTab() {
       {/* Departments List - Left Side */}
       <div className="lg:col-span-2">
         <div className="glass-card overflow-hidden">
-          <div className="p-4" style={{ borderBottom: '1px solid var(--border-color)' }}>
-            <h3 className="font-semibold" style={{ color: 'var(--text-primary)' }}>
-              Departments List
-            </h3>
-            <p className="text-xs mt-1" style={{ color: 'var(--text-tertiary)' }}>
-              {departments.length} department{departments.length !== 1 ? 's' : ''} registered
-            </p>
-          </div>
-
           {departments.length === 0 ? (
             <div className="p-12 text-center">
               <p className="text-sm" style={{ color: 'var(--text-tertiary)' }}>

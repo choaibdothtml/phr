@@ -11,16 +11,6 @@ export default function Settings() {
 
   return (
     <div className="p-6 max-w-[1600px] mx-auto space-y-6 animate-fade-in-up">
-      {/* Header */}
-      <div>
-        <h1 className="font-display text-2xl font-bold" style={{ color: 'var(--text-primary)' }}>
-          Settings
-        </h1>
-        <p className="text-sm mt-1" style={{ color: 'var(--text-secondary)' }}>
-          Configure your workspace preferences
-        </p>
-      </div>
-
       {/* Tabs Navigation */}
       <div className="flex gap-2 border-b" style={{ borderColor: 'var(--border-color)' }}>
         {tabs.map(tab => {
