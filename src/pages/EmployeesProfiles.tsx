@@ -295,25 +295,9 @@ export default function EmployeesProfiles() {
         </div>
       </div>
 
-      {/* Profile Section - Empty for now */}
-      <div className="flex-1 flex">
-        {/* Profile Sidebar - Empty placeholder - flush left */}
-        <div 
-          className="w-56 flex-shrink-0 p-4"
-          style={{ 
-            background: 'var(--bg-card)',
-            borderRight: '1px solid var(--border-color)',
-            minHeight: '400px'
-          }}
-        >
-          <p className="text-xs text-center" style={{ color: 'var(--text-tertiary)' }}>
-            Profile sidebar content will be added here
-          </p>
-        </div>
-
-        {/* Main Profile Content */}
-        <div className="flex-1 p-6" style={{ minHeight: '400px' }}>
-          <div className="glass-card p-6 h-full">
+      {/* Profile Content */}
+      <div className="flex-1 p-6">
+        <div className="glass-card p-6 h-full">
           {profile.employeeNumber ? (
             <div className="text-center py-12">
               <div className="w-20 h-20 rounded-2xl flex items-center justify-center text-2xl font-bold text-white mx-auto mb-4"
@@ -337,7 +321,6 @@ export default function EmployeesProfiles() {
               </p>
             </div>
           )}
-          </div>
         </div>
       </div>
 

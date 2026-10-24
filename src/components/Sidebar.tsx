@@ -1,7 +1,7 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import { 
   Home, UserPlus, Users, CalendarClock, 
-  Settings, LogOut, Flame, ChevronLeft, ChevronRight, Menu,
+  Settings, LogOut, Flame, ChevronLeft, ChevronRight,
   Sun, Moon, Bell, User
 } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
@@ -25,64 +25,33 @@ export default function Sidebar() {
   const [collapsed, setCollapsed] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
-  const [isMiniMode, setIsMiniMode] = useState(false);
   const unreadCount = mockNotifications.filter(n => !n.read).length;
 
   const sidebarRef = useRef<HTMLDivElement>(null);
-  const isProfilesPage = location.pathname === '/employees/profiles';
 
   const closeDropdowns = () => {
     setShowNotifications(false);
     setShowProfile(false);
   };
 
-  // On profiles page: auto-collapse to mini mode
-  useEffect(() => {
-    if (isProfilesPage) {
-      setIsMiniMode(true);
-    } else {
-      setIsMiniMode(false);
-    }
-  }, [isProfilesPage]);
-
-  // Close dropdowns & collapse mini mode when clicking outside sidebar (only on profiles page)
+  // Close dropdowns when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (sidebarRef.current && !sidebarRef.current.contains(event.target as Node)) {
         closeDropdowns();
-        if (isProfilesPage && isMiniMode === false) {
-          // User clicked outside while expanded on profiles page -> collapse back
-          setIsMiniMode(true);
-        }
       }
     };
 
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [isProfilesPage, isMiniMode]);
-
-  const handleNavClick = (path: string) => {
-    // If on profiles page and clicking a different nav item, restore normal sidebar
-    if (isProfilesPage && path !== '/employees/profiles') {
-      setIsMiniMode(false);
-    }
-    navigate(path);
-  };
-
-  const toggleMiniMode = () => {
-    setIsMiniMode(!isMiniMode);
-  };
-
-  // Determine sidebar state
-  const showFullSidebar = !isProfilesPage || !isMiniMode;
-  const sidebarWidth = isProfilesPage 
-    ? (isMiniMode ? 'w-[72px]' : 'w-[260px]')
-    : (collapsed ? 'w-[72px]' : 'w-[260px]');
+  }, []);
 
   return (
     <aside 
       ref={sidebarRef}
-      className={`h-screen flex flex-col transition-all duration-300 ease-in-out relative ${sidebarWidth}`}
+      className={`h-screen flex flex-col transition-all duration-300 ease-in-out relative ${
+        collapsed ? 'w-[72px]' : 'w-[260px]'
+      }`}
       style={{ 
         background: 'var(--bg-sidebar)',
         borderRight: '1px solid var(--border-color)',
@@ -96,18 +65,7 @@ export default function Sidebar() {
             <Flame className="w-5 h-5 text-white" />
           </div>
         </div>
-        
-        {/* On profiles page in mini mode: show menu button next to logo */}
-        {isProfilesPage && isMiniMode ? (
-          <button
-            onClick={toggleMiniMode}
-            className="w-8 h-8 rounded-lg flex items-center justify-center transition-all hover:scale-110"
-            style={{ background: 'var(--bg-tertiary)' }}
-            title="Expand sidebar"
-          >
-            <Menu className="w-4 h-4" style={{ color: 'var(--text-secondary)' }} />
-          </button>
-        ) : showFullSidebar ? (
+        {!collapsed && (
           <div className="overflow-hidden">
             <h1 className="font-display font-bold text-lg leading-tight" style={{ color: 'var(--text-primary)' }}>
               Phoenix HR
@@ -116,69 +74,62 @@ export default function Sidebar() {
               Management Suite
             </p>
           </div>
-        ) : null}
+        )}
       </div>
 
-      {/* Collapse toggle - only show when not on profiles page */}
-      {!isProfilesPage && (
-        <button
-          onClick={() => setCollapsed(!collapsed)}
-          className="absolute -right-3 top-20 w-6 h-6 rounded-full flex items-center justify-center z-10 transition-all hover:scale-110"
-          style={{ 
-            background: 'var(--bg-card)', 
-            border: '1px solid var(--border-color)',
-            boxShadow: 'var(--shadow-sm)'
-          }}
-        >
-          {collapsed ? (
-            <ChevronRight className="w-3 h-3" style={{ color: 'var(--text-secondary)' }} />
-          ) : (
-            <ChevronLeft className="w-3 h-3" style={{ color: 'var(--text-secondary)' }} />
-          )}
-        </button>
-      )}
+      {/* Collapse toggle */}
+      <button
+        onClick={() => setCollapsed(!collapsed)}
+        className="absolute -right-3 top-20 w-6 h-6 rounded-full flex items-center justify-center z-10 transition-all hover:scale-110"
+        style={{ 
+          background: 'var(--bg-card)', 
+          border: '1px solid var(--border-color)',
+          boxShadow: 'var(--shadow-sm)'
+        }}
+      >
+        {collapsed ? (
+          <ChevronRight className="w-3 h-3" style={{ color: 'var(--text-secondary)' }} />
+        ) : (
+          <ChevronLeft className="w-3 h-3" style={{ color: 'var(--text-secondary)' }} />
+        )}
+      </button>
 
-      {/* Navigation - only show when sidebar is expanded */}
-      {showFullSidebar && (
-        <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
-          {navItems.map((item) => {
-            const isActive = location.pathname === item.path;
-            const Icon = item.icon;
-            return (
-              <button
-                key={item.path}
-                onClick={() => handleNavClick(item.path)}
-                className={`sidebar-indicator w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group ${
-                  isActive ? 'active nav-item-active' : 'nav-item'
-                }`}
-                title={collapsed ? item.label : undefined}
+      {/* Navigation */}
+      <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
+        {navItems.map((item) => {
+          const isActive = location.pathname === item.path;
+          const Icon = item.icon;
+          return (
+            <button
+              key={item.path}
+              onClick={() => navigate(item.path)}
+              className={`sidebar-indicator w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group ${
+                isActive ? 'active nav-item-active' : 'nav-item'
+              }`}
+              title={collapsed ? item.label : undefined}
+            >
+              <div className={`flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center transition-all ${
+                isActive ? 'phoenix-glow' : 'group-hover:scale-105'
+              }`}
+                style={{ 
+                  background: isActive ? 'var(--gradient-primary)' : 'transparent',
+                }}
               >
-                <div className={`flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center transition-all ${
-                  isActive ? 'phoenix-glow' : 'group-hover:scale-105'
-                }`}
-                  style={{ 
-                    background: isActive ? 'var(--gradient-primary)' : 'transparent',
-                  }}
-                >
-                  <Icon className={`w-4 h-4 ${isActive ? 'text-white' : ''}`} 
-                    style={{ color: isActive ? 'white' : 'var(--text-secondary)' }} 
-                  />
-                </div>
-                {!collapsed && (
-                  <span className={`text-sm font-medium transition-colors ${
-                    isActive ? '' : ''
-                  }`} style={{ color: isActive ? 'var(--text-primary)' : 'var(--text-secondary)' }}>
-                    {item.label}
-                  </span>
-                )}
-              </button>
-            );
-          })}
-        </nav>
-      )}
+                <Icon className={`w-4 h-4 ${isActive ? 'text-white' : ''}`} 
+                  style={{ color: isActive ? 'white' : 'var(--text-secondary)' }} 
+                />
+              </div>
+              {!collapsed && (
+                <span className="text-sm font-medium" style={{ color: isActive ? 'var(--text-primary)' : 'var(--text-secondary)' }}>
+                  {item.label}
+                </span>
+              )}
+            </button>
+          );
+        })}
+      </nav>
 
-      {/* Bottom section - only show when sidebar is expanded */}
-      {showFullSidebar && (
+      {/* Bottom section */}
       <div className="px-3 pb-3 pt-2" style={{ borderTop: '1px solid var(--border-color)' }}>
         <div className="space-y-1.5">
           {/* Theme toggle + Notifications on the same horizontal line */}
@@ -334,7 +285,6 @@ export default function Sidebar() {
           )}
         </div>
       </div>
-      )}
     </aside>
   );
 }
