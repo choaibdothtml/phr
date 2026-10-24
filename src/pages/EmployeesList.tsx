@@ -304,39 +304,14 @@ export default function EmployeesList() {
   const isFiltered = appliedFilter !== null;
 
   return (
-    <div className="p-6 space-y-4 animate-fade-in-up">
-      {/* Header */}
-      <div>
-        <h1 className="font-display text-2xl font-bold" style={{ color: 'var(--text-primary)' }}>
-          Employees' List
-        </h1>
-        <p className="text-sm mt-1" style={{ color: 'var(--text-secondary)' }}>
-          Complete list of all employees with detailed information
-        </p>
-      </div>
-
-      {/* Action Buttons */}
-      <div className="flex items-center gap-3">
-        <button
-          onClick={exportToExcel}
-          className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-white font-semibold text-sm transition-all hover:scale-105 hover:shadow-lg"
-          style={{ background: 'var(--gradient-primary)' }}
-        >
-          <Download className="w-4 h-4" />
-          Export to Excel
-        </button>
-        <button
-          onClick={() => setShowFilter(true)}
-          className="flex items-center gap-2 px-4 py-2.5 rounded-xl font-semibold text-sm transition-all hover:scale-105"
-          style={{ 
-            background: 'var(--bg-tertiary)', 
-            border: '1px solid var(--border-color)',
-            color: 'var(--text-primary)'
-          }}
-        >
-          <Filter className="w-4 h-4" />
-          Filter
-        </button>
+    <div className="px-6 pt-6 pb-0 h-full flex flex-col animate-fade-in-up">
+      {/* Action Buttons - right aligned */}
+      <div className="flex items-center justify-end gap-3 mb-4">
+        {isFiltered && (
+          <span className="text-xs font-medium px-3 py-1.5 rounded-lg mr-auto" style={{ background: 'var(--bg-tertiary)', color: 'var(--text-secondary)' }}>
+            Showing {filteredEmployees.length} of {employees.length} employees
+          </span>
+        )}
         {isFiltered && (
           <button
             onClick={resetFilter}
@@ -351,21 +326,36 @@ export default function EmployeesList() {
             Reset Filter
           </button>
         )}
-        {isFiltered && (
-          <span className="text-xs font-medium px-3 py-1.5 rounded-lg" style={{ background: 'var(--bg-tertiary)', color: 'var(--text-secondary)' }}>
-            Showing {filteredEmployees.length} of {employees.length} employees
-          </span>
-        )}
+        <button
+          onClick={() => setShowFilter(true)}
+          className="flex items-center gap-2 px-4 py-2.5 rounded-xl font-semibold text-sm transition-all hover:scale-105"
+          style={{ 
+            background: 'var(--bg-tertiary)', 
+            border: '1px solid var(--border-color)',
+            color: 'var(--text-primary)'
+          }}
+        >
+          <Filter className="w-4 h-4" />
+          Filter
+        </button>
+        <button
+          onClick={exportToExcel}
+          className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-white font-semibold text-sm transition-all hover:scale-105 hover:shadow-lg"
+          style={{ background: 'var(--gradient-primary)' }}
+        >
+          <Download className="w-4 h-4" />
+          Export to Excel
+        </button>
       </div>
 
-      {/* Table */}
+      {/* Table - fills remaining height */}
       <div 
         ref={tableRef}
-        className="glass-card overflow-hidden"
+        className="glass-card overflow-hidden flex-1 flex flex-col min-h-0"
         style={{ border: '1px solid var(--border-color)' }}
       >
-        <div className="overflow-x-auto">
-          <table className="w-full border-collapse" style={{ minWidth: '3600px' }}>
+        <div className="overflow-auto flex-1 h-full">
+          <table className="w-full border-collapse" style={{ minWidth: '3600px', height: '100%' }}>
             <thead>
               <tr>
                 {columns.map((col, idx) => (
