@@ -242,39 +242,46 @@ export default function EmployeesList() {
     XLSX.writeFile(wb, 'employees_list.xlsx');
   };
 
-  const columns: { key: keyof Employee; label: string; width: string }[] = [
-    { key: 'employeeNumber', label: "Employee's Number", width: 'w-32' },
-    { key: 'lastName', label: 'Family Name', width: 'w-32' },
-    { key: 'firstName', label: 'Name', width: 'w-32' },
-    { key: 'joinDate', label: 'Entry Date', width: 'w-28' },
-    { key: 'position', label: 'Job', width: 'w-36' },
-    { key: 'department', label: 'Department', width: 'w-36' },
-    { key: 'group', label: 'Group', width: 'w-32' },
-    { key: 'classification', label: 'Classification', width: 'w-28' },
-    { key: 'degree', label: 'Degree', width: 'w-40' },
-    { key: 'socialSecurityNumber', label: 'Social Security Number', width: 'w-40' },
-    { key: 'phone', label: 'Phone Number', width: 'w-32' },
-    { key: 'email', label: 'Email Address', width: 'w-48' },
-    { key: 'provinceOfResidency', label: 'Province of Residency', width: 'w-40' },
-    { key: 'municipalityOfResidency', label: 'Municipality of Residency', width: 'w-44' },
-    { key: 'address', label: 'Address', width: 'w-48' },
-    { key: 'idNumber', label: 'ID Number', width: 'w-28' },
-    { key: 'driverLicenseNumber', label: 'Driver License Number', width: 'w-36' },
-    { key: 'gender', label: 'Gender', width: 'w-24' },
-    { key: 'dateOfBirth', label: 'Date of Birth', width: 'w-28' },
-    { key: 'provinceOfBirth', label: 'Province of Birth', width: 'w-36' },
-    { key: 'municipalityOfBirth', label: 'Municipality of Birth', width: 'w-40' },
-    { key: 'dateOfBirth', label: 'Age', width: 'w-20', },
-    { key: 'situation', label: 'Situation', width: 'w-28' },
-    { key: 'numberOfKids', label: 'Number of Kids', width: 'w-32' },
-    { key: 'bloodType', label: 'Blood Type', width: 'w-24' },
-    { key: 'chronicDiseases', label: 'Chronic Diseases', width: 'w-36' },
-    { key: 'bankName', label: 'Bank Name', width: 'w-32' },
-    { key: 'accountNumber', label: 'Account Number', width: 'w-32' },
-    { key: 'currentContractStartDate', label: 'Contract Start Date', width: 'w-36' },
-    { key: 'currentContractEndDate', label: 'Contract End Date', width: 'w-36' },
-    { key: 'dateOfLeavingWork', label: 'Date of Leaving', width: 'w-32' },
-    { key: 'reasonForLeaving', label: 'Reason for Leaving', width: 'w-40' },
+  const columns: { key: keyof Employee; label: string; width: number }[] = [
+    { key: 'employeeNumber', label: "Employee's Number", width: 120 },
+    { key: 'lastName', label: 'Family Name', width: 130 },
+    { key: 'firstName', label: 'Name', width: 120 },
+    { key: 'joinDate', label: 'Entry Date', width: 110 },
+    { key: 'position', label: 'Job', width: 150 },
+    { key: 'department', label: 'Department', width: 140 },
+    { key: 'group', label: 'Group', width: 130 },
+    { key: 'classification', label: 'Classification', width: 110 },
+    { key: 'degree', label: 'Degree', width: 160 },
+    { key: 'socialSecurityNumber', label: 'Social Security Number', width: 160 },
+    { key: 'phone', label: 'Phone Number', width: 130 },
+    { key: 'email', label: 'Email Address', width: 200 },
+    { key: 'provinceOfResidency', label: 'Province of Residency', width: 160 },
+    { key: 'municipalityOfResidency', label: 'Municipality of Residency', width: 180 },
+    { key: 'address', label: 'Address', width: 200 },
+    { key: 'idNumber', label: 'ID Number', width: 110 },
+    { key: 'driverLicenseNumber', label: 'Driver License Number', width: 150 },
+    { key: 'gender', label: 'Gender', width: 100 },
+    { key: 'dateOfBirth', label: 'Date of Birth', width: 120 },
+    { key: 'provinceOfBirth', label: 'Province of Birth', width: 150 },
+    { key: 'municipalityOfBirth', label: 'Municipality of Birth', width: 170 },
+    { key: 'dateOfBirth', label: 'Age', width: 80 },
+    { key: 'situation', label: 'Situation', width: 120 },
+    { key: 'numberOfKids', label: 'Number of Kids', width: 130 },
+    { key: 'bloodType', label: 'Blood Type', width: 100 },
+    { key: 'chronicDiseases', label: 'Chronic Diseases', width: 150 },
+    { key: 'bankName', label: 'Bank Name', width: 130 },
+    { key: 'accountNumber', label: 'Account Number', width: 140 },
+    { key: 'currentContractStartDate', label: 'Contract Start Date', width: 150 },
+    { key: 'currentContractEndDate', label: 'Contract End Date', width: 150 },
+    { key: 'dateOfLeavingWork', label: 'Date of Leaving', width: 130 },
+    { key: 'reasonForLeaving', label: 'Reason for Leaving', width: 160 },
+  ];
+
+  // Calculate cumulative left positions for sticky columns
+  const stickyColumnPositions = [
+    0, // Column 0 (Employee Number)
+    columns[0].width, // Column 1 (Family Name)
+    columns[0].width + columns[1].width, // Column 2 (Name)
   ];
 
   const getCellValue = (emp: Employee, col: typeof columns[0]) => {
@@ -358,7 +365,7 @@ export default function EmployeesList() {
         style={{ border: '1px solid var(--border-color)' }}
       >
         <div className="overflow-x-auto">
-          <table className="w-full border-collapse" style={{ minWidth: '2400px' }}>
+          <table className="w-full border-collapse" style={{ minWidth: '3600px' }}>
             <thead>
               <tr>
                 {columns.map((col, idx) => (
@@ -371,8 +378,9 @@ export default function EmployeesList() {
                       color: 'var(--text-tertiary)',
                       background: idx < 3 ? 'var(--bg-secondary)' : 'var(--bg-card)',
                       borderBottom: '2px solid var(--border-color)',
-                      left: idx === 0 ? '0px' : idx === 1 ? '128px' : idx === 2 ? '256px' : undefined,
-                      minWidth: col.width,
+                      left: idx < 3 ? `${stickyColumnPositions[idx]}px` : undefined,
+                      width: `${col.width}px`,
+                      minWidth: `${col.width}px`,
                     }}
                     onClick={() => handleSort(col.key)}
                   >
@@ -389,7 +397,7 @@ export default function EmployeesList() {
             <tbody>
               {sortedEmployees.length > 0 ? (
                 sortedEmployees.map((emp, rowIdx) => (
-                  <tr key={emp.id} className="transition-colors hover:bg-[var(--bg-tertiary)]">
+                  <tr key={emp.id} className="transition-colors employee-row">
                     {columns.map((col, colIdx) => (
                       <td
                         key={`${col.key}-${colIdx}`}
@@ -400,7 +408,9 @@ export default function EmployeesList() {
                           color: 'var(--text-primary)',
                           background: colIdx < 3 ? (rowIdx % 2 === 0 ? 'var(--bg-card)' : 'var(--bg-secondary)') : 'transparent',
                           borderBottom: '1px solid var(--border-subtle)',
-                          left: colIdx === 0 ? '0px' : colIdx === 1 ? '128px' : colIdx === 2 ? '256px' : undefined,
+                          left: colIdx < 3 ? `${stickyColumnPositions[colIdx]}px` : undefined,
+                          width: `${col.width}px`,
+                          minWidth: `${col.width}px`,
                           fontWeight: colIdx < 3 ? 500 : 400,
                         }}
                       >
