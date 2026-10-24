@@ -1,10 +1,13 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import { 
   LayoutDashboard, Users, Building2, CalendarClock, 
-  FileText, Settings, LogOut, Flame, ChevronLeft, ChevronRight
+  FileText, Settings, LogOut, Flame, ChevronLeft, ChevronRight,
+  Sun, Moon, Bell, User
 } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../contexts/AuthContext';
+import { useTheme } from '../contexts/ThemeContext';
+import { mockNotifications } from '../services/api';
 
 const navItems = [
   { path: '/', label: 'Dashboard', icon: LayoutDashboard },
@@ -18,11 +21,35 @@ const navItems = [
 export default function Sidebar() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { logout } = useAuth();
+  const { logout, user } = useAuth();
+  const { theme, toggleTheme } = useTheme();
   const [collapsed, setCollapsed] = useState(false);
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [showProfile, setShowProfile] = useState(false);
+  const unreadCount = mockNotifications.filter(n => !n.read).length;
+
+  const sidebarRef = useRef<HTMLDivElement>(null);
+
+  const closeDropdowns = () => {
+    setShowNotifications(false);
+    setShowProfile(false);
+  };
+
+  // Close dropdowns when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (sidebarRef.current && !sidebarRef.current.contains(event.target as Node)) {
+        closeDropdowns();
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   return (
     <aside 
+      ref={sidebarRef}
       className={`h-screen flex flex-col transition-all duration-300 ease-in-out relative ${
         collapsed ? 'w-[72px]' : 'w-[260px]'
       }`}
@@ -108,21 +135,160 @@ export default function Sidebar() {
         })}
       </nav>
 
-      {/* Bottom section */}
-      <div className="px-3 py-4" style={{ borderTop: '1px solid var(--border-color)' }}>
-        <button
-          onClick={logout}
-          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all hover:bg-red-50 dark:hover:bg-red-950/20 group"
-          title={collapsed ? 'Logout' : undefined}
-        >
-          <div className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center"
-            style={{ background: 'rgba(239, 68, 68, 0.1)' }}>
-            <LogOut className="w-4 h-4 text-red-500" />
+      {/* Bottom section - User controls above logout */}
+      <div className="px-3 pb-3 pt-2" style={{ borderTop: '1px solid var(--border-color)' }}>
+        <div className="space-y-1.5">
+          {/* User Profile */}
+          <div className="relative">
+            <button
+              onClick={() => { setShowProfile(!showProfile); setShowNotifications(false); }}
+              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all hover:bg-[var(--bg-tertiary)] group"
+              title={collapsed ? user?.name || 'User' : undefined}
+            >
+              <div className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center"
+                style={{ background: 'var(--gradient-primary)' }}>
+                <User className="w-4 h-4 text-white" />
+              </div>
+              {!collapsed && (
+                <div className="flex-1 min-w-0 text-left">
+                  <p className="text-sm font-semibold leading-tight truncate" style={{ color: 'var(--text-primary)' }}>
+                    {user?.name || 'User'}
+                  </p>
+                  <p className="text-[10px] capitalize truncate" style={{ color: 'var(--text-tertiary)' }}>
+                    {user?.role || 'employee'}
+                  </p>
+                </div>
+              )}
+            </button>
+
+            {/* Profile dropdown */}
+            {showProfile && (
+              <div 
+                className="absolute left-full ml-2 bottom-0 w-56 rounded-2xl overflow-hidden z-50 animate-fade-in-up"
+                style={{ 
+                  background: 'var(--bg-card)',
+                  border: '1px solid var(--border-color)',
+                  boxShadow: 'var(--shadow-lg)',
+                }}
+              >
+                <div className="p-4" style={{ borderBottom: '1px solid var(--border-color)' }}>
+                  <p className="font-semibold text-sm" style={{ color: 'var(--text-primary)' }}>{user?.name}</p>
+                  <p className="text-xs mt-0.5" style={{ color: 'var(--text-secondary)' }}>{user?.email}</p>
+                  <span className="inline-block mt-2 px-2 py-0.5 rounded-md text-[10px] font-semibold uppercase tracking-wider"
+                    style={{ background: 'var(--gradient-primary)', color: 'white' }}>
+                    {user?.role}
+                  </span>
+                </div>
+                <div className="p-2">
+                  <button onClick={() => { navigate('/settings'); closeDropdowns(); }}
+                    className="w-full text-left px-3 py-2 rounded-lg text-sm transition-colors hover:bg-[var(--bg-tertiary)]"
+                    style={{ color: 'var(--text-secondary)' }}>
+                    My Profile
+                  </button>
+                  <button onClick={() => { navigate('/settings'); closeDropdowns(); }}
+                    className="w-full text-left px-3 py-2 rounded-lg text-sm transition-colors hover:bg-[var(--bg-tertiary)]"
+                    style={{ color: 'var(--text-secondary)' }}>
+                    Preferences
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
-          {!collapsed && (
-            <span className="text-sm font-medium text-red-500">Logout</span>
-          )}
-        </button>
+
+          {/* Notifications */}
+          <div className="relative">
+            <button
+              onClick={() => { setShowNotifications(!showNotifications); setShowProfile(false); }}
+              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all hover:bg-[var(--bg-tertiary)] group"
+              title={collapsed ? 'Notifications' : undefined}
+            >
+              <div className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center relative"
+                style={{ background: 'var(--bg-tertiary)' }}>
+                <Bell className="w-4 h-4" style={{ color: 'var(--text-secondary)' }} />
+                {unreadCount > 0 && (
+                  <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-phoenix-500 text-white text-[10px] font-bold flex items-center justify-center">
+                    {unreadCount}
+                  </span>
+                )}
+              </div>
+              {!collapsed && (
+                <div className="flex-1 min-w-0 text-left flex items-center justify-between">
+                  <span className="text-sm font-medium" style={{ color: 'var(--text-secondary)' }}>Notifications</span>
+                  {unreadCount > 0 && (
+                    <span className="text-[10px] font-bold text-phoenix-500">{unreadCount} new</span>
+                  )}
+                </div>
+              )}
+            </button>
+
+            {/* Notifications dropdown */}
+            {showNotifications && (
+              <div 
+                className="absolute left-full ml-2 bottom-0 w-80 rounded-2xl overflow-hidden z-50 animate-fade-in-up"
+                style={{ 
+                  background: 'var(--bg-card)',
+                  border: '1px solid var(--border-color)',
+                  boxShadow: 'var(--shadow-lg)',
+                }}
+              >
+                <div className="p-4 flex items-center justify-between" style={{ borderBottom: '1px solid var(--border-color)' }}>
+                  <h3 className="font-semibold text-sm" style={{ color: 'var(--text-primary)' }}>Notifications</h3>
+                  <span className="text-[10px] font-semibold text-phoenix-500">{unreadCount} unread</span>
+                </div>
+                <div className="max-h-64 overflow-y-auto">
+                  {mockNotifications.map(n => (
+                    <div key={n.id} className="p-3 flex gap-3 transition-colors hover:bg-[var(--bg-tertiary)]"
+                      style={{ borderBottom: '1px solid var(--border-subtle)' }}>
+                      <div className={`w-2 h-2 rounded-full mt-1.5 flex-shrink-0 ${!n.read ? 'pulse-dot' : 'opacity-0'}`}
+                        style={{ background: n.type === 'warning' ? '#f59e0b' : n.type === 'success' ? '#10b981' : '#f97316' }}
+                      />
+                      <div className="min-w-0">
+                        <p className="text-xs font-medium truncate" style={{ color: 'var(--text-primary)' }}>{n.title}</p>
+                        <p className="text-[11px] mt-0.5 line-clamp-2" style={{ color: 'var(--text-secondary)' }}>{n.message}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Theme toggle */}
+          <button
+            onClick={toggleTheme}
+            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all hover:bg-[var(--bg-tertiary)] group"
+            title={collapsed ? (theme === 'light' ? 'Dark Mode' : 'Light Mode') : undefined}
+          >
+            <div className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center"
+              style={{ background: 'var(--bg-tertiary)' }}>
+              {theme === 'light' ? (
+                <Moon className="w-4 h-4" style={{ color: 'var(--text-secondary)' }} />
+              ) : (
+                <Sun className="w-4 h-4 text-phoenix-400" />
+              )}
+            </div>
+            {!collapsed && (
+              <span className="text-sm font-medium" style={{ color: 'var(--text-secondary)' }}>
+                {theme === 'light' ? 'Dark Mode' : 'Light Mode'}
+              </span>
+            )}
+          </button>
+
+          {/* Logout */}
+          <button
+            onClick={logout}
+            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all hover:bg-red-50 dark:hover:bg-red-950/20 group"
+            title={collapsed ? 'Logout' : undefined}
+          >
+            <div className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center"
+              style={{ background: 'rgba(239, 68, 68, 0.1)' }}>
+              <LogOut className="w-4 h-4 text-red-500" />
+            </div>
+            {!collapsed && (
+              <span className="text-sm font-medium text-red-500">Logout</span>
+            )}
+          </button>
+        </div>
       </div>
     </aside>
   );
