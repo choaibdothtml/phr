@@ -96,7 +96,7 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="space-y-6 animate-fade-in-up">
+    <div className="p-6 max-w-[1600px] mx-auto space-y-6 animate-fade-in-up">
       {/* Welcome Section */}
       <div>
         <h1 className="font-display text-2xl font-bold" style={{ color: 'var(--text-primary)' }}>

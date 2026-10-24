@@ -6,9 +6,7 @@ export default function Layout() {
     <div className="flex h-screen overflow-hidden" style={{ background: 'var(--bg-primary)' }}>
       <Sidebar />
       <main className="flex-1 overflow-y-auto mesh-bg">
-        <div className="p-6 max-w-[1600px] mx-auto">
-          <Outlet />
-        </div>
+        <Outlet />
       </main>
     </div>
   );

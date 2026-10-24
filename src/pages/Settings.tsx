@@ -27,7 +27,7 @@ export default function Settings() {
   ];
 
   return (
-    <div className="space-y-6 animate-fade-in-up">
+    <div className="p-6 max-w-[1600px] mx-auto space-y-6 animate-fade-in-up">
       {/* Header */}
       <div>
         <h1 className="font-display text-2xl font-bold" style={{ color: 'var(--text-primary)' }}>

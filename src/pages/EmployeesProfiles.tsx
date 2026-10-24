@@ -122,9 +122,9 @@ export default function EmployeesProfiles() {
   }
 
   return (
-    <div className="space-y-6 animate-fade-in-up">
-      {/* Header */}
-      <div>
+    <div className="h-full flex flex-col animate-fade-in-up">
+      {/* Header with padding */}
+      <div className="p-6 max-w-[1600px] mx-auto w-full">
         <h1 className="font-display text-2xl font-bold" style={{ color: 'var(--text-primary)' }}>
           Employees' Profiles
         </h1>
@@ -134,7 +134,8 @@ export default function EmployeesProfiles() {
       </div>
 
       {/* Search Boxes Row */}
-      <div className="glass-card p-6">
+      <div className="p-6 max-w-[1600px] mx-auto w-full">
+        <div className="glass-card p-6">
         <div className="flex flex-wrap items-end gap-3">
           {/* Employee Number Box */}
           <div className="flex flex-col gap-1.5">
@@ -291,16 +292,17 @@ export default function EmployeesProfiles() {
             />
           </div>
         </div>
+        </div>
       </div>
 
       {/* Profile Section - Empty for now */}
-      <div className="flex gap-6">
-        {/* Profile Sidebar - Empty placeholder */}
+      <div className="flex-1 flex">
+        {/* Profile Sidebar - Empty placeholder - flush left */}
         <div 
-          className="w-56 flex-shrink-0 rounded-2xl p-4"
+          className="w-56 flex-shrink-0 p-4"
           style={{ 
             background: 'var(--bg-card)',
-            border: '1px solid var(--border-color)',
+            borderRight: '1px solid var(--border-color)',
             minHeight: '400px'
           }}
         >
@@ -310,7 +312,8 @@ export default function EmployeesProfiles() {
         </div>
 
         {/* Main Profile Content */}
-        <div className="flex-1 glass-card p-6" style={{ minHeight: '400px' }}>
+        <div className="flex-1 p-6" style={{ minHeight: '400px' }}>
+          <div className="glass-card p-6 h-full">
           {profile.employeeNumber ? (
             <div className="text-center py-12">
               <div className="w-20 h-20 rounded-2xl flex items-center justify-center text-2xl font-bold text-white mx-auto mb-4"
@@ -334,6 +337,7 @@ export default function EmployeesProfiles() {
               </p>
             </div>
           )}
+          </div>
         </div>
       </div>
 
