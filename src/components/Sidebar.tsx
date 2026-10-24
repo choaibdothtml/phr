@@ -216,26 +216,25 @@ export default function Sidebar() {
                               <span className="text-[10px] font-semibold text-phoenix-500">{unreadCount} unread</span>
                             )}
                           </div>
-                          <button
-                            onClick={() => setShowNotifications(false)}
-                            className="w-6 h-6 rounded-lg flex items-center justify-center hover:bg-[var(--bg-tertiary)] transition-colors"
-                          >
-                            <X className="w-4 h-4" style={{ color: 'var(--text-secondary)' }} />
-                          </button>
-                        </div>
-                        
-                        {unreadCount > 0 && (
-                          <div className="px-4 py-2 flex justify-end" style={{ borderBottom: '1px solid var(--border-subtle)' }}>
+                          <div className="flex items-center gap-2">
+                            {unreadCount > 0 && (
+                              <button
+                                onClick={markAllAsRead}
+                                className="flex items-center gap-1.5 text-[11px] font-medium hover:text-phoenix-500 transition-colors"
+                                style={{ color: 'var(--text-secondary)' }}
+                              >
+                                <CheckCheck className="w-3.5 h-3.5" />
+                                Mark all as read
+                              </button>
+                            )}
                             <button
-                              onClick={markAllAsRead}
-                              className="flex items-center gap-1.5 text-[11px] font-medium hover:text-phoenix-500 transition-colors"
-                              style={{ color: 'var(--text-secondary)' }}
+                              onClick={() => setShowNotifications(false)}
+                              className="w-6 h-6 rounded-lg flex items-center justify-center hover:bg-[var(--bg-tertiary)] transition-colors"
                             >
-                              <CheckCheck className="w-3.5 h-3.5" />
-                              Mark all as read
+                              <X className="w-4 h-4" style={{ color: 'var(--text-secondary)' }} />
                             </button>
                           </div>
-                        )}
+                        </div>
                         
                         <div className="max-h-64 overflow-y-auto">
                           {notifications.map(n => (
