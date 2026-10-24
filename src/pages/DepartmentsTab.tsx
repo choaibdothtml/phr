@@ -134,10 +134,10 @@ export default function DepartmentsTab() {
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-full">
       {/* Departments List - Left Side */}
-      <div className="lg:col-span-2">
-        <div className="glass-card overflow-hidden">
+      <div className="lg:col-span-2 h-full">
+        <div className="glass-card overflow-hidden h-full">
           {departments.length === 0 ? (
             <div className="p-12 text-center">
               <p className="text-sm" style={{ color: 'var(--text-tertiary)' }}>
@@ -209,8 +209,8 @@ export default function DepartmentsTab() {
       </div>
 
       {/* Add/Edit Form - Right Side */}
-      <div>
-        <div className="glass-card p-6 sticky top-6">
+      <div className="h-full">
+        <div className="glass-card p-6 sticky top-6 h-full">
           <h3 className="font-semibold mb-4" style={{ color: 'var(--text-primary)' }}>
             {editingDepartment ? 'Edit Department' : 'Add New Department'}
           </h3>

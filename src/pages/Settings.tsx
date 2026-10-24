@@ -10,7 +10,7 @@ export default function Settings() {
   ];
 
   return (
-    <div className="p-6 max-w-[1600px] mx-auto space-y-6 animate-fade-in-up">
+    <div className="p-6 max-w-[1600px] mx-auto space-y-6 animate-fade-in-up h-full">
       {/* Tabs Navigation */}
       <div className="flex gap-2 border-b" style={{ borderColor: 'var(--border-color)' }}>
         {tabs.map(tab => {
