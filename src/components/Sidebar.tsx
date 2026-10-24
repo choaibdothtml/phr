@@ -1,6 +1,6 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import { 
-  Home, UserPlus, Users, List, CalendarClock, 
+  Home, UserPlus, Users, List, CalendarClock, Watch,
   Settings, LogOut, Flame, ChevronLeft, ChevronRight,
   Sun, Moon, Bell, User
 } from 'lucide-react';
@@ -15,6 +15,7 @@ const navItems = [
   { path: '/employees/list', label: "Employees' list", icon: List },
   { path: '/employees/profiles', label: "Employees' profiles", icon: Users },
   { path: '/attendance', label: 'Attendance', icon: CalendarClock },
+  { path: '/payroll', label: 'Payroll', icon: Watch },
   { path: '/settings', label: 'Settings', icon: Settings },
 ];
 
