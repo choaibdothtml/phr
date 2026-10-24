@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { 
   Users, UserCheck, UserX, Clock, TrendingUp, 
-  Calendar, ArrowUpRight, ArrowDownRight, Flame,
+  ArrowUpRight, ArrowDownRight, Flame,
   Briefcase, Heart, Award
 } from 'lucide-react';
 import { api, Employee, LeaveRequest } from '../services/api';
@@ -98,22 +98,13 @@ export default function Dashboard() {
   return (
     <div className="space-y-6 animate-fade-in-up">
       {/* Welcome Section */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="font-display text-2xl font-bold" style={{ color: 'var(--text-primary)' }}>
-            Welcome back, {user?.name?.split(' ')[0]} 👋
-          </h1>
-          <p className="text-sm mt-1" style={{ color: 'var(--text-secondary)' }}>
-            Here's what's happening in your organization today.
-          </p>
-        </div>
-        <div className="hidden md:flex items-center gap-2 px-4 py-2 rounded-xl"
-          style={{ background: 'var(--bg-card)', border: '1px solid var(--border-color)' }}>
-          <Calendar className="w-4 h-4" style={{ color: 'var(--text-tertiary)' }} />
-          <span className="text-sm font-medium" style={{ color: 'var(--text-secondary)' }}>
-            {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}
-          </span>
-        </div>
+      <div>
+        <h1 className="font-display text-2xl font-bold" style={{ color: 'var(--text-primary)' }}>
+          Welcome back, {user?.name?.split(' ')[0]} 👋
+        </h1>
+        <p className="text-sm mt-1" style={{ color: 'var(--text-secondary)' }}>
+          Here's what's happening in your organization today.
+        </p>
       </div>
 
       {/* Stats Grid */}
