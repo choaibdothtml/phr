@@ -135,66 +135,9 @@ export default function Sidebar() {
         })}
       </nav>
 
-      {/* Bottom section - User controls above logout */}
+      {/* Bottom section */}
       <div className="px-3 pb-3 pt-2" style={{ borderTop: '1px solid var(--border-color)' }}>
         <div className="space-y-1.5">
-          {/* User Profile */}
-          <div className="relative">
-            <button
-              onClick={() => { setShowProfile(!showProfile); setShowNotifications(false); }}
-              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all hover:bg-[var(--bg-tertiary)] group"
-              title={collapsed ? user?.name || 'User' : undefined}
-            >
-              <div className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center"
-                style={{ background: 'var(--gradient-primary)' }}>
-                <User className="w-4 h-4 text-white" />
-              </div>
-              {!collapsed && (
-                <div className="flex-1 min-w-0 text-left">
-                  <p className="text-sm font-semibold leading-tight truncate" style={{ color: 'var(--text-primary)' }}>
-                    {user?.name || 'User'}
-                  </p>
-                  <p className="text-[10px] capitalize truncate" style={{ color: 'var(--text-tertiary)' }}>
-                    {user?.role || 'employee'}
-                  </p>
-                </div>
-              )}
-            </button>
-
-            {/* Profile dropdown */}
-            {showProfile && (
-              <div 
-                className="absolute left-full ml-2 bottom-0 w-56 rounded-2xl overflow-hidden z-50 animate-fade-in-up"
-                style={{ 
-                  background: 'var(--bg-card)',
-                  border: '1px solid var(--border-color)',
-                  boxShadow: 'var(--shadow-lg)',
-                }}
-              >
-                <div className="p-4" style={{ borderBottom: '1px solid var(--border-color)' }}>
-                  <p className="font-semibold text-sm" style={{ color: 'var(--text-primary)' }}>{user?.name}</p>
-                  <p className="text-xs mt-0.5" style={{ color: 'var(--text-secondary)' }}>{user?.email}</p>
-                  <span className="inline-block mt-2 px-2 py-0.5 rounded-md text-[10px] font-semibold uppercase tracking-wider"
-                    style={{ background: 'var(--gradient-primary)', color: 'white' }}>
-                    {user?.role}
-                  </span>
-                </div>
-                <div className="p-2">
-                  <button onClick={() => { navigate('/settings'); closeDropdowns(); }}
-                    className="w-full text-left px-3 py-2 rounded-lg text-sm transition-colors hover:bg-[var(--bg-tertiary)]"
-                    style={{ color: 'var(--text-secondary)' }}>
-                    My Profile
-                  </button>
-                  <button onClick={() => { navigate('/settings'); closeDropdowns(); }}
-                    className="w-full text-left px-3 py-2 rounded-lg text-sm transition-colors hover:bg-[var(--bg-tertiary)]"
-                    style={{ color: 'var(--text-secondary)' }}>
-                    Preferences
-                  </button>
-                </div>
-              </div>
-            )}
-          </div>
-
           {/* Notifications */}
           <div className="relative">
             <button
@@ -273,6 +216,63 @@ export default function Sidebar() {
               </span>
             )}
           </button>
+
+          {/* User Profile - directly above logout */}
+          <div className="relative">
+            <button
+              onClick={() => { setShowProfile(!showProfile); setShowNotifications(false); }}
+              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all hover:bg-[var(--bg-tertiary)] group"
+              title={collapsed ? user?.name || 'User' : undefined}
+            >
+              <div className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center"
+                style={{ background: 'var(--gradient-primary)' }}>
+                <User className="w-4 h-4 text-white" />
+              </div>
+              {!collapsed && (
+                <div className="flex-1 min-w-0 text-left">
+                  <p className="text-sm font-semibold leading-tight truncate" style={{ color: 'var(--text-primary)' }}>
+                    {user?.name || 'User'}
+                  </p>
+                  <p className="text-[10px] capitalize truncate" style={{ color: 'var(--text-tertiary)' }}>
+                    {user?.role || 'employee'}
+                  </p>
+                </div>
+              )}
+            </button>
+
+            {/* Profile dropdown */}
+            {showProfile && (
+              <div 
+                className="absolute left-full ml-2 bottom-0 w-56 rounded-2xl overflow-hidden z-50 animate-fade-in-up"
+                style={{ 
+                  background: 'var(--bg-card)',
+                  border: '1px solid var(--border-color)',
+                  boxShadow: 'var(--shadow-lg)',
+                }}
+              >
+                <div className="p-4" style={{ borderBottom: '1px solid var(--border-color)' }}>
+                  <p className="font-semibold text-sm" style={{ color: 'var(--text-primary)' }}>{user?.name}</p>
+                  <p className="text-xs mt-0.5" style={{ color: 'var(--text-secondary)' }}>{user?.email}</p>
+                  <span className="inline-block mt-2 px-2 py-0.5 rounded-md text-[10px] font-semibold uppercase tracking-wider"
+                    style={{ background: 'var(--gradient-primary)', color: 'white' }}>
+                    {user?.role}
+                  </span>
+                </div>
+                <div className="p-2">
+                  <button onClick={() => { navigate('/settings'); closeDropdowns(); }}
+                    className="w-full text-left px-3 py-2 rounded-lg text-sm transition-colors hover:bg-[var(--bg-tertiary)]"
+                    style={{ color: 'var(--text-secondary)' }}>
+                    My Profile
+                  </button>
+                  <button onClick={() => { navigate('/settings'); closeDropdowns(); }}
+                    className="w-full text-left px-3 py-2 rounded-lg text-sm transition-colors hover:bg-[var(--bg-tertiary)]"
+                    style={{ color: 'var(--text-secondary)' }}>
+                    Preferences
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
 
           {/* Logout */}
           <button
