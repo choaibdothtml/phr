@@ -1,6 +1,6 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import { 
-  Home, Users, Building2, CalendarClock, 
+  Home, UserPlus, Building2, CalendarClock, 
   FileText, Settings, LogOut, Flame, ChevronLeft, ChevronRight,
   Sun, Moon, Bell, User
 } from 'lucide-react';
@@ -11,7 +11,7 @@ import { mockNotifications } from '../services/api';
 
 const navItems = [
   { path: '/', label: 'Home', icon: Home },
-  { path: '/employees', label: 'Employees', icon: Users },
+  { path: '/employees', label: 'Add a new employee', icon: UserPlus },
   { path: '/departments', label: 'Departments', icon: Building2 },
   { path: '/attendance', label: 'Attendance', icon: CalendarClock },
   { path: '/leave', label: 'Leave Requests', icon: FileText },
