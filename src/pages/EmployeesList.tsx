@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Download, Filter, X, ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react';
 import { api, Employee } from '../services/api';
 import { useSettings } from '../contexts/SettingsContext';
@@ -425,14 +426,29 @@ export default function EmployeesList() {
       </div>
 
       {/* Full-screen blur overlay + Modal (both portaled to body) */}
-      {showFilter && createPortal(
-        <>
-          {/* Blur overlay - covers everything including sidebars */}
-          <div className="fixed inset-0 z-40" style={{ backdropFilter: 'blur(10px)', WebkitBackdropFilter: 'blur(10px)' }} />
-          
-          {/* Modal - sits on top of blur, NOT blurred */}
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-            <div className="w-full max-w-4xl max-h-[90vh] overflow-y-auto animate-fade-in-up rounded-2xl" style={{ background: 'var(--bg-popup)', border: '1px solid var(--border-color)' }}>
+      {createPortal(
+        <AnimatePresence>
+          {showFilter && (
+            <>
+              {/* Blur overlay - covers everything including sidebars */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
+                className="fixed inset-0 z-40"
+                style={{ backdropFilter: 'blur(10px)', WebkitBackdropFilter: 'blur(10px)' }}
+              />
+              
+              {/* Modal - sits on top of blur, NOT blurred */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                transition={{ duration: 0.2, ease: "easeOut" }}
+                className="fixed inset-0 z-50 flex items-center justify-center p-4"
+              >
+                <div className="w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-2xl" style={{ background: 'var(--bg-popup)', border: '1px solid var(--border-color)' }}>
             <div className="p-6 grid grid-cols-2 gap-8">
               {/* Left side */}
               <div className="space-y-5">
@@ -618,8 +634,10 @@ export default function EmployeesList() {
               </button>
             </div>
           </div>
-          </div>
+          </motion.div>
         </>
+          )}
+        </AnimatePresence>
       , document.body)}
     </div>
   );

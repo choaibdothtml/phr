@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { X, Search } from 'lucide-react';
 import { api, Employee } from '../services/api';
 
@@ -325,36 +326,53 @@ export default function EmployeesProfiles() {
       </div>
 
       {/* Error Modal */}
-      {showError && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4" 
-          style={{ background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)' }}>
-          <div className="glass-card p-8 text-center animate-fade-in-up max-w-sm w-full" 
-            style={{ background: 'var(--bg-card)' }}>
-            {/* Red circle with X */}
-            <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4"
-              style={{ background: '#ef4444' }}>
-              <X className="w-8 h-8 text-white" strokeWidth={3} />
-            </div>
-            <h3 className="font-semibold text-lg mb-2" style={{ color: 'var(--text-primary)' }}>
-              Invalid employee number
-            </h3>
-            <p className="text-sm mb-6" style={{ color: 'var(--text-secondary)' }}>
-              The employee number you entered does not exist in our records.
-            </p>
-            <button
-              onClick={() => {
-                setShowError(false);
-                setProfile(prev => ({ ...prev, employeeNumber: '' }));
-                numberInputRef.current?.focus();
-              }}
-              className="px-6 py-2.5 rounded-xl text-white font-semibold text-sm transition-all hover:scale-105"
-              style={{ background: 'var(--gradient-primary)' }}
+      <AnimatePresence>
+        {showError && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="fixed inset-0 z-50"
+              style={{ background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)' }}
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              transition={{ duration: 0.2, ease: "easeOut" }}
+              className="fixed inset-0 z-50 flex items-center justify-center p-4"
             >
-              Try typing again
-            </button>
-          </div>
-        </div>
-      )}
+              <div className="glass-card p-8 text-center max-w-sm w-full" 
+                style={{ background: 'var(--bg-card)' }}>
+                {/* Red circle with X */}
+                <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4"
+                  style={{ background: '#ef4444' }}>
+                  <X className="w-8 h-8 text-white" strokeWidth={3} />
+                </div>
+                <h3 className="font-semibold text-lg mb-2" style={{ color: 'var(--text-primary)' }}>
+                  Invalid employee number
+                </h3>
+                <p className="text-sm mb-6" style={{ color: 'var(--text-secondary)' }}>
+                  The employee number you entered does not exist in our records.
+                </p>
+                <button
+                  onClick={() => {
+                    setShowError(false);
+                    setProfile(prev => ({ ...prev, employeeNumber: '' }));
+                    numberInputRef.current?.focus();
+                  }}
+                  className="px-6 py-2.5 rounded-xl text-white font-semibold text-sm transition-all hover:scale-105"
+                  style={{ background: 'var(--gradient-primary)' }}
+                >
+                  Try typing again
+                </button>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

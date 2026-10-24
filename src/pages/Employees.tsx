@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Search, Filter, Plus, MoreVertical, Mail, Phone, MapPin } from 'lucide-react';
 import { api, Employee } from '../services/api';
 
@@ -229,9 +230,25 @@ export default function Employees() {
       )}
 
       {/* Add Employee Modal */}
-      {showAddModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)' }}>
-          <div className="glass-card w-full max-w-lg p-6 animate-fade-in-up" style={{ background: 'var(--bg-card)' }}>
+      <AnimatePresence>
+        {showAddModal && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="fixed inset-0 z-50"
+              style={{ background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)' }}
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              transition={{ duration: 0.2, ease: "easeOut" }}
+              className="fixed inset-0 z-50 flex items-center justify-center p-4"
+            >
+              <div className="glass-card w-full max-w-lg p-6" style={{ background: 'var(--bg-card)' }}>
             <h2 className="font-display text-xl font-bold mb-6" style={{ color: 'var(--text-primary)' }}>Add New Employee</h2>
             <div className="grid grid-cols-2 gap-4">
               <div>
@@ -274,9 +291,11 @@ export default function Employees() {
                 Add Employee
               </button>
             </div>
-          </div>
-        </div>
-      )}
+            </div>
+          </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
