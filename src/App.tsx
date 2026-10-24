@@ -1,11 +1,13 @@
 import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
+import { SettingsProvider } from './contexts/SettingsContext';
 import Layout from './components/Layout';
 import LoginPage from './pages/LoginPage';
 import Dashboard from './pages/Dashboard';
 import Employees from './pages/Employees';
 import EmployeesProfiles from './pages/EmployeesProfiles';
+import EmployeesList from './pages/EmployeesList';
 import Departments from './pages/Departments';
 import Attendance from './pages/Attendance';
 import LeaveManagement from './pages/LeaveManagement';
@@ -43,6 +45,7 @@ function AppRoutes() {
       }>
         <Route index element={<Dashboard />} />
         <Route path="employees" element={<Employees />} />
+        <Route path="employees/list" element={<EmployeesList />} />
         <Route path="employees/profiles" element={<EmployeesProfiles />} />
         <Route path="departments" element={<Departments />} />
         <Route path="attendance" element={<Attendance />} />
@@ -59,7 +62,9 @@ export default function App() {
     <HashRouter>
       <ThemeProvider>
         <AuthProvider>
-          <AppRoutes />
+          <SettingsProvider>
+            <AppRoutes />
+          </SettingsProvider>
         </AuthProvider>
       </ThemeProvider>
     </HashRouter>
