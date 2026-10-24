@@ -33,6 +33,7 @@ export default function Sidebar() {
   const unreadCount = notifications.filter(n => !n.read).length;
 
   const sidebarRef = useRef<HTMLDivElement>(null);
+  const notificationsDropdownRef = useRef<HTMLDivElement>(null);
 
   const markAllAsRead = () => {
     setNotifications(notifications.map(n => ({ ...n, read: true })));
@@ -46,7 +47,15 @@ export default function Sidebar() {
   // Close dropdowns when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (sidebarRef.current && !sidebarRef.current.contains(event.target as Node)) {
+      const target = event.target as Node;
+      
+      // Don't close if clicking inside the notifications dropdown
+      if (notificationsDropdownRef.current && notificationsDropdownRef.current.contains(target)) {
+        return;
+      }
+      
+      // Check if click is outside sidebar
+      if (sidebarRef.current && !sidebarRef.current.contains(target)) {
         closeDropdowns();
       }
     };
@@ -192,10 +201,12 @@ export default function Sidebar() {
                         transition={{ duration: 0.2 }}
                         className="fixed inset-0 z-40"
                         style={{ backdropFilter: 'blur(10px)', WebkitBackdropFilter: 'blur(10px)' }}
+                        onClick={() => setShowNotifications(false)}
                       />
                       
                       {/* Dropdown menu */}
                       <motion.div
+                        ref={notificationsDropdownRef}
                         initial={{ opacity: 0, scale: 0.95 }}
                         animate={{ opacity: 1, scale: 1 }}
                         exit={{ opacity: 0, scale: 0.95 }}
