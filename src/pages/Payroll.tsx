@@ -1,4 +1,4 @@
-import { Watch } from 'lucide-react';
+import { DollarSign } from 'lucide-react';
 
 export default function Payroll() {
   return (
@@ -6,7 +6,7 @@ export default function Payroll() {
       <div className="text-center">
         <div className="inline-flex items-center justify-center w-20 h-20 rounded-full mb-6"
           style={{ background: 'var(--bg-tertiary)' }}>
-          <Watch className="w-10 h-10" style={{ color: 'var(--text-tertiary)' }} />
+          <DollarSign className="w-10 h-10" style={{ color: 'var(--text-tertiary)' }} />
         </div>
         <h1 className="font-display text-2xl font-bold mb-2" style={{ color: 'var(--text-primary)' }}>
           Coming soon …
