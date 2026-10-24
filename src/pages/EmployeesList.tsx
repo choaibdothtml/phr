@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { Download, Filter, X, ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react';
 import { api, Employee } from '../services/api';
 import { useSettings } from '../contexts/SettingsContext';
@@ -423,9 +424,15 @@ export default function EmployeesList() {
         </div>
       </div>
 
+      {/* Full-screen blur overlay (covers sidebar too) */}
+      {showFilter && createPortal(
+        <div className="fixed inset-0 z-40" style={{ backdropFilter: 'blur(10px)', WebkitBackdropFilter: 'blur(10px)' }} />,
+        document.body
+      )}
+
       {/* Filter Modal */}
       {showFilter && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ backdropFilter: 'blur(10px)', WebkitBackdropFilter: 'blur(10px)', background: 'transparent' }}>
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div className="w-full max-w-4xl max-h-[90vh] overflow-y-auto animate-fade-in-up rounded-2xl" style={{ background: 'var(--bg-solid-primary)', border: '1px solid var(--border-color)' }}>
             <div className="p-6 flex items-center justify-end" style={{ borderBottom: '1px solid var(--border-color)' }}>
               <button onClick={cancelFilter} className="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-[var(--bg-tertiary)]">
