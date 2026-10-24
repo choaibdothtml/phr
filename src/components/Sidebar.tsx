@@ -1,8 +1,10 @@
 import { useLocation, useNavigate } from 'react-router-dom';
+import { createPortal } from 'react-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Home, UserPlus, Users, List, CalendarClock, DollarSign,
   Settings, LogOut, Flame, ChevronLeft, ChevronRight,
-  Sun, Moon, Bell, User
+  Sun, Moon, Bell, User, X, CheckCheck
 } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../contexts/AuthContext';
@@ -27,9 +29,14 @@ export default function Sidebar() {
   const [collapsed, setCollapsed] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
-  const unreadCount = mockNotifications.filter(n => !n.read).length;
+  const [notifications, setNotifications] = useState(mockNotifications);
+  const unreadCount = notifications.filter(n => !n.read).length;
 
   const sidebarRef = useRef<HTMLDivElement>(null);
+
+  const markAllAsRead = () => {
+    setNotifications(notifications.map(n => ({ ...n, read: true })));
+  };
 
   const closeDropdowns = () => {
     setShowNotifications(false);
@@ -173,35 +180,82 @@ export default function Sidebar() {
               </button>
 
               {/* Notifications dropdown */}
-              {showNotifications && (
-                <div 
-                  className="absolute left-full ml-2 bottom-0 w-80 rounded-2xl overflow-hidden z-50 animate-fade-in-up"
-                  style={{ 
-                    background: 'var(--bg-card)',
-                    border: '1px solid var(--border-color)',
-                    boxShadow: 'var(--shadow-lg)',
-                  }}
-                >
-                  <div className="p-4 flex items-center justify-between" style={{ borderBottom: '1px solid var(--border-color)' }}>
-                    <h3 className="font-semibold text-sm" style={{ color: 'var(--text-primary)' }}>Notifications</h3>
-                    <span className="text-[10px] font-semibold text-phoenix-500">{unreadCount} unread</span>
-                  </div>
-                  <div className="max-h-64 overflow-y-auto">
-                    {mockNotifications.map(n => (
-                      <div key={n.id} className="p-3 flex gap-3 transition-colors hover:bg-[var(--bg-tertiary)]"
-                        style={{ borderBottom: '1px solid var(--border-subtle)' }}>
-                        <div className={`w-2 h-2 rounded-full mt-1.5 flex-shrink-0 ${!n.read ? 'pulse-dot' : 'opacity-0'}`}
-                          style={{ background: n.type === 'warning' ? '#f59e0b' : n.type === 'success' ? '#10b981' : '#f97316' }}
-                        />
-                        <div className="min-w-0">
-                          <p className="text-xs font-medium truncate" style={{ color: 'var(--text-primary)' }}>{n.title}</p>
-                          <p className="text-[11px] mt-0.5 line-clamp-2" style={{ color: 'var(--text-secondary)' }}>{n.message}</p>
+              {createPortal(
+                <AnimatePresence>
+                  {showNotifications && (
+                    <>
+                      {/* Blur overlay */}
+                      <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.2 }}
+                        className="fixed inset-0 z-40"
+                        style={{ backdropFilter: 'blur(10px)', WebkitBackdropFilter: 'blur(10px)' }}
+                      />
+                      
+                      {/* Dropdown menu */}
+                      <motion.div
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.95 }}
+                        transition={{ duration: 0.2, ease: "easeOut" }}
+                        className="fixed z-50 w-80 rounded-2xl overflow-hidden"
+                        style={{ 
+                          background: 'var(--bg-popup)',
+                          border: '1px solid var(--border-color)',
+                          boxShadow: 'var(--shadow-lg)',
+                          left: '280px',
+                          bottom: '180px',
+                        }}
+                      >
+                        <div className="p-4 flex items-center justify-between" style={{ borderBottom: '1px solid var(--border-color)' }}>
+                          <div className="flex items-center gap-2">
+                            <h3 className="font-semibold text-sm" style={{ color: 'var(--text-primary)' }}>Notifications</h3>
+                            {unreadCount > 0 && (
+                              <span className="text-[10px] font-semibold text-phoenix-500">{unreadCount} unread</span>
+                            )}
+                          </div>
+                          <button
+                            onClick={() => setShowNotifications(false)}
+                            className="w-6 h-6 rounded-lg flex items-center justify-center hover:bg-[var(--bg-tertiary)] transition-colors"
+                          >
+                            <X className="w-4 h-4" style={{ color: 'var(--text-secondary)' }} />
+                          </button>
                         </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
+                        
+                        {unreadCount > 0 && (
+                          <div className="px-4 py-2 flex justify-end" style={{ borderBottom: '1px solid var(--border-subtle)' }}>
+                            <button
+                              onClick={markAllAsRead}
+                              className="flex items-center gap-1.5 text-[11px] font-medium hover:text-phoenix-500 transition-colors"
+                              style={{ color: 'var(--text-secondary)' }}
+                            >
+                              <CheckCheck className="w-3.5 h-3.5" />
+                              Mark all as read
+                            </button>
+                          </div>
+                        )}
+                        
+                        <div className="max-h-64 overflow-y-auto">
+                          {notifications.map(n => (
+                            <div key={n.id} className="p-3 flex gap-3 transition-colors hover:bg-[var(--bg-tertiary)]"
+                              style={{ borderBottom: '1px solid var(--border-subtle)' }}>
+                              <div className={`w-2 h-2 rounded-full mt-1.5 flex-shrink-0 ${!n.read ? 'pulse-dot' : 'opacity-0'}`}
+                                style={{ background: n.type === 'warning' ? '#f59e0b' : n.type === 'success' ? '#10b981' : '#f97316' }}
+                              />
+                              <div className="min-w-0">
+                                <p className="text-xs font-medium truncate" style={{ color: 'var(--text-primary)' }}>{n.title}</p>
+                                <p className="text-[11px] mt-0.5 line-clamp-2" style={{ color: 'var(--text-secondary)' }}>{n.message}</p>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </motion.div>
+                    </>
+                  )}
+                </AnimatePresence>
+              , document.body)}
             </div>
           </div>
 
