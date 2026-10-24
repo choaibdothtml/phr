@@ -5,6 +5,7 @@ import Layout from './components/Layout';
 import LoginPage from './pages/LoginPage';
 import Dashboard from './pages/Dashboard';
 import Employees from './pages/Employees';
+import EmployeesProfiles from './pages/EmployeesProfiles';
 import Departments from './pages/Departments';
 import Attendance from './pages/Attendance';
 import LeaveManagement from './pages/LeaveManagement';
@@ -42,6 +43,7 @@ function AppRoutes() {
       }>
         <Route index element={<Dashboard />} />
         <Route path="employees" element={<Employees />} />
+        <Route path="employees/profiles" element={<EmployeesProfiles />} />
         <Route path="departments" element={<Departments />} />
         <Route path="attendance" element={<Attendance />} />
         <Route path="leave" element={<LeaveManagement />} />

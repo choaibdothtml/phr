@@ -22,12 +22,14 @@
 
 export interface Employee {
   id: string;
+  employeeNumber: string;
   firstName: string;
   lastName: string;
   email: string;
   phone: string;
   department: string;
   position: string;
+  group: string;
   joinDate: string;
   status: 'active' | 'on-leave' | 'terminated';
   avatar?: string;
@@ -76,16 +78,16 @@ export interface Notification {
 
 // Mock Data
 export const mockEmployees: Employee[] = [
-  { id: '1', firstName: 'Sarah', lastName: 'Mitchell', email: 'sarah.m@phoenix.com', phone: '+1 555-0101', department: 'Human Resources', position: 'HR Director', joinDate: '2020-03-15', status: 'active', salary: 95000 },
-  { id: '2', firstName: 'James', lastName: 'Rodriguez', email: 'james.r@phoenix.com', phone: '+1 555-0102', department: 'Engineering', position: 'Senior Developer', joinDate: '2021-06-01', status: 'active', salary: 105000 },
-  { id: '3', firstName: 'Emily', lastName: 'Chen', email: 'emily.c@phoenix.com', phone: '+1 555-0103', department: 'Design', position: 'UI/UX Designer', joinDate: '2022-01-10', status: 'active', salary: 85000 },
-  { id: '4', firstName: 'Michael', lastName: 'Thompson', email: 'michael.t@phoenix.com', phone: '+1 555-0104', department: 'Engineering', position: 'Backend Developer', joinDate: '2021-09-20', status: 'active', salary: 98000 },
-  { id: '5', firstName: 'Lisa', lastName: 'Park', email: 'lisa.p@phoenix.com', phone: '+1 555-0105', department: 'Marketing', position: 'Marketing Manager', joinDate: '2020-11-05', status: 'on-leave', salary: 88000 },
-  { id: '6', firstName: 'David', lastName: 'Wilson', email: 'david.w@phoenix.com', phone: '+1 555-0106', department: 'Finance', position: 'Financial Analyst', joinDate: '2022-04-18', status: 'active', salary: 78000 },
-  { id: '7', firstName: 'Anna', lastName: 'Kowalski', email: 'anna.k@phoenix.com', phone: '+1 555-0107', department: 'Design', position: 'Graphic Designer', joinDate: '2023-02-14', status: 'active', salary: 72000 },
-  { id: '8', firstName: 'Robert', lastName: 'Kim', email: 'robert.k@phoenix.com', phone: '+1 555-0108', department: 'Engineering', position: 'DevOps Engineer', joinDate: '2021-07-22', status: 'active', salary: 110000 },
-  { id: '9', firstName: 'Maria', lastName: 'Garcia', email: 'maria.g@phoenix.com', phone: '+1 555-0109', department: 'Human Resources', position: 'HR Specialist', joinDate: '2022-08-30', status: 'active', salary: 68000 },
-  { id: '10', firstName: 'Thomas', lastName: 'Brown', email: 'thomas.b@phoenix.com', phone: '+1 555-0110', department: 'Marketing', position: 'Content Strategist', joinDate: '2023-05-01', status: 'active', salary: 75000 },
+  { id: '1', employeeNumber: '0001', firstName: 'Sarah', lastName: 'Mitchell', email: 'sarah.m@phoenix.com', phone: '+1 555-0101', department: 'Human Resources', position: 'HR Director', group: 'Management', joinDate: '2020-03-15', status: 'active', salary: 95000 },
+  { id: '2', employeeNumber: '0002', firstName: 'James', lastName: 'Rodriguez', email: 'james.r@phoenix.com', phone: '+1 555-0102', department: 'Engineering', position: 'Senior Developer', group: 'Backend', joinDate: '2021-06-01', status: 'active', salary: 105000 },
+  { id: '3', employeeNumber: '0003', firstName: 'Emily', lastName: 'Chen', email: 'emily.c@phoenix.com', phone: '+1 555-0103', department: 'Design', position: 'UI/UX Designer', group: 'UI Team', joinDate: '2022-01-10', status: 'active', salary: 85000 },
+  { id: '4', employeeNumber: '0004', firstName: 'Michael', lastName: 'Thompson', email: 'michael.t@phoenix.com', phone: '+1 555-0104', department: 'Engineering', position: 'Backend Developer', group: 'Backend', joinDate: '2021-09-20', status: 'active', salary: 98000 },
+  { id: '5', employeeNumber: '0005', firstName: 'Lisa', lastName: 'Park', email: 'lisa.p@phoenix.com', phone: '+1 555-0105', department: 'Marketing', position: 'Marketing Manager', group: 'Digital Marketing', joinDate: '2020-11-05', status: 'on-leave', salary: 88000 },
+  { id: '6', employeeNumber: '0006', firstName: 'David', lastName: 'Wilson', email: 'david.w@phoenix.com', phone: '+1 555-0106', department: 'Finance', position: 'Financial Analyst', group: 'Accounting', joinDate: '2022-04-18', status: 'active', salary: 78000 },
+  { id: '7', employeeNumber: '0007', firstName: 'Anna', lastName: 'Kowalski', email: 'anna.k@phoenix.com', phone: '+1 555-0107', department: 'Design', position: 'Graphic Designer', group: 'Creative', joinDate: '2023-02-14', status: 'active', salary: 72000 },
+  { id: '8', employeeNumber: '0008', firstName: 'Robert', lastName: 'Kim', email: 'robert.k@phoenix.com', phone: '+1 555-0108', department: 'Engineering', position: 'DevOps Engineer', group: 'Infrastructure', joinDate: '2021-07-22', status: 'active', salary: 110000 },
+  { id: '9', employeeNumber: '0009', firstName: 'Maria', lastName: 'Garcia', email: 'maria.g@phoenix.com', phone: '+1 555-0109', department: 'Human Resources', position: 'HR Specialist', group: 'Recruitment', joinDate: '2022-08-30', status: 'active', salary: 68000 },
+  { id: '10', employeeNumber: '0010', firstName: 'Thomas', lastName: 'Brown', email: 'thomas.b@phoenix.com', phone: '+1 555-0110', department: 'Marketing', position: 'Content Strategist', group: 'Content', joinDate: '2023-05-01', status: 'active', salary: 75000 },
 ];
 
 export const mockDepartments: Department[] = [
