@@ -138,8 +138,26 @@ export default function Sidebar() {
       {/* Bottom section */}
       <div className="px-3 pb-3 pt-2" style={{ borderTop: '1px solid var(--border-color)' }}>
         <div className="space-y-1.5">
-          {/* Notifications + Theme toggle on the same horizontal line */}
+          {/* Theme toggle + Notifications on the same horizontal line */}
           <div className="flex items-center gap-1.5">
+            {/* Theme toggle */}
+            <div className="flex-1">
+              <button
+                onClick={toggleTheme}
+                className="w-full flex items-center justify-center px-3 py-2.5 rounded-xl transition-all hover:bg-[var(--bg-tertiary)] group"
+                title={theme === 'light' ? 'Dark Mode' : 'Light Mode'}
+              >
+                <div className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center"
+                  style={{ background: 'var(--bg-tertiary)' }}>
+                  {theme === 'light' ? (
+                    <Moon className="w-4 h-4" style={{ color: 'var(--text-secondary)' }} />
+                  ) : (
+                    <Sun className="w-4 h-4 text-phoenix-400" />
+                  )}
+                </div>
+              </button>
+            </div>
+
             {/* Notifications */}
             <div className="relative flex-1">
               <button
@@ -188,24 +206,6 @@ export default function Sidebar() {
                   </div>
                 </div>
               )}
-            </div>
-
-            {/* Theme toggle */}
-            <div className="flex-1">
-              <button
-                onClick={toggleTheme}
-                className="w-full flex items-center justify-center px-3 py-2.5 rounded-xl transition-all hover:bg-[var(--bg-tertiary)] group"
-                title={theme === 'light' ? 'Dark Mode' : 'Light Mode'}
-              >
-                <div className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center"
-                  style={{ background: 'var(--bg-tertiary)' }}>
-                  {theme === 'light' ? (
-                    <Moon className="w-4 h-4" style={{ color: 'var(--text-secondary)' }} />
-                  ) : (
-                    <Sun className="w-4 h-4 text-phoenix-400" />
-                  )}
-                </div>
-              </button>
             </div>
           </div>
 
