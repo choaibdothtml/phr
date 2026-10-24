@@ -138,84 +138,76 @@ export default function Sidebar() {
       {/* Bottom section */}
       <div className="px-3 pb-3 pt-2" style={{ borderTop: '1px solid var(--border-color)' }}>
         <div className="space-y-1.5">
-          {/* Notifications */}
-          <div className="relative">
-            <button
-              onClick={() => { setShowNotifications(!showNotifications); setShowProfile(false); }}
-              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all hover:bg-[var(--bg-tertiary)] group"
-              title={collapsed ? 'Notifications' : undefined}
-            >
-              <div className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center relative"
-                style={{ background: 'var(--bg-tertiary)' }}>
-                <Bell className="w-4 h-4" style={{ color: 'var(--text-secondary)' }} />
-                {unreadCount > 0 && (
-                  <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-phoenix-500 text-white text-[10px] font-bold flex items-center justify-center">
-                    {unreadCount}
-                  </span>
-                )}
-              </div>
-              {!collapsed && (
-                <div className="flex-1 min-w-0 text-left flex items-center justify-between">
-                  <span className="text-sm font-medium" style={{ color: 'var(--text-secondary)' }}>Notifications</span>
+          {/* Notifications + Theme toggle on the same horizontal line */}
+          <div className="flex items-center gap-1.5">
+            {/* Notifications */}
+            <div className="relative flex-1">
+              <button
+                onClick={() => { setShowNotifications(!showNotifications); setShowProfile(false); }}
+                className="w-full flex items-center justify-center px-3 py-2.5 rounded-xl transition-all hover:bg-[var(--bg-tertiary)] group"
+                title="Notifications"
+              >
+                <div className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center relative"
+                  style={{ background: 'var(--bg-tertiary)' }}>
+                  <Bell className="w-4 h-4" style={{ color: 'var(--text-secondary)' }} />
                   {unreadCount > 0 && (
-                    <span className="text-[10px] font-bold text-phoenix-500">{unreadCount} new</span>
+                    <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-phoenix-500 text-white text-[10px] font-bold flex items-center justify-center">
+                      {unreadCount}
+                    </span>
                   )}
                 </div>
-              )}
-            </button>
+              </button>
 
-            {/* Notifications dropdown */}
-            {showNotifications && (
-              <div 
-                className="absolute left-full ml-2 bottom-0 w-80 rounded-2xl overflow-hidden z-50 animate-fade-in-up"
-                style={{ 
-                  background: 'var(--bg-card)',
-                  border: '1px solid var(--border-color)',
-                  boxShadow: 'var(--shadow-lg)',
-                }}
-              >
-                <div className="p-4 flex items-center justify-between" style={{ borderBottom: '1px solid var(--border-color)' }}>
-                  <h3 className="font-semibold text-sm" style={{ color: 'var(--text-primary)' }}>Notifications</h3>
-                  <span className="text-[10px] font-semibold text-phoenix-500">{unreadCount} unread</span>
-                </div>
-                <div className="max-h-64 overflow-y-auto">
-                  {mockNotifications.map(n => (
-                    <div key={n.id} className="p-3 flex gap-3 transition-colors hover:bg-[var(--bg-tertiary)]"
-                      style={{ borderBottom: '1px solid var(--border-subtle)' }}>
-                      <div className={`w-2 h-2 rounded-full mt-1.5 flex-shrink-0 ${!n.read ? 'pulse-dot' : 'opacity-0'}`}
-                        style={{ background: n.type === 'warning' ? '#f59e0b' : n.type === 'success' ? '#10b981' : '#f97316' }}
-                      />
-                      <div className="min-w-0">
-                        <p className="text-xs font-medium truncate" style={{ color: 'var(--text-primary)' }}>{n.title}</p>
-                        <p className="text-[11px] mt-0.5 line-clamp-2" style={{ color: 'var(--text-secondary)' }}>{n.message}</p>
+              {/* Notifications dropdown */}
+              {showNotifications && (
+                <div 
+                  className="absolute left-full ml-2 bottom-0 w-80 rounded-2xl overflow-hidden z-50 animate-fade-in-up"
+                  style={{ 
+                    background: 'var(--bg-card)',
+                    border: '1px solid var(--border-color)',
+                    boxShadow: 'var(--shadow-lg)',
+                  }}
+                >
+                  <div className="p-4 flex items-center justify-between" style={{ borderBottom: '1px solid var(--border-color)' }}>
+                    <h3 className="font-semibold text-sm" style={{ color: 'var(--text-primary)' }}>Notifications</h3>
+                    <span className="text-[10px] font-semibold text-phoenix-500">{unreadCount} unread</span>
+                  </div>
+                  <div className="max-h-64 overflow-y-auto">
+                    {mockNotifications.map(n => (
+                      <div key={n.id} className="p-3 flex gap-3 transition-colors hover:bg-[var(--bg-tertiary)]"
+                        style={{ borderBottom: '1px solid var(--border-subtle)' }}>
+                        <div className={`w-2 h-2 rounded-full mt-1.5 flex-shrink-0 ${!n.read ? 'pulse-dot' : 'opacity-0'}`}
+                          style={{ background: n.type === 'warning' ? '#f59e0b' : n.type === 'success' ? '#10b981' : '#f97316' }}
+                        />
+                        <div className="min-w-0">
+                          <p className="text-xs font-medium truncate" style={{ color: 'var(--text-primary)' }}>{n.title}</p>
+                          <p className="text-[11px] mt-0.5 line-clamp-2" style={{ color: 'var(--text-secondary)' }}>{n.message}</p>
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
-              </div>
-            )}
-          </div>
-
-          {/* Theme toggle */}
-          <button
-            onClick={toggleTheme}
-            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all hover:bg-[var(--bg-tertiary)] group"
-            title={collapsed ? (theme === 'light' ? 'Dark Mode' : 'Light Mode') : undefined}
-          >
-            <div className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center"
-              style={{ background: 'var(--bg-tertiary)' }}>
-              {theme === 'light' ? (
-                <Moon className="w-4 h-4" style={{ color: 'var(--text-secondary)' }} />
-              ) : (
-                <Sun className="w-4 h-4 text-phoenix-400" />
               )}
             </div>
-            {!collapsed && (
-              <span className="text-sm font-medium" style={{ color: 'var(--text-secondary)' }}>
-                {theme === 'light' ? 'Dark Mode' : 'Light Mode'}
-              </span>
-            )}
-          </button>
+
+            {/* Theme toggle */}
+            <div className="flex-1">
+              <button
+                onClick={toggleTheme}
+                className="w-full flex items-center justify-center px-3 py-2.5 rounded-xl transition-all hover:bg-[var(--bg-tertiary)] group"
+                title={theme === 'light' ? 'Dark Mode' : 'Light Mode'}
+              >
+                <div className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center"
+                  style={{ background: 'var(--bg-tertiary)' }}>
+                  {theme === 'light' ? (
+                    <Moon className="w-4 h-4" style={{ color: 'var(--text-secondary)' }} />
+                  ) : (
+                    <Sun className="w-4 h-4 text-phoenix-400" />
+                  )}
+                </div>
+              </button>
+            </div>
+          </div>
 
           {/* User Profile - directly above logout */}
           <div className="relative">
