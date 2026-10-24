@@ -376,7 +376,7 @@ export default function EmployeesList() {
                     }`}
                     style={{ 
                       color: 'var(--text-tertiary)',
-                      background: idx < 3 ? 'var(--bg-secondary)' : 'var(--bg-card)',
+                      background: idx < 3 ? 'var(--bg-solid-primary)' : 'var(--bg-card)',
                       borderBottom: '2px solid var(--border-color)',
                       left: idx < 3 ? `${stickyColumnPositions[idx]}px` : undefined,
                       width: `${col.width}px`,
@@ -406,7 +406,7 @@ export default function EmployeesList() {
                         }`}
                         style={{ 
                           color: 'var(--text-primary)',
-                          background: colIdx < 3 ? (rowIdx % 2 === 0 ? 'var(--bg-card)' : 'var(--bg-secondary)') : 'transparent',
+                          background: colIdx < 3 ? (rowIdx % 2 === 0 ? 'var(--bg-solid-primary)' : 'var(--bg-solid-secondary)') : 'transparent',
                           borderBottom: '1px solid var(--border-subtle)',
                           left: colIdx < 3 ? `${stickyColumnPositions[colIdx]}px` : undefined,
                           width: `${col.width}px`,
