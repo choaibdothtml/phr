@@ -2,7 +2,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { 
   LayoutDashboard, Users, Building2, CalendarClock, 
   FileText, Settings, LogOut, Flame, ChevronLeft, ChevronRight,
-  Sun, Moon, Bell, User, Calendar
+  Sun, Moon, Bell, User
 } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../contexts/AuthContext';
@@ -283,8 +283,7 @@ export default function Sidebar() {
 
           {/* Date */}
           {!collapsed && (
-            <div className="flex items-center gap-2 px-3 py-2 mt-2 rounded-lg" style={{ background: 'var(--bg-tertiary)' }}>
-              <Calendar className="w-3 h-3" style={{ color: 'var(--text-tertiary)' }} />
+            <div className="flex items-center justify-center px-3 py-2 mt-2">
               <span className="text-[11px] font-medium" style={{ color: 'var(--text-secondary)' }}>
                 {new Date().toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' })}
               </span>
