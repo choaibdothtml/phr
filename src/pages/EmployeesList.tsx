@@ -594,7 +594,7 @@ export default function EmployeesList() {
             </div>
 
             {/* Footer buttons */}
-            <div className="p-6 flex justify-end gap-3" style={{ borderTop: '1px solid var(--border-color)' }}>
+            <div className="p-6 flex justify-center gap-3">
               <button
                 onClick={cancelFilter}
                 className="px-5 py-2.5 rounded-xl text-sm font-semibold transition-all hover:scale-105"
