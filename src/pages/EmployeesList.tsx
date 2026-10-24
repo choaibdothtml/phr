@@ -425,7 +425,7 @@ export default function EmployeesList() {
 
       {/* Filter Modal */}
       {showFilter && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(0, 0, 0, 0.4)' }}>
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ backdropFilter: 'blur(10px)', WebkitBackdropFilter: 'blur(10px)', background: 'transparent' }}>
           <div className="w-full max-w-4xl max-h-[90vh] overflow-y-auto animate-fade-in-up rounded-2xl" style={{ background: 'var(--bg-solid-primary)', border: '1px solid var(--border-color)' }}>
             <div className="p-6 flex items-center justify-end" style={{ borderBottom: '1px solid var(--border-color)' }}>
               <button onClick={cancelFilter} className="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-[var(--bg-tertiary)]">
