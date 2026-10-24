@@ -432,7 +432,7 @@ export default function EmployeesList() {
           
           {/* Modal - sits on top of blur, NOT blurred */}
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-            <div className="w-full max-w-4xl max-h-[90vh] overflow-y-auto animate-fade-in-up rounded-2xl" style={{ background: 'var(--bg-solid-primary)', border: '1px solid var(--border-color)' }}>
+            <div className="w-full max-w-4xl max-h-[90vh] overflow-y-auto animate-fade-in-up rounded-2xl" style={{ background: 'var(--bg-popup)', border: '1px solid var(--border-color)' }}>
             <div className="p-6 flex items-center justify-end" style={{ borderBottom: '1px solid var(--border-color)' }}>
               <button onClick={cancelFilter} className="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-[var(--bg-tertiary)]">
                 <X className="w-4 h-4" style={{ color: 'var(--text-secondary)' }} />

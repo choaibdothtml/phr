@@ -49,6 +49,7 @@
   --bg-glass: rgba(255, 255, 255, 0.6);
   --bg-solid-primary: #ffffff;
   --bg-solid-secondary: #f8fafc;
+  --bg-popup: #f8fafc;
   --text-primary: #0f172a;
   --text-secondary: #475569;
   --text-tertiary: #94a3b8;
@@ -75,6 +76,7 @@
   --bg-glass: rgba(15, 22, 41, 0.6);
   --bg-solid-primary: #0a0e1a;
   --bg-solid-secondary: #0f1629;
+  --bg-popup: #0f1629;
   --text-primary: #f1f5f9;
   --text-secondary: #94a3b8;
   --text-tertiary: #64748b;
