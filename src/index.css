@@ -184,6 +184,23 @@ body {
   opacity: 1;
 }
 
+/* Sidebar nav item hover and active states */
+.nav-item {
+  background: transparent;
+}
+
+.nav-item:hover {
+  background: rgba(249, 115, 22, 0.08);
+}
+
+.nav-item-active {
+  background: rgba(249, 115, 22, 0.1);
+}
+
+.nav-item-active:hover {
+  background: rgba(249, 115, 22, 0.12);
+}
+
 /* Pulse dot animation */
 @keyframes pulse-dot {
   0%, 100% { transform: scale(1); opacity: 1; }

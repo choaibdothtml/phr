@@ -103,11 +103,8 @@ export default function Sidebar() {
               key={item.path}
               onClick={() => navigate(item.path)}
               className={`sidebar-indicator w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group ${
-                isActive ? 'active' : ''
+                isActive ? 'active nav-item-active' : 'nav-item'
               }`}
-              style={{
-                background: isActive ? 'var(--bg-tertiary)' : 'transparent',
-              }}
               title={collapsed ? item.label : undefined}
             >
               <div className={`flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center transition-all ${
