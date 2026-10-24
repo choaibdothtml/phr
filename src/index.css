@@ -201,6 +201,19 @@ body {
   background: rgba(249, 115, 22, 0.12);
 }
 
+/* Dark mode adjustments */
+.dark .nav-item:hover {
+  background: rgba(249, 115, 22, 0.15);
+}
+
+.dark .nav-item-active {
+  background: rgba(249, 115, 22, 0.2);
+}
+
+.dark .nav-item-active:hover {
+  background: rgba(249, 115, 22, 0.25);
+}
+
 /* Pulse dot animation */
 @keyframes pulse-dot {
   0%, 100% { transform: scale(1); opacity: 1; }
