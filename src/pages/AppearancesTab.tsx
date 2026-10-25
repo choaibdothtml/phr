@@ -15,7 +15,7 @@ const primaryColors: ColorOption[] = [
   { id: 'royal-blue', name: 'Royal Blue', value: '#3b82f6', gradient: 'linear-gradient(135deg, #3b82f6, #2563eb)' },
   { id: 'emerald', name: 'Emerald', value: '#10b981', gradient: 'linear-gradient(135deg, #10b981, #059669)' },
   { id: 'violet', name: 'Violet', value: '#8b5cf6', gradient: 'linear-gradient(135deg, #8b5cf6, #7c3aed)' },
-  { id: 'rose', name: 'Rose', value: '#f43f5e', gradient: 'linear-gradient(135deg, #f43f5e, #e11d48)' },
+  { id: 'scarlet', name: 'Scarlet', value: '#FF3300', gradient: 'linear-gradient(135deg, #FF3300, #CC2900)' },
   { id: 'cyan', name: 'Cyan', value: '#06b6d4', gradient: 'linear-gradient(135deg, #06b6d4, #0891b2)' },
   { id: 'amber', name: 'Amber', value: '#f59e0b', gradient: 'linear-gradient(135deg, #f59e0b, #d97706)' },
   { id: 'teal', name: 'Teal', value: '#14b8a6', gradient: 'linear-gradient(135deg, #14b8a6, #0d9488)' },
