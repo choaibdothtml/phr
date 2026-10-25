@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { Building2, Users, DollarSign, Settings as SettingsIcon } from 'lucide-react';
+import { Building2, Users, DollarSign, Landmark, Settings as SettingsIcon } from 'lucide-react';
 import DepartmentsTab from './DepartmentsTab';
 import GroupsClassificationsTab from './GroupsClassificationsTab';
 import BasicSalariesTab from './BasicSalariesTab';
+import BanksTab from './BanksTab';
 
 export default function Settings() {
   const [activeTab, setActiveTab] = useState('departments');
@@ -11,6 +12,7 @@ export default function Settings() {
     { id: 'departments', label: 'Departments', icon: Building2 },
     { id: 'groups', label: 'Groups and classifications', icon: Users },
     { id: 'salaries', label: 'Basic salaries', icon: DollarSign },
+    { id: 'banks', label: 'Banks', icon: Landmark },
   ];
 
   return (
@@ -42,6 +44,7 @@ export default function Settings() {
         {activeTab === 'departments' && <DepartmentsTab />}
         {activeTab === 'groups' && <GroupsClassificationsTab />}
         {activeTab === 'salaries' && <BasicSalariesTab />}
+        {activeTab === 'banks' && <BanksTab />}
       </div>
     </div>
   );
