@@ -896,15 +896,6 @@ export default function EmployeeWizard() {
   return (
     <div className="h-full overflow-y-auto">
       <div className="max-w-7xl mx-auto p-8">
-        <div className="mb-8">
-          <h2 className="font-display text-2xl font-bold mb-2" style={{ color: 'var(--text-primary)' }}>
-            Add New Employee
-          </h2>
-          <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
-            Step {currentStep + 1} of {steps.length}
-          </p>
-        </div>
-
         <div className="flex gap-6">
           {/* Step Navigation - Left of Form */}
           <div className="w-64 flex-shrink-0 space-y-2">
