@@ -784,32 +784,30 @@ export default function EmployeeWizard() {
               />
             </FormField>
 
-            {formData.idNumber && (
-              <div className="grid grid-cols-3 gap-6 mt-6">
-                <FormField label="ID Issuing Date" required error={errors.idIssuingDate}>
-                  <Input
-                    type="date"
-                    value={formData.idIssuingDate}
-                    onChange={(e) => handleInputChange('idIssuingDate', e.target.value)}
-                    error={errors.idIssuingDate}
-                  />
-                </FormField>
-                <FormField label="ID Issuing Province" required error={errors.idIssuingProvince}>
-                  <Input
-                    value={formData.idIssuingProvince}
-                    onChange={(e) => handleInputChange('idIssuingProvince', e.target.value)}
-                    error={errors.idIssuingProvince}
-                  />
-                </FormField>
-                <FormField label="ID Issuing Municipality" required error={errors.idIssuingMunicipality}>
-                  <Input
-                    value={formData.idIssuingMunicipality}
-                    onChange={(e) => handleInputChange('idIssuingMunicipality', e.target.value)}
-                    error={errors.idIssuingMunicipality}
-                  />
-                </FormField>
-              </div>
-            )}
+            <div className="grid grid-cols-3 gap-6 mt-6">
+              <FormField label="ID Issuing Date" required={!!formData.idNumber} error={errors.idIssuingDate}>
+                <Input
+                  type="date"
+                  value={formData.idIssuingDate}
+                  onChange={(e) => handleInputChange('idIssuingDate', e.target.value)}
+                  error={errors.idIssuingDate}
+                />
+              </FormField>
+              <FormField label="ID Issuing Province" required={!!formData.idNumber} error={errors.idIssuingProvince}>
+                <Input
+                  value={formData.idIssuingProvince}
+                  onChange={(e) => handleInputChange('idIssuingProvince', e.target.value)}
+                  error={errors.idIssuingProvince}
+                />
+              </FormField>
+              <FormField label="ID Issuing Municipality" required={!!formData.idNumber} error={errors.idIssuingMunicipality}>
+                <Input
+                  value={formData.idIssuingMunicipality}
+                  onChange={(e) => handleInputChange('idIssuingMunicipality', e.target.value)}
+                  error={errors.idIssuingMunicipality}
+                />
+              </FormField>
+            </div>
           </div>
 
           <div className="pt-6" style={{ borderTop: '1px solid var(--border-subtle)' }}>
@@ -822,32 +820,30 @@ export default function EmployeeWizard() {
               />
             </FormField>
 
-            {formData.driverLicenseNumber && (
-              <div className="grid grid-cols-3 gap-6 mt-6">
-                <FormField label="Driver License Issuing Date" required error={errors.driverLicenseIssuingDate}>
-                  <Input
-                    type="date"
-                    value={formData.driverLicenseIssuingDate}
-                    onChange={(e) => handleInputChange('driverLicenseIssuingDate', e.target.value)}
-                    error={errors.driverLicenseIssuingDate}
-                  />
-                </FormField>
-                <FormField label="Driver License Issuing Province" required error={errors.driverLicenseIssuingProvince}>
-                  <Input
-                    value={formData.driverLicenseIssuingProvince}
-                    onChange={(e) => handleInputChange('driverLicenseIssuingProvince', e.target.value)}
-                    error={errors.driverLicenseIssuingProvince}
-                  />
-                </FormField>
-                <FormField label="Driver License Issuing Municipality" required error={errors.driverLicenseIssuingMunicipality}>
-                  <Input
-                    value={formData.driverLicenseIssuingMunicipality}
-                    onChange={(e) => handleInputChange('driverLicenseIssuingMunicipality', e.target.value)}
-                    error={errors.driverLicenseIssuingMunicipality}
-                  />
-                </FormField>
-              </div>
-            )}
+            <div className="grid grid-cols-3 gap-6 mt-6">
+              <FormField label="Driver License Issuing Date" required={!!formData.driverLicenseNumber} error={errors.driverLicenseIssuingDate}>
+                <Input
+                  type="date"
+                  value={formData.driverLicenseIssuingDate}
+                  onChange={(e) => handleInputChange('driverLicenseIssuingDate', e.target.value)}
+                  error={errors.driverLicenseIssuingDate}
+                />
+              </FormField>
+              <FormField label="Driver License Issuing Province" required={!!formData.driverLicenseNumber} error={errors.driverLicenseIssuingProvince}>
+                <Input
+                  value={formData.driverLicenseIssuingProvince}
+                  onChange={(e) => handleInputChange('driverLicenseIssuingProvince', e.target.value)}
+                  error={errors.driverLicenseIssuingProvince}
+                />
+              </FormField>
+              <FormField label="Driver License Issuing Municipality" required={!!formData.driverLicenseNumber} error={errors.driverLicenseIssuingMunicipality}>
+                <Input
+                  value={formData.driverLicenseIssuingMunicipality}
+                  onChange={(e) => handleInputChange('driverLicenseIssuingMunicipality', e.target.value)}
+                  error={errors.driverLicenseIssuingMunicipality}
+                />
+              </FormField>
+            </div>
           </div>
 
           <div className="pt-6" style={{ borderTop: '1px solid var(--border-subtle)' }}>
