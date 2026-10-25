@@ -5,7 +5,7 @@ import { SettingsProvider } from './contexts/SettingsContext';
 import Layout from './components/Layout';
 import LoginPage from './pages/LoginPage';
 import Dashboard from './pages/Dashboard';
-import Employees from './pages/Employees';
+import EmployeeWizard from './pages/EmployeeWizard';
 import EmployeesProfiles from './pages/EmployeesProfiles';
 import EmployeesList from './pages/EmployeesList';
 import Departments from './pages/Departments';
@@ -45,7 +45,7 @@ function AppRoutes() {
         </ProtectedRoute>
       }>
         <Route index element={<Dashboard />} />
-        <Route path="employees" element={<Employees />} />
+        <Route path="employees" element={<EmployeeWizard />} />
         <Route path="employees/list" element={<EmployeesList />} />
         <Route path="employees/profiles" element={<EmployeesProfiles />} />
         <Route path="departments" element={<Departments />} />
