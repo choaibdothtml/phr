@@ -898,110 +898,107 @@ export default function EmployeeWizard() {
   };
 
   return (
-    <div className="h-full flex">
-      {/* Left Sidebar - Step Navigation */}
-      <div className="w-72 flex-shrink-0 p-6" style={{ background: 'var(--bg-sidebar)', borderRight: '1px solid var(--border-color)' }}>
-        <h2 className="font-display text-xl font-bold mb-8" style={{ color: 'var(--text-primary)' }}>
-          Add New Employee
-        </h2>
-        <div className="space-y-2">
-          {steps.map((step, index) => {
-            const Icon = step.icon;
-            const isActive = currentStep === index;
-            const isCompleted = index < currentStep;
-            
-            return (
-              <button
-                key={step.id}
-                onClick={() => setCurrentStep(index)}
-                className="w-full flex items-center gap-3 p-4 rounded-xl transition-all"
-                style={{
-                  background: isActive ? 'rgba(var(--primary-color-rgb), 0.1)' : 'transparent',
-                }}
-              >
-                <div
-                  className="flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center transition-all"
+    <div className="h-full overflow-y-auto">
+      <div className="max-w-7xl mx-auto p-8">
+        <div className="mb-8">
+          <h2 className="font-display text-2xl font-bold mb-2" style={{ color: 'var(--text-primary)' }}>
+            Add New Employee
+          </h2>
+          <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+            Step {currentStep + 1} of {steps.length}
+          </p>
+        </div>
+
+        <div className="flex gap-6">
+          {/* Step Navigation - Left of Form */}
+          <div className="w-64 flex-shrink-0 space-y-2">
+            {steps.map((step, index) => {
+              const Icon = step.icon;
+              const isActive = currentStep === index;
+              const isCompleted = index < currentStep;
+              
+              return (
+                <button
+                  key={step.id}
+                  onClick={() => setCurrentStep(index)}
+                  className="w-full flex items-center gap-3 p-4 rounded-xl transition-all"
                   style={{
-                    background: isActive || isCompleted ? 'var(--gradient-primary)' : 'var(--bg-tertiary)',
+                    background: isActive ? 'rgba(var(--primary-color-rgb), 0.1)' : 'transparent',
                   }}
                 >
-                  <Icon className="w-5 h-5" style={{ color: isActive || isCompleted ? 'white' : 'var(--text-tertiary)' }} />
-                </div>
-                <div className="flex-1 text-left">
-                  <p className="text-sm font-semibold" style={{ color: isActive ? 'var(--text-primary)' : 'var(--text-secondary)' }}>
-                    {step.label}
-                  </p>
-                  {isCompleted && (
-                    <p className="text-xs mt-0.5" style={{ color: 'var(--text-tertiary)' }}>Completed</p>
-                  )}
-                </div>
-              </button>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* Right Content - Form */}
-      <div className="flex-1 overflow-y-auto">
-        <div className="max-w-4xl mx-auto p-8">
-          <div className="mb-8">
-            <h3 className="font-display text-2xl font-bold mb-2" style={{ color: 'var(--text-primary)' }}>
-              {steps[currentStep].label}
-            </h3>
-            <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
-              Step {currentStep + 1} of {steps.length}
-            </p>
-          </div>
-          
-          <div className="glass-card p-8">
-            {renderStepContent()}
+                  <div
+                    className="flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center transition-all"
+                    style={{
+                      background: isActive || isCompleted ? 'var(--gradient-primary)' : 'var(--bg-tertiary)',
+                    }}
+                  >
+                    <Icon className="w-5 h-5" style={{ color: isActive || isCompleted ? 'white' : 'var(--text-tertiary)' }} />
+                  </div>
+                  <div className="flex-1 text-left">
+                    <p className="text-sm font-semibold" style={{ color: isActive ? 'var(--text-primary)' : 'var(--text-secondary)' }}>
+                      {step.label}
+                    </p>
+                    {isCompleted && (
+                      <p className="text-xs mt-0.5" style={{ color: 'var(--text-tertiary)' }}>Completed</p>
+                    )}
+                  </div>
+                </button>
+              );
+            })}
           </div>
 
-          {/* Navigation Buttons */}
-          <div className="flex justify-between mt-8">
-            <button
-              onClick={handlePrevious}
-              disabled={currentStep === 0}
-              className="px-6 py-3 rounded-xl text-sm font-semibold transition-all hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
-              style={{ 
-                background: 'var(--bg-tertiary)',
-                border: '1px solid var(--border-color)',
-                color: 'var(--text-secondary)'
-              }}
-            >
-              Previous
-            </button>
-            
-            <div className="flex gap-3">
+          {/* Form Content - Right Side */}
+          <div className="flex-1">
+            <div className="glass-card p-8">
+              {renderStepContent()}
+            </div>
+
+            {/* Navigation Buttons */}
+            <div className="flex justify-between mt-8">
               <button
-                onClick={handleReset}
-                className="px-6 py-3 rounded-xl text-sm font-semibold transition-all hover:scale-105"
+                onClick={handlePrevious}
+                disabled={currentStep === 0}
+                className="px-6 py-3 rounded-xl text-sm font-semibold transition-all hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
                 style={{ 
                   background: 'var(--bg-tertiary)',
                   border: '1px solid var(--border-color)',
                   color: 'var(--text-secondary)'
                 }}
               >
-                Reset Fields
+                Previous
               </button>
               
-              {currentStep < steps.length - 1 ? (
+              <div className="flex gap-3">
                 <button
-                  onClick={handleNext}
-                  className="px-6 py-3 rounded-xl text-white text-sm font-semibold transition-all hover:scale-105 hover:shadow-lg"
-                  style={{ background: 'var(--gradient-primary)' }}
+                  onClick={handleReset}
+                  className="px-6 py-3 rounded-xl text-sm font-semibold transition-all hover:scale-105"
+                  style={{ 
+                    background: 'var(--bg-tertiary)',
+                    border: '1px solid var(--border-color)',
+                    color: 'var(--text-secondary)'
+                  }}
                 >
-                  Next
+                  Reset Fields
                 </button>
-              ) : (
-                <button
-                  onClick={handleSubmit}
-                  className="px-6 py-3 rounded-xl text-white text-sm font-semibold transition-all hover:scale-105 hover:shadow-lg"
-                  style={{ background: 'var(--gradient-primary)' }}
-                >
-                  Add Employee
-                </button>
-              )}
+                
+                {currentStep < steps.length - 1 ? (
+                  <button
+                    onClick={handleNext}
+                    className="px-6 py-3 rounded-xl text-white text-sm font-semibold transition-all hover:scale-105 hover:shadow-lg"
+                    style={{ background: 'var(--gradient-primary)' }}
+                  >
+                    Next
+                  </button>
+                ) : (
+                  <button
+                    onClick={handleSubmit}
+                    className="px-6 py-3 rounded-xl text-white text-sm font-semibold transition-all hover:scale-105 hover:shadow-lg"
+                    style={{ background: 'var(--gradient-primary)' }}
+                  >
+                    Add Employee
+                  </button>
+                )}
+              </div>
             </div>
           </div>
         </div>
