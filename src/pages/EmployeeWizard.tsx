@@ -950,9 +950,19 @@ export default function EmployeeWizard() {
 
           {/* Form Content - Right Side */}
           <div className="flex-1">
-            <div className="glass-card p-8">
-              {renderStepContent()}
-            </div>
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={currentStep}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.2 }}
+              >
+                <div className="glass-card p-8">
+                  {renderStepContent()}
+                </div>
+              </motion.div>
+            </AnimatePresence>
 
             {/* Navigation Buttons */}
             <div className="flex justify-between mt-8">
