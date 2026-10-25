@@ -221,6 +221,35 @@ body {
   background: rgba(var(--primary-color-rgb), 0.25);
 }
 
+/* Wizard step navigation hover */
+.wizard-step-btn {
+  transition: background-color 0.2s ease;
+}
+
+.wizard-step-btn:hover {
+  background-color: rgba(var(--primary-color-rgb), 0.08) !important;
+}
+
+.wizard-step-active {
+  background-color: rgba(var(--primary-color-rgb), 0.1) !important;
+}
+
+.wizard-step-active:hover {
+  background-color: rgba(var(--primary-color-rgb), 0.12) !important;
+}
+
+.dark .wizard-step-btn:hover {
+  background-color: rgba(var(--primary-color-rgb), 0.15) !important;
+}
+
+.dark .wizard-step-active {
+  background-color: rgba(var(--primary-color-rgb), 0.2) !important;
+}
+
+.dark .wizard-step-active:hover {
+  background-color: rgba(var(--primary-color-rgb), 0.25) !important;
+}
+
 /* Employee table row hover effect */
 .employee-row {
   transition: background-color 0.2s ease;

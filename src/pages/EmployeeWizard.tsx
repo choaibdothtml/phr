@@ -918,15 +918,16 @@ export default function EmployeeWizard() {
               const isCompleted = index < currentStep;
               
               return (
-                <button
-                  key={step.id}
-                  onClick={() => setCurrentStep(index)}
-                  className="w-full flex items-center gap-3 p-4 rounded-xl transition-all"
-                  style={{
-                    background: isActive ? 'rgba(var(--primary-color-rgb), 0.1)' : 'transparent',
-                  }}
-                >
-                  <div
+              <button
+                key={step.id}
+                onClick={() => setCurrentStep(index)}
+                className={`w-full flex items-center gap-3 p-4 rounded-xl transition-all wizard-step-btn ${
+                  isActive ? 'wizard-step-active' : ''
+                }`}
+                style={{
+                  background: isActive ? 'rgba(var(--primary-color-rgb), 0.1)' : 'transparent',
+                }}
+              >                  <div
                     className="flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center transition-all"
                     style={{
                       background: isActive || isCompleted ? 'var(--gradient-primary)' : 'var(--bg-tertiary)',
