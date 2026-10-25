@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Building2, Users, DollarSign, Landmark, Palette, Settings as SettingsIcon } from 'lucide-react';
+import { Building2, Users, DollarSign, Landmark, Palette, Key, Database, Settings as SettingsIcon } from 'lucide-react';
 import DepartmentsTab from './DepartmentsTab';
 import GroupsClassificationsTab from './GroupsClassificationsTab';
 import BasicSalariesTab from './BasicSalariesTab';
@@ -15,6 +15,8 @@ export default function Settings() {
     { id: 'salaries', label: 'Basic salaries', icon: DollarSign },
     { id: 'banks', label: 'Banks', icon: Landmark },
     { id: 'appearances', label: 'Appearances', icon: Palette },
+    { id: 'password', label: 'Change password', icon: Key },
+    { id: 'backup', label: 'Backup/Restore', icon: Database },
   ];
 
   return (
@@ -48,6 +50,8 @@ export default function Settings() {
         {activeTab === 'salaries' && <BasicSalariesTab />}
         {activeTab === 'banks' && <BanksTab />}
         {activeTab === 'appearances' && <AppearancesTab />}
+        {activeTab === 'password' && <div className="glass-card p-6"><p className="text-sm" style={{ color: 'var(--text-tertiary)' }}>Coming soon...</p></div>}
+        {activeTab === 'backup' && <div className="glass-card p-6"><p className="text-sm" style={{ color: 'var(--text-tertiary)' }}>Coming soon...</p></div>}
       </div>
     </div>
   );
