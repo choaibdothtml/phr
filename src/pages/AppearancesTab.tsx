@@ -84,8 +84,15 @@ export default function AppearancesTab() {
 
     const root = document.documentElement;
     
+    // Convert hex to RGB
+    const hex = primary.value.replace('#', '');
+    const r = parseInt(hex.substring(0, 2), 16);
+    const g = parseInt(hex.substring(2, 4), 16);
+    const b = parseInt(hex.substring(4, 6), 16);
+    
     // Apply primary color
     root.style.setProperty('--phoenix-500', primary.value);
+    root.style.setProperty('--primary-color-rgb', `${r}, ${g}, ${b}`);
     root.style.setProperty('--gradient-primary', primary.gradient || `linear-gradient(135deg, ${primary.value}, ${primary.value})`);
     root.style.setProperty('--gradient-accent', `linear-gradient(135deg, ${primary.value}, #d946ef)`);
     

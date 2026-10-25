@@ -64,6 +64,7 @@
   --gradient-mesh: radial-gradient(at 20% 80%, rgba(249, 115, 22, 0.08) 0%, transparent 50%),
                    radial-gradient(at 80% 20%, rgba(217, 70, 239, 0.06) 0%, transparent 50%),
                    radial-gradient(at 50% 50%, rgba(249, 115, 22, 0.03) 0%, transparent 70%);
+  --primary-color-rgb: 249, 115, 22;
 }
 
 .dark {
@@ -196,28 +197,28 @@ body {
 }
 
 .nav-item:hover {
-  background: rgba(249, 115, 22, 0.08);
+  background: rgba(var(--primary-color-rgb), 0.08);
 }
 
 .nav-item-active {
-  background: rgba(249, 115, 22, 0.1);
+  background: rgba(var(--primary-color-rgb), 0.1);
 }
 
 .nav-item-active:hover {
-  background: rgba(249, 115, 22, 0.12);
+  background: rgba(var(--primary-color-rgb), 0.12);
 }
 
 /* Dark mode adjustments */
 .dark .nav-item:hover {
-  background: rgba(249, 115, 22, 0.15);
+  background: rgba(var(--primary-color-rgb), 0.15);
 }
 
 .dark .nav-item-active {
-  background: rgba(249, 115, 22, 0.2);
+  background: rgba(var(--primary-color-rgb), 0.2);
 }
 
 .dark .nav-item-active:hover {
-  background: rgba(249, 115, 22, 0.25);
+  background: rgba(var(--primary-color-rgb), 0.25);
 }
 
 /* Employee table row hover effect */
@@ -226,12 +227,12 @@ body {
 }
 
 .employee-row:hover td:not([style*="position: sticky"]) {
-  background-color: rgba(249, 115, 22, 0.08) !important;
+  background-color: rgba(var(--primary-color-rgb), 0.08) !important;
 }
 
 /* Dark mode employee table row hover */
 .dark .employee-row:hover td:not([style*="position: sticky"]) {
-  background-color: rgba(249, 115, 22, 0.15) !important;
+  background-color: rgba(var(--primary-color-rgb), 0.15) !important;
 }
 
 /* Pulse dot animation */
