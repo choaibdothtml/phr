@@ -207,6 +207,7 @@ export default function EmployeesList() {
       'Employee Number': emp.employeeNumber,
       'Family Name': emp.lastName,
       'Name': emp.firstName,
+      'Existing/Departing': emp.status === 'active' ? 'Existing' : emp.status === 'terminated' ? 'Departing' : emp.status === 'on-leave' ? 'On Leave' : '',
       'Entry Date': emp.joinDate,
       'Job': emp.position,
       'Department': emp.department,
@@ -221,6 +222,7 @@ export default function EmployeesList() {
       'Address': emp.address || '',
       'ID Number': emp.idNumber || '',
       'Driver License Number': emp.driverLicenseNumber || '',
+      'NIN': emp.nationalIdNumber || '',
       'Gender': emp.gender || '',
       'Date of Birth': emp.dateOfBirth || '',
       'Province of Birth': emp.provinceOfBirth || '',
@@ -248,6 +250,7 @@ export default function EmployeesList() {
     { key: 'employeeNumber', label: "Employee's Number", width: 120 },
     { key: 'lastName', label: 'Family Name', width: 130 },
     { key: 'firstName', label: 'Name', width: 120 },
+    { key: 'status', label: 'Existing/Departing', width: 140 },
     { key: 'joinDate', label: 'Entry Date', width: 110 },
     { key: 'position', label: 'Job', width: 150 },
     { key: 'department', label: 'Department', width: 140 },
@@ -262,6 +265,7 @@ export default function EmployeesList() {
     { key: 'address', label: 'Address', width: 200 },
     { key: 'idNumber', label: 'ID Number', width: 110 },
     { key: 'driverLicenseNumber', label: 'Driver License Number', width: 150 },
+    { key: 'nationalIdNumber', label: 'NIN', width: 160 },
     { key: 'gender', label: 'Gender', width: 100 },
     { key: 'dateOfBirth', label: 'Date of Birth', width: 120 },
     { key: 'provinceOfBirth', label: 'Province of Birth', width: 150 },
@@ -289,6 +293,12 @@ export default function EmployeesList() {
   const getCellValue = (emp: Employee, col: typeof columns[0]) => {
     if (col.label === 'Age') {
       return emp.dateOfBirth ? calculateAge(emp.dateOfBirth) : '-';
+    }
+    if (col.label === 'Existing/Departing') {
+      if (emp.status === 'active') return 'Existing';
+      if (emp.status === 'terminated') return 'Departing';
+      if (emp.status === 'on-leave') return 'On Leave';
+      return '-';
     }
     const val = emp[col.key];
     return val !== undefined && val !== null && val !== '' ? val : '-';

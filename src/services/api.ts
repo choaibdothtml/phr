@@ -38,6 +38,7 @@ export interface Employee {
   classification?: string;
   degree?: string;
   socialSecurityNumber?: string;
+  nationalIdNumber?: string;
   provinceOfResidency?: string;
   municipalityOfResidency?: string;
   address?: string;
