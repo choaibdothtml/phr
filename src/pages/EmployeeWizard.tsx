@@ -1027,7 +1027,7 @@ export default function EmployeeWizard() {
                 }}
                 disabled={!formData.dateOfBirth}
                 placeholder="xx xxxx xxxx xx"
-                maxLength={14}
+                maxLength={15}
                 error={errors.socialSecurityNumber}
                 className={!formData.dateOfBirth ? 'cursor-not-allowed opacity-60' : ''}
               />
