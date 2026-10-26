@@ -121,29 +121,17 @@ export default function EmployeeWizard() {
     }));
   }, []);
 
-  useEffect(() => {
-    if (formData.dateOfBirth) {
-      const today = new Date();
-      const birth = new Date(formData.dateOfBirth);
-      let age = today.getFullYear() - birth.getFullYear();
-      const monthDiff = today.getMonth() - birth.getMonth();
-      if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
-        age--;
-      }
-      
-      if (age < 18) {
-        setErrors(prev => ({ ...prev, dateOfBirth: 'Employee must be at least 18 years old' }));
-        setFormData(prev => ({ ...prev, age: '' }));
-      } else {
-        setErrors(prev => {
-          const newErrors = { ...prev };
-          delete newErrors.dateOfBirth;
-          return newErrors;
-        });
-        setFormData(prev => ({ ...prev, age: `${age} years old` }));
-      }
+  const calculateAge = (dateString: string) => {
+    if (!dateString) return '';
+    const today = new Date();
+    const birth = new Date(dateString);
+    let age = today.getFullYear() - birth.getFullYear();
+    const monthDiff = today.getMonth() - birth.getMonth();
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
+      age--;
     }
-  }, [formData.dateOfBirth]);
+    return `${age} years old`;
+  };
 
   useEffect(() => {
     if (formData.classification) {
@@ -539,6 +527,31 @@ export default function EmployeeWizard() {
                 onBlur={() => {
                   if (!formData.dateOfBirth) {
                     setErrors(prev => ({ ...prev, dateOfBirth: 'Required' }));
+                    setFormData(prev => ({ ...prev, age: '' }));
+                  } else {
+                    // Validate date format (dd/mm/yyyy)
+                    const dateRegex = /^\d{2}\/\d{2}\/\d{4}$/;
+                    if (!dateRegex.test(formData.dateOfBirth)) {
+                      setErrors(prev => ({ ...prev, dateOfBirth: 'Invalid date format. Use dd/mm/yyyy' }));
+                      setFormData(prev => ({ ...prev, age: '' }));
+                    } else {
+                      // Calculate age
+                      const ageText = calculateAge(formData.dateOfBirth);
+                      if (ageText) {
+                        const ageNum = parseInt(ageText);
+                        if (ageNum < 18) {
+                          setErrors(prev => ({ ...prev, dateOfBirth: 'Employee must be at least 18 years old' }));
+                          setFormData(prev => ({ ...prev, age: '' }));
+                        } else {
+                          setErrors(prev => {
+                            const newErrors = { ...prev };
+                            delete newErrors.dateOfBirth;
+                            return newErrors;
+                          });
+                          setFormData(prev => ({ ...prev, age: ageText }));
+                        }
+                      }
+                    }
                   }
                 }}
                 error={errors.dateOfBirth}
