@@ -834,7 +834,7 @@ export default function EmployeeWizard() {
       const savedJobTitles = localStorage.getItem('phoenix-hr-job-titles');
       const currentJobTitles = savedJobTitles ? JSON.parse(savedJobTitles) : [];
       
-      const savedDepartments = localStorage.getItem('phoenix-hr-departments');
+      const savedDepartments = localStorage.getItem('phoenix-hr-departments-custom');
       const currentDepartments = savedDepartments ? JSON.parse(savedDepartments) : [];
       
       return (
