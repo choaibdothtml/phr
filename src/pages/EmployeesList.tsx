@@ -85,11 +85,21 @@ export default function EmployeesList() {
   const { jobTitles, departments, groups, maxClassification } = useSettings();
 
   useEffect(() => {
-    api.employees.getAll().then(data => {
-      setEmployees(data);
-      setFilteredEmployees(data);
+    // Load employees from localStorage first
+    const savedEmployees = localStorage.getItem('phoenix-hr-employees');
+    if (savedEmployees) {
+      const employeesFromStorage = JSON.parse(savedEmployees);
+      setEmployees(employeesFromStorage);
+      setFilteredEmployees(employeesFromStorage);
       setLoading(false);
-    });
+    } else {
+      // Fallback to API if no localStorage data
+      api.employees.getAll().then(data => {
+        setEmployees(data);
+        setFilteredEmployees(data);
+        setLoading(false);
+      });
+    }
   }, []);
 
   // Calculate sticky column positions after render

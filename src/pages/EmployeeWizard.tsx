@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { X, Check, AlertCircle, User, MapPin, Phone, FileText, CreditCard, Building2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSettings } from '../contexts/SettingsContext';
+import { Employee } from '../services/api';
 
 interface FormData {
   employeeNumber: string;
@@ -502,7 +503,42 @@ export default function EmployeeWizard() {
     if (validateCurrentStep()) {
       const savedEmployees = localStorage.getItem('phoenix-hr-employees');
       const employees = savedEmployees ? JSON.parse(savedEmployees) : [];
-      employees.push(formData);
+      
+      // Transform FormData to Employee interface format
+      const newEmployee: Employee = {
+        id: Date.now().toString(),
+        employeeNumber: formData.employeeNumber,
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        email: formData.email,
+        phone: formData.phoneNumber,
+        department: formData.department,
+        position: formData.job,
+        group: formData.group,
+        joinDate: formData.entryDate,
+        status: 'active',
+        classification: formData.classification,
+        degree: formData.degree,
+        socialSecurityNumber: formData.socialSecurityNumber,
+        nationalIdNumber: formData.nationalIdNumber,
+        provinceOfResidency: formData.provinceOfResidency,
+        municipalityOfResidency: formData.municipalityOfResidency,
+        address: formData.homeAddress,
+        idNumber: formData.idNumber,
+        driverLicenseNumber: formData.driverLicenseNumber,
+        gender: formData.gender as 'Male' | 'Female' | 'Other',
+        dateOfBirth: formData.dateOfBirth,
+        provinceOfBirth: formData.provinceOfBirth,
+        municipalityOfBirth: formData.municipalityOfBirth,
+        situation: formData.situation as 'Single' | 'Married' | 'Divorced' | 'Widowed',
+        numberOfKids: parseInt(formData.numberOfKids) || 0,
+        bloodType: formData.bloodType,
+        chronicDiseases: formData.chronicDiseases,
+        bankName: formData.bankName,
+        accountNumber: formData.accountNumber,
+      };
+      
+      employees.push(newEmployee);
       localStorage.setItem('phoenix-hr-employees', JSON.stringify(employees));
       
       setShowSuccessModal(true);

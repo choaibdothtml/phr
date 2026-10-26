@@ -39,8 +39,12 @@ export default function EmployeesProfiles() {
   const navigationSource = localStorage.getItem('employeesListFrom');
 
   useEffect(() => {
-    api.employees.getAll().then(data => {
-      setEmployees(data);
+    // Load employees from localStorage first
+    const savedEmployees = localStorage.getItem('phoenix-hr-employees');
+    
+    if (savedEmployees) {
+      const employeeData = JSON.parse(savedEmployees);
+      setEmployees(employeeData);
       setLoading(false);
       
       // If coming from list with employee data, auto-fill profile
@@ -55,7 +59,26 @@ export default function EmployeesProfiles() {
           group: emp.group,
         });
       }
-    });
+    } else {
+      // Fallback to API if no localStorage data
+      api.employees.getAll().then(data => {
+        setEmployees(data);
+        setLoading(false);
+        
+        // If coming from list with employee data, auto-fill profile
+        if (location.state?.employee) {
+          const emp = location.state.employee;
+          setProfile({
+            employeeNumber: emp.employeeNumber,
+            lastName: emp.lastName,
+            firstName: emp.firstName,
+            position: emp.position,
+            department: emp.department,
+            group: emp.group,
+          });
+        }
+      });
+    }
   }, [location.state]);
 
   const handleGoBack = () => {
