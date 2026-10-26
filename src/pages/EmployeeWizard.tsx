@@ -50,10 +50,10 @@ interface FormErrors {
 }
 
 const steps = [
-  { id: 'personal', label: 'Personal Info', icon: User },
+  { id: 'personal', label: 'Personal info', icon: User },
   { id: 'address', label: 'Address', icon: MapPin },
   { id: 'emergency', label: 'Emergency', icon: Phone },
-  { id: 'job', label: 'Job Details', icon: FileText },
+  { id: 'job', label: 'Job details', icon: FileText },
   { id: 'identification', label: 'Identification', icon: CreditCard },
   { id: 'payment', label: 'Payment', icon: Building2 },
 ];
@@ -491,7 +491,7 @@ export default function EmployeeWizard() {
       return (
         <div className="space-y-6">
           <div className="grid grid-cols-2 gap-6">
-            <FormField label="Employee Number">
+            <FormField label="Employee number">
               <Input value={formData.employeeNumber} readOnly className="cursor-not-allowed opacity-60" />
             </FormField>
             <FormField label="Gender" required error={errors.gender}>
@@ -504,7 +504,7 @@ export default function EmployeeWizard() {
           </div>
 
           <div className="grid grid-cols-2 gap-6">
-            <FormField label="Family Name" required error={errors.lastName}>
+            <FormField label="Family name" required error={errors.lastName}>
               <Input
                 value={formData.lastName}
                 onChange={(e) => handleInputChange('lastName', e.target.value)}
@@ -521,7 +521,7 @@ export default function EmployeeWizard() {
           </div>
 
           <div className="grid grid-cols-2 gap-6">
-            <FormField label="Date of Birth" required error={errors.dateOfBirth}>
+            <FormField label="Date of birth" required error={errors.dateOfBirth}>
               <Input
                 type="date"
                 value={formData.dateOfBirth}
@@ -538,14 +538,14 @@ export default function EmployeeWizard() {
           </div>
 
           <div className="grid grid-cols-2 gap-6">
-            <FormField label="Province of Birth" required error={errors.provinceOfBirth}>
+            <FormField label="Province of birth" required error={errors.provinceOfBirth}>
               <Input
                 value={formData.provinceOfBirth}
                 onChange={(e) => handleInputChange('provinceOfBirth', e.target.value)}
                 error={errors.provinceOfBirth}
               />
             </FormField>
-            <FormField label="Municipality of Birth" required error={errors.municipalityOfBirth}>
+            <FormField label="Municipality of birth" required error={errors.municipalityOfBirth}>
               <Input
                 value={formData.municipalityOfBirth}
                 onChange={(e) => handleInputChange('municipalityOfBirth', e.target.value)}
@@ -555,7 +555,7 @@ export default function EmployeeWizard() {
           </div>
 
           <div className="grid grid-cols-2 gap-6">
-            <FormField label="Phone Number" required error={errors.phoneNumber}>
+            <FormField label="Phone number" required error={errors.phoneNumber}>
               <Input
                 value={formData.phoneNumber}
                 onChange={(e) => handleInputChange('phoneNumber', e.target.value)}
@@ -564,7 +564,7 @@ export default function EmployeeWizard() {
                 error={errors.phoneNumber}
               />
             </FormField>
-            <FormField label="Email Address" error={errors.email}>
+            <FormField label="Email address" error={errors.email}>
               <Input
                 type="email"
                 value={formData.email}
@@ -604,7 +604,7 @@ export default function EmployeeWizard() {
     if (step === 'address') {
       return (
         <div className="space-y-6">
-          <FormField label="Home Address" required error={errors.homeAddress}>
+          <FormField label="Home address" required error={errors.homeAddress}>
             <Textarea
               value={formData.homeAddress}
               onChange={(e) => handleInputChange('homeAddress', e.target.value)}
@@ -614,14 +614,14 @@ export default function EmployeeWizard() {
           </FormField>
 
           <div className="grid grid-cols-2 gap-6">
-            <FormField label="Province of Residency" required error={errors.provinceOfResidency}>
+            <FormField label="Province of residency" required error={errors.provinceOfResidency}>
               <Input
                 value={formData.provinceOfResidency}
                 onChange={(e) => handleInputChange('provinceOfResidency', e.target.value)}
                 error={errors.provinceOfResidency}
               />
             </FormField>
-            <FormField label="Municipality of Residency" required error={errors.municipalityOfResidency}>
+            <FormField label="Municipality of residency" required error={errors.municipalityOfResidency}>
               <Input
                 value={formData.municipalityOfResidency}
                 onChange={(e) => handleInputChange('municipalityOfResidency', e.target.value)}
@@ -636,7 +636,7 @@ export default function EmployeeWizard() {
     if (step === 'emergency') {
       return (
         <div className="space-y-6">
-          <FormField label="Person to Contact in Case of Emergency" required error={errors.emergencyContactName}>
+          <FormField label="Person to contact in case of emergency" required error={errors.emergencyContactName}>
             <Input
               value={formData.emergencyContactName}
               onChange={(e) => handleInputChange('emergencyContactName', e.target.value)}
@@ -645,7 +645,7 @@ export default function EmployeeWizard() {
           </FormField>
 
           <div className="grid grid-cols-2 gap-6">
-            <FormField label="Phone Number to Call" required error={errors.emergencyContactPhone}>
+            <FormField label="Phone number to call" required error={errors.emergencyContactPhone}>
               <Input
                 value={formData.emergencyContactPhone}
                 onChange={(e) => handleInputChange('emergencyContactPhone', e.target.value)}
@@ -670,7 +670,7 @@ export default function EmployeeWizard() {
           </div>
 
           <div className="grid grid-cols-2 gap-6">
-            <FormField label="Blood Type" required error={errors.bloodType}>
+            <FormField label="Blood type" required error={errors.bloodType}>
               <Select value={formData.bloodType} onChange={(e) => handleInputChange('bloodType', e.target.value)} error={errors.bloodType}>
                 <option value="">Select blood type</option>
                 <option value="A+">A+</option>
@@ -685,7 +685,7 @@ export default function EmployeeWizard() {
             </FormField>
           </div>
 
-          <FormField label="Chronic Diseases">
+          <FormField label="Chronic diseases">
             <Textarea
               value={formData.chronicDiseases}
               onChange={(e) => handleInputChange('chronicDiseases', e.target.value)}
@@ -705,7 +705,7 @@ export default function EmployeeWizard() {
       
       return (
         <div className="space-y-6">
-          <FormField label="Entry Date" required error={errors.entryDate}>
+          <FormField label="Entry date" required error={errors.entryDate}>
             <Input
               type="date"
               value={formData.entryDate}
@@ -765,7 +765,7 @@ export default function EmployeeWizard() {
             </p>
           </div>
 
-          <FormField label="National ID Number (NIN)" required error={errors.nationalIdNumber}>
+          <FormField label="National ID number (NIN)" required error={errors.nationalIdNumber}>
             <Input
               value={formData.nationalIdNumber}
               onChange={(e) => handleInputChange('nationalIdNumber', e.target.value)}
@@ -776,7 +776,7 @@ export default function EmployeeWizard() {
           </FormField>
 
           <div className="pt-6" style={{ borderTop: '1px solid var(--border-subtle)' }}>
-            <FormField label="ID Number" error={errors.idNumber}>
+            <FormField label="ID number" error={errors.idNumber}>
               <Input
                 value={formData.idNumber}
                 onChange={(e) => handleInputChange('idNumber', e.target.value)}
@@ -785,7 +785,7 @@ export default function EmployeeWizard() {
             </FormField>
 
             <div className="grid grid-cols-3 gap-6 mt-6">
-              <FormField label="ID Issuing Date" required={!!formData.idNumber} error={errors.idIssuingDate}>
+              <FormField label="ID issuing date" required={!!formData.idNumber} error={errors.idIssuingDate}>
                 <Input
                   type="date"
                   value={formData.idIssuingDate}
@@ -793,14 +793,14 @@ export default function EmployeeWizard() {
                   error={errors.idIssuingDate}
                 />
               </FormField>
-              <FormField label="ID Issuing Province" required={!!formData.idNumber} error={errors.idIssuingProvince}>
+              <FormField label="ID issuing province" required={!!formData.idNumber} error={errors.idIssuingProvince}>
                 <Input
                   value={formData.idIssuingProvince}
                   onChange={(e) => handleInputChange('idIssuingProvince', e.target.value)}
                   error={errors.idIssuingProvince}
                 />
               </FormField>
-              <FormField label="ID Issuing Municipality" required={!!formData.idNumber} error={errors.idIssuingMunicipality}>
+              <FormField label="ID issuing municipality" required={!!formData.idNumber} error={errors.idIssuingMunicipality}>
                 <Input
                   value={formData.idIssuingMunicipality}
                   onChange={(e) => handleInputChange('idIssuingMunicipality', e.target.value)}
@@ -811,7 +811,7 @@ export default function EmployeeWizard() {
           </div>
 
           <div className="pt-6" style={{ borderTop: '1px solid var(--border-subtle)' }}>
-            <FormField label="Driver License Number" error={errors.driverLicenseNumber}>
+            <FormField label="Driver license number" error={errors.driverLicenseNumber}>
               <Input
                 value={formData.driverLicenseNumber}
                 onChange={(e) => handleInputChange('driverLicenseNumber', e.target.value)}
@@ -821,7 +821,7 @@ export default function EmployeeWizard() {
             </FormField>
 
             <div className="grid grid-cols-3 gap-6 mt-6">
-              <FormField label="Driver License Issuing Date" required={!!formData.driverLicenseNumber} error={errors.driverLicenseIssuingDate}>
+              <FormField label="Driver license issuing date" required={!!formData.driverLicenseNumber} error={errors.driverLicenseIssuingDate}>
                 <Input
                   type="date"
                   value={formData.driverLicenseIssuingDate}
@@ -829,14 +829,14 @@ export default function EmployeeWizard() {
                   error={errors.driverLicenseIssuingDate}
                 />
               </FormField>
-              <FormField label="Driver License Issuing Province" required={!!formData.driverLicenseNumber} error={errors.driverLicenseIssuingProvince}>
+              <FormField label="Driver license issuing province" required={!!formData.driverLicenseNumber} error={errors.driverLicenseIssuingProvince}>
                 <Input
                   value={formData.driverLicenseIssuingProvince}
                   onChange={(e) => handleInputChange('driverLicenseIssuingProvince', e.target.value)}
                   error={errors.driverLicenseIssuingProvince}
                 />
               </FormField>
-              <FormField label="Driver License Issuing Municipality" required={!!formData.driverLicenseNumber} error={errors.driverLicenseIssuingMunicipality}>
+              <FormField label="Driver license issuing municipality" required={!!formData.driverLicenseNumber} error={errors.driverLicenseIssuingMunicipality}>
                 <Input
                   value={formData.driverLicenseIssuingMunicipality}
                   onChange={(e) => handleInputChange('driverLicenseIssuingMunicipality', e.target.value)}
@@ -847,7 +847,7 @@ export default function EmployeeWizard() {
           </div>
 
           <div className="pt-6" style={{ borderTop: '1px solid var(--border-subtle)' }}>
-            <FormField label="Social Security Number" required error={errors.socialSecurityNumber}>
+            <FormField label="Social security number" required error={errors.socialSecurityNumber}>
               <Input
                 value={formData.socialSecurityNumber}
                 onChange={(e) => handleInputChange('socialSecurityNumber', e.target.value)}
@@ -865,7 +865,7 @@ export default function EmployeeWizard() {
     if (step === 'payment') {
       return (
         <div className="space-y-6">
-          <FormField label="Bank Name" required error={errors.bankName}>
+          <FormField label="Bank name" required error={errors.bankName}>
             <Select value={formData.bankName} onChange={(e) => handleInputChange('bankName', e.target.value)} error={errors.bankName}>
               <option value="">Select bank</option>
               {banks.map(bank => (
@@ -874,7 +874,7 @@ export default function EmployeeWizard() {
             </Select>
           </FormField>
 
-          <FormField label="Account Number" required error={errors.accountNumber}>
+          <FormField label="Account number" required error={errors.accountNumber}>
             <Input
               value={formData.accountNumber}
               onChange={(e) => handleInputChange('accountNumber', e.target.value)}
