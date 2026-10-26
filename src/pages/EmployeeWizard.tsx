@@ -560,7 +560,7 @@ export default function EmployeeWizard() {
                 value={formData.phoneNumber}
                 onChange={(e) => handleInputChange('phoneNumber', e.target.value)}
                 onBlur={() => handleBlur('phoneNumber')}
-                placeholder="05 06 07 08 09"
+                placeholder="xx xx xx xx xx"
                 error={errors.phoneNumber}
               />
             </FormField>
@@ -650,7 +650,7 @@ export default function EmployeeWizard() {
                 value={formData.emergencyContactPhone}
                 onChange={(e) => handleInputChange('emergencyContactPhone', e.target.value)}
                 onBlur={() => handleBlur('emergencyContactPhone')}
-                placeholder="05 06 07 08 09"
+                placeholder="xx xx xx xx xx"
                 error={errors.emergencyContactPhone}
               />
             </FormField>
@@ -770,6 +770,7 @@ export default function EmployeeWizard() {
               value={formData.nationalIdNumber}
               onChange={(e) => handleInputChange('nationalIdNumber', e.target.value)}
               onBlur={() => handleBlur('nationalIdNumber')}
+              placeholder="xxxxxxxxxxxxxxxxxx"
               maxLength={18}
               error={errors.nationalIdNumber}
             />
@@ -852,7 +853,7 @@ export default function EmployeeWizard() {
                 value={formData.socialSecurityNumber}
                 onChange={(e) => handleInputChange('socialSecurityNumber', e.target.value)}
                 onBlur={() => handleBlur('socialSecurityNumber')}
-                placeholder="95 1234 5678 90"
+                placeholder="xx xxxx xxxx xx"
                 maxLength={14}
                 error={errors.socialSecurityNumber}
               />
@@ -880,7 +881,7 @@ export default function EmployeeWizard() {
               onChange={(e) => handleInputChange('accountNumber', e.target.value)}
               onBlur={() => handleBlur('accountNumber')}
               disabled={!formData.bankName}
-              placeholder="123 45678 123456789012"
+              placeholder="xxx xxxxx xxxxxxxxxxxx"
               maxLength={23}
               error={errors.accountNumber}
               className={!formData.bankName ? 'cursor-not-allowed opacity-60' : ''}
