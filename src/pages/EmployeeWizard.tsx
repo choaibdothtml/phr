@@ -58,6 +58,66 @@ const steps = [
   { id: 'payment', label: 'Payment', icon: Building2 },
 ];
 
+// Helper components - defined outside to prevent re-creation on every render
+const FormField = ({ label, required = false, error, children }: { label: string; required?: boolean; error?: string; children: React.ReactNode }) => (
+  <div className="space-y-2">
+    <label className="block text-sm font-medium" style={{ color: 'var(--text-primary)' }}>
+      {label} {required && <span className="text-red-500">*</span>}
+    </label>
+    {children}
+    {error && (
+      <p className="text-xs text-red-500 flex items-center gap-1">
+        <AlertCircle className="w-3 h-3" />
+        {error}
+      </p>
+    )}
+  </div>
+);
+
+const Input = ({ error, ...props }: { error?: string; [key: string]: any }) => (
+  <input
+    {...props}
+    className={`w-full px-4 py-2.5 rounded-xl text-sm outline-none transition-all focus:ring-2 focus:ring-phoenix-500/30 ${
+      error ? 'border-red-500' : ''
+    }`}
+    style={{ 
+      background: 'var(--bg-tertiary)', 
+      border: `1px solid ${error ? '#ef4444' : 'var(--border-color)'}`, 
+      color: 'var(--text-primary)' 
+    }}
+  />
+);
+
+const Select = ({ error, children, ...props }: { error?: string; children: React.ReactNode; [key: string]: any }) => (
+  <select
+    {...props}
+    className={`w-full px-4 py-2.5 rounded-xl text-sm outline-none cursor-pointer transition-all focus:ring-2 focus:ring-phoenix-500/30 ${
+      error ? 'border-red-500' : ''
+    }`}
+    style={{ 
+      background: 'var(--bg-tertiary)', 
+      border: `1px solid ${error ? '#ef4444' : 'var(--border-color)'}`, 
+      color: 'var(--text-primary)' 
+    }}
+  >
+    {children}
+  </select>
+);
+
+const Textarea = ({ error, ...props }: { error?: string; [key: string]: any }) => (
+  <textarea
+    {...props}
+    className={`w-full px-4 py-2.5 rounded-xl text-sm outline-none transition-all focus:ring-2 focus:ring-phoenix-500/30 resize-none ${
+      error ? 'border-red-500' : ''
+    }`}
+    style={{ 
+      background: 'var(--bg-tertiary)', 
+      border: `1px solid ${error ? '#ef4444' : 'var(--border-color)'}`, 
+      color: 'var(--text-primary)' 
+    }}
+  />
+);
+
 export default function EmployeeWizard() {
   const { jobTitles, departments } = useSettings();
   const [currentStep, setCurrentStep] = useState(0);
@@ -411,65 +471,6 @@ export default function EmployeeWizard() {
     setErrors({});
     setCurrentStep(0);
   };
-
-  const FormField = ({ label, required = false, error, children }: { label: string; required?: boolean; error?: string; children: React.ReactNode }) => (
-    <div className="space-y-2">
-      <label className="block text-sm font-medium" style={{ color: 'var(--text-primary)' }}>
-        {label} {required && <span className="text-red-500">*</span>}
-      </label>
-      {children}
-      {error && (
-        <p className="text-xs text-red-500 flex items-center gap-1">
-          <AlertCircle className="w-3 h-3" />
-          {error}
-        </p>
-      )}
-    </div>
-  );
-
-  const Input = ({ error, ...props }: { error?: string; [key: string]: any }) => (
-    <input
-      {...props}
-      className={`w-full px-4 py-2.5 rounded-xl text-sm outline-none transition-all focus:ring-2 focus:ring-phoenix-500/30 ${
-        error ? 'border-red-500' : ''
-      }`}
-      style={{ 
-        background: 'var(--bg-tertiary)', 
-        border: `1px solid ${error ? '#ef4444' : 'var(--border-color)'}`, 
-        color: 'var(--text-primary)' 
-      }}
-    />
-  );
-
-  const Select = ({ error, children, ...props }: { error?: string; children: React.ReactNode; [key: string]: any }) => (
-    <select
-      {...props}
-      className={`w-full px-4 py-2.5 rounded-xl text-sm outline-none cursor-pointer transition-all focus:ring-2 focus:ring-phoenix-500/30 ${
-        error ? 'border-red-500' : ''
-      }`}
-      style={{ 
-        background: 'var(--bg-tertiary)', 
-        border: `1px solid ${error ? '#ef4444' : 'var(--border-color)'}`, 
-        color: 'var(--text-primary)' 
-      }}
-    >
-      {children}
-    </select>
-  );
-
-  const Textarea = ({ error, ...props }: { error?: string; [key: string]: any }) => (
-    <textarea
-      {...props}
-      className={`w-full px-4 py-2.5 rounded-xl text-sm outline-none transition-all focus:ring-2 focus:ring-phoenix-500/30 resize-none ${
-        error ? 'border-red-500' : ''
-      }`}
-      style={{ 
-        background: 'var(--bg-tertiary)', 
-        border: `1px solid ${error ? '#ef4444' : 'var(--border-color)'}`, 
-        color: 'var(--text-primary)' 
-      }}
-    />
-  );
 
   const renderStepContent = () => {
     const step = steps[currentStep].id;
