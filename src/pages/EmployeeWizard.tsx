@@ -545,6 +545,58 @@ export default function EmployeeWizard() {
     }
   };
 
+  const handleCloseSuccess = () => {
+    setShowSuccessModal(false);
+    setCurrentStep(0);
+    setErrors({});
+    
+    // Generate new employee number
+    const savedEmployees = localStorage.getItem('phoenix-hr-employees');
+    const employees = savedEmployees ? JSON.parse(savedEmployees) : [];
+    const nextNumber = employees.length + 1;
+    
+    setFormData({
+      employeeNumber: String(nextNumber).padStart(4, '0'),
+      lastName: '',
+      firstName: '',
+      gender: '',
+      dateOfBirth: '',
+      age: '',
+      provinceOfBirth: '',
+      municipalityOfBirth: '',
+      phoneNumber: '',
+      email: '',
+      situation: '',
+      numberOfKids: '',
+      homeAddress: '',
+      provinceOfResidency: '',
+      municipalityOfResidency: '',
+      emergencyContactName: '',
+      emergencyContactPhone: '',
+      emergencyContactRelationship: '',
+      bloodType: '',
+      chronicDiseases: '',
+      entryDate: '',
+      job: '',
+      classification: '',
+      degree: '',
+      group: '',
+      department: '',
+      nationalIdNumber: '',
+      idNumber: '',
+      idIssuingDate: '',
+      idIssuingProvince: '',
+      idIssuingMunicipality: '',
+      driverLicenseNumber: '',
+      driverLicenseIssuingDate: '',
+      driverLicenseIssuingProvince: '',
+      driverLicenseIssuingMunicipality: '',
+      socialSecurityNumber: '',
+      bankName: '',
+      accountNumber: '',
+    });
+  };
+
   const handleReset = () => {
     setFormData({
       employeeNumber: formData.employeeNumber,
@@ -1227,6 +1279,7 @@ export default function EmployeeWizard() {
               transition={{ duration: 0.2 }}
               className="fixed inset-0 z-50"
               style={{ background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)' }}
+              onClick={handleCloseSuccess}
             />
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
@@ -1237,7 +1290,7 @@ export default function EmployeeWizard() {
             >
               <div className="glass-card p-8 max-w-md w-full" style={{ background: 'var(--bg-card)' }}>
                 <button
-                  onClick={() => setShowSuccessModal(false)}
+                  onClick={handleCloseSuccess}
                   className="absolute top-4 right-4 w-8 h-8 rounded-lg flex items-center justify-center hover:bg-[var(--bg-tertiary)]"
                 >
                   <X className="w-4 h-4" style={{ color: 'var(--text-secondary)' }} />
