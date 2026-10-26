@@ -558,7 +558,7 @@ export default function EmployeesList() {
         <div className="overflow-auto flex-1 h-full">
           <table className="border-collapse" style={{ height: '100%' }}>
             <thead>
-              <tr style={{ height: '40px' }}>
+              <tr>
                 {columns.map((col, idx) => (
                   <th
                     key={`${col.key}-${idx}`}
@@ -570,6 +570,8 @@ export default function EmployeesList() {
                       background: idx < 3 ? 'var(--bg-solid-primary)' : 'var(--bg-card)',
                       borderBottom: '2px solid var(--border-color)',
                       left: idx < 3 ? `${stickyColumnPositions[idx]}px` : undefined,
+                      height: '40px',
+                      lineHeight: '1.2',
                     }}
                     onClick={() => handleSort(col.key)}
                   >
@@ -588,7 +590,6 @@ export default function EmployeesList() {
                 sortedEmployees.map((emp, rowIdx) => (
                   <tr 
                     key={emp.id} 
-                    style={{ height: '27px' }}
                     className="transition-colors employee-row cursor-pointer"
                     onDoubleClick={() => handleRowDoubleClick(emp)}
                   >
@@ -604,6 +605,8 @@ export default function EmployeesList() {
                           borderBottom: '1px solid var(--border-subtle)',
                           left: colIdx < 3 ? `${stickyColumnPositions[colIdx]}px` : undefined,
                           fontWeight: colIdx < 3 ? 500 : 400,
+                          height: '27px',
+                          lineHeight: '1.2',
                         }}
                       >
                         {getCellValue(emp, col)}
