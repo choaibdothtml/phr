@@ -183,15 +183,52 @@ export default function EmployeeWizard() {
 
   const calculateAge = (dateString: string) => {
     if (!dateString) return '';
+    
+    // Parse dd/mm/yyyy format
+    const parts = dateString.split('/');
+    if (parts.length !== 3) return '';
+    
+    const day = parseInt(parts[0], 10);
+    const month = parseInt(parts[1], 10) - 1; // Month is 0-indexed in JavaScript
+    const year = parseInt(parts[2], 10);
+    
+    if (isNaN(day) || isNaN(month) || isNaN(year)) return '';
+    
+    const birth = new Date(year, month, day);
     const today = new Date();
-    const birth = new Date(dateString);
+    
     let age = today.getFullYear() - birth.getFullYear();
     const monthDiff = today.getMonth() - birth.getMonth();
+    
     if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
       age--;
     }
+    
     return `${age} years old`;
   };
+
+  // Calculate age when dateOfBirth changes
+  useEffect(() => {
+    if (formData.dateOfBirth) {
+      const ageText = calculateAge(formData.dateOfBirth);
+      if (ageText) {
+        const ageNum = parseInt(ageText);
+        if (ageNum < 18) {
+          setErrors(prev => ({ ...prev, dateOfBirth: 'Employee must be at least 18 years old' }));
+          setFormData(prev => ({ ...prev, age: '' }));
+        } else {
+          setErrors(prev => {
+            const newErrors = { ...prev };
+            delete newErrors.dateOfBirth;
+            return newErrors;
+          });
+          setFormData(prev => ({ ...prev, age: ageText }));
+        }
+      }
+    } else {
+      setFormData(prev => ({ ...prev, age: '' }));
+    }
+  }, [formData.dateOfBirth]);
 
   useEffect(() => {
     if (formData.classification) {
@@ -528,30 +565,11 @@ export default function EmployeeWizard() {
                 onBlur={() => {
                   if (!formData.dateOfBirth) {
                     setErrors(prev => ({ ...prev, dateOfBirth: 'Required' }));
-                    setFormData(prev => ({ ...prev, age: '' }));
                   } else {
                     // Validate date format (dd/mm/yyyy)
                     const dateRegex = /^\d{2}\/\d{2}\/\d{4}$/;
                     if (!dateRegex.test(formData.dateOfBirth)) {
                       setErrors(prev => ({ ...prev, dateOfBirth: 'Invalid date format. Use dd/mm/yyyy' }));
-                      setFormData(prev => ({ ...prev, age: '' }));
-                    } else {
-                      // Calculate age
-                      const ageText = calculateAge(formData.dateOfBirth);
-                      if (ageText) {
-                        const ageNum = parseInt(ageText);
-                        if (ageNum < 18) {
-                          setErrors(prev => ({ ...prev, dateOfBirth: 'Employee must be at least 18 years old' }));
-                          setFormData(prev => ({ ...prev, age: '' }));
-                        } else {
-                          setErrors(prev => {
-                            const newErrors = { ...prev };
-                            delete newErrors.dateOfBirth;
-                            return newErrors;
-                          });
-                          setFormData(prev => ({ ...prev, age: ageText }));
-                        }
-                      }
                     }
                   }
                 }}
