@@ -362,10 +362,14 @@ export default function EmployeeWizard() {
       if (numbers.length !== 12) return 'Social security number must be 12 digits';
       
       if (formData.dateOfBirth) {
-        const birthYear = new Date(formData.dateOfBirth).getFullYear();
-        const yearDigits = String(birthYear).slice(-2);
-        if (!numbers.startsWith(yearDigits)) {
-          return `First 2 digits must be ${yearDigits} (from birth year)`;
+        // Parse dd/mm/yyyy format correctly
+        const dateParts = formData.dateOfBirth.split('/');
+        if (dateParts.length === 3) {
+          const year = parseInt(dateParts[2], 10);
+          const yearDigits = String(year).slice(-2);
+          if (!numbers.startsWith(yearDigits)) {
+            return `First 2 digits must be ${yearDigits} (from birth year)`;
+          }
         }
       }
     }
