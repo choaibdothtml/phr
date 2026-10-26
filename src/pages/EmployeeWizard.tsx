@@ -846,10 +846,21 @@ export default function EmployeeWizard() {
           </FormField>
 
           <FormField label="Job" required error={errors.job}>
-            <Select value={formData.job} onChange={(e) => handleInputChange('job', e.target.value)} error={errors.job}>
+            <Select 
+              value={formData.job} 
+              onChange={(e) => {
+                handleInputChange('job', e.target.value);
+                // Auto-fill classification when job is selected
+                const selectedJob = currentJobTitles.find((j: any) => j.title === e.target.value);
+                if (selectedJob) {
+                  handleInputChange('classification', selectedJob.classification.toString());
+                }
+              }} 
+              error={errors.job}
+            >
               <option value="">Select job</option>
-              {currentJobTitles.map((title: string) => (
-                <option key={title} value={title}>{title}</option>
+              {currentJobTitles.map((job: any) => (
+                <option key={job.id} value={job.title}>{job.title}</option>
               ))}
             </Select>
           </FormField>
@@ -859,6 +870,8 @@ export default function EmployeeWizard() {
               <Input
                 value={formData.classification}
                 onChange={(e) => handleInputChange('classification', e.target.value)}
+                readOnly
+                className="cursor-not-allowed opacity-60"
               />
             </FormField>
             <FormField label="Degree" required error={errors.degree}>
