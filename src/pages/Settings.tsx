@@ -13,8 +13,8 @@ export default function Settings() {
 
   const tabs = [
     { id: 'departments', label: 'Departments', icon: Building2 },
-    { id: 'jobTitles', label: 'Job titles', icon: Briefcase },
     { id: 'groups', label: 'Groups and classifications', icon: Users },
+    { id: 'jobTitles', label: 'Job titles', icon: Briefcase },
     { id: 'salaries', label: 'Basic salaries', icon: DollarSign },
     { id: 'banks', label: 'Banks', icon: Landmark },
     { id: 'appearances', label: 'Appearances', icon: Palette },
@@ -67,8 +67,8 @@ export default function Settings() {
           transition={{ duration: 0.2 }}
         >
           {activeTab === 'departments' && <DepartmentsTab />}
-          {activeTab === 'jobTitles' && <JobTitlesTab />}
           {activeTab === 'groups' && <GroupsClassificationsTab />}
+          {activeTab === 'jobTitles' && <JobTitlesTab />}
           {activeTab === 'salaries' && <BasicSalariesTab />}
           {activeTab === 'banks' && <BanksTab />}
           {activeTab === 'appearances' && <AppearancesTab />}
