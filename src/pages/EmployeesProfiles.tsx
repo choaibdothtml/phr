@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Search } from 'lucide-react';
+import { X, Search, ArrowLeft } from 'lucide-react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { api, Employee } from '../services/api';
 
 interface ProfileData {
@@ -13,6 +14,8 @@ interface ProfileData {
 }
 
 export default function EmployeesProfiles() {
+  const location = useLocation();
+  const navigate = useNavigate();
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [loading, setLoading] = useState(true);
   const [profile, setProfile] = useState<ProfileData>({
@@ -31,12 +34,35 @@ export default function EmployeesProfiles() {
   const lastNameInputRef = useRef<HTMLInputElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
+  // Check if coming from employees list
+  const fromList = location.state?.employee;
+  const navigationSource = localStorage.getItem('employeesListFrom');
+
   useEffect(() => {
     api.employees.getAll().then(data => {
       setEmployees(data);
       setLoading(false);
+      
+      // If coming from list with employee data, auto-fill profile
+      if (location.state?.employee) {
+        const emp = location.state.employee;
+        setProfile({
+          employeeNumber: emp.employeeNumber,
+          lastName: emp.lastName,
+          firstName: emp.firstName,
+          position: emp.position,
+          department: emp.department,
+          group: emp.group,
+        });
+      }
     });
-  }, []);
+  }, [location.state]);
+
+  const handleGoBack = () => {
+    // Clear navigation state
+    localStorage.removeItem('employeesListFrom');
+    navigate('/employees/list');
+  };
 
   // Handle employee number input - only allow digits, max 4
   const handleNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -126,12 +152,30 @@ export default function EmployeesProfiles() {
     <div className="h-full flex flex-col animate-fade-in-up">
       {/* Header with padding */}
       <div className="p-6 max-w-[1600px] mx-auto w-full">
-        <h1 className="font-display text-2xl font-bold" style={{ color: 'var(--text-primary)' }}>
-          Employees' Profiles
-        </h1>
-        <p className="text-sm mt-1" style={{ color: 'var(--text-secondary)' }}>
-          Search and view employee profiles by number or family name
-        </p>
+        <div className="flex items-center gap-4 mb-2">
+          {fromList && navigationSource === 'list' && (
+            <button
+              onClick={handleGoBack}
+              className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all hover:scale-105"
+              style={{ 
+                background: 'var(--bg-tertiary)',
+                border: '1px solid var(--border-color)',
+                color: 'var(--text-primary)'
+              }}
+            >
+              <ArrowLeft className="w-4 h-4" />
+              Back to list
+            </button>
+          )}
+          <div>
+            <h1 className="font-display text-2xl font-bold" style={{ color: 'var(--text-primary)' }}>
+              Employees' Profiles
+            </h1>
+            <p className="text-sm mt-1" style={{ color: 'var(--text-secondary)' }}>
+              Search and view employee profiles by number or family name
+            </p>
+          </div>
+        </div>
       </div>
 
       {/* Search Boxes Row */}

@@ -1,10 +1,13 @@
 import { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Download, Filter, X, ArrowUpDown, ArrowUp, ArrowDown, Printer } from 'lucide-react';
+import { Download, Filter, X, ArrowUpDown, ArrowUp, ArrowDown, Printer, ChevronDown } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { api, Employee } from '../services/api';
 import { useSettings } from '../contexts/SettingsContext';
 import * as XLSX from 'xlsx';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 interface FilterState {
   situation: string;
@@ -65,6 +68,7 @@ function calculateAge(dateOfBirth: string): number {
 }
 
 export default function EmployeesList() {
+  const navigate = useNavigate();
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [filteredEmployees, setFilteredEmployees] = useState<Employee[]>([]);
   const [loading, setLoading] = useState(true);
@@ -72,7 +76,11 @@ export default function EmployeesList() {
   const [filter, setFilter] = useState<FilterState>(defaultFilter);
   const [appliedFilter, setAppliedFilter] = useState<FilterState | null>(null);
   const [sort, setSort] = useState<SortState>({ column: null, direction: null });
+  const [showProfileConfirm, setShowProfileConfirm] = useState(false);
+  const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
+  const [showExportDropdown, setShowExportDropdown] = useState(false);
   const tableRef = useRef<HTMLDivElement>(null);
+  const exportDropdownRef = useRef<HTMLDivElement>(null);
   const { jobTitles, departments, groups, maxClassification } = useSettings();
 
   useEffect(() => {
@@ -244,7 +252,110 @@ export default function EmployeesList() {
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Employees');
     XLSX.writeFile(wb, 'employees_list.xlsx');
+    setShowExportDropdown(false);
   };
+
+  const exportToPDF = () => {
+    const doc = new jsPDF({
+      orientation: 'landscape',
+      unit: 'mm',
+      format: 'a4'
+    });
+
+    const dataToExport = getSortedEmployees().map(emp => [
+      emp.employeeNumber,
+      emp.lastName,
+      emp.firstName,
+      emp.status === 'active' ? 'Existing' : emp.status === 'terminated' ? 'Departing' : emp.status === 'on-leave' ? 'On Leave' : '',
+      emp.joinDate,
+      emp.position,
+      emp.department,
+      emp.group,
+      emp.classification || '',
+      emp.degree || '',
+      emp.socialSecurityNumber || '',
+      emp.phone,
+      emp.email,
+      emp.provinceOfResidency || '',
+      emp.municipalityOfResidency || '',
+      emp.address || '',
+      emp.idNumber || '',
+      emp.driverLicenseNumber || '',
+      emp.nationalIdNumber || '',
+      emp.gender || '',
+      emp.dateOfBirth || '',
+      emp.provinceOfBirth || '',
+      emp.municipalityOfBirth || '',
+      emp.dateOfBirth ? calculateAge(emp.dateOfBirth).toString() : '',
+      emp.situation || '',
+      emp.numberOfKids?.toString() || '0',
+      emp.bloodType || '',
+      emp.chronicDiseases || '',
+      emp.bankName || '',
+      emp.accountNumber || '',
+      emp.currentContractStartDate || '',
+      emp.currentContractEndDate || '',
+      emp.dateOfLeavingWork || '',
+      emp.reasonForLeaving || '',
+    ]);
+
+    const headers = [[
+      'Employee Number', 'Family Name', 'Name', 'Existing/Departing', 'Entry Date',
+      'Job', 'Department', 'Group', 'Classification', 'Degree',
+      'Social Security Number', 'Phone Number', 'Email Address',
+      'Province of Residency', 'Municipality of Residency', 'Address',
+      'ID Number', 'Driver License Number', 'NIN', 'Gender',
+      'Date of Birth', 'Province of Birth', 'Municipality of Birth', 'Age',
+      'Situation', 'Number of Kids', 'Blood Type', 'Chronic Diseases',
+      'Bank Name', 'Account Number', 'Contract Start Date', 'Contract End Date',
+      'Date of Leaving', 'Reason for Leaving'
+    ]];
+
+    autoTable(doc, {
+      head: headers,
+      body: dataToExport,
+      startY: 20,
+      styles: { fontSize: 6, cellPadding: 1 },
+      headStyles: { fillColor: [249, 115, 22], fontSize: 7 },
+      margin: { top: 20 }
+    });
+
+    doc.save('employees_list.pdf');
+    setShowExportDropdown(false);
+  };
+
+  const handleRowDoubleClick = (employee: Employee) => {
+    setSelectedEmployee(employee);
+    setShowProfileConfirm(true);
+  };
+
+  const handleConfirmProfile = () => {
+    if (selectedEmployee) {
+      // Save current filters and sort to localStorage
+      localStorage.setItem('employeesListFilters', JSON.stringify(appliedFilter));
+      localStorage.setItem('employeesListSort', JSON.stringify(sort));
+      localStorage.setItem('employeesListFrom', 'list');
+      
+      // Navigate to profile
+      navigate('/employees/profiles', { 
+        state: { employee: selectedEmployee } 
+      });
+    }
+    setShowProfileConfirm(false);
+    setSelectedEmployee(null);
+  };
+
+  // Close export dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (exportDropdownRef.current && !exportDropdownRef.current.contains(event.target as Node)) {
+        setShowExportDropdown(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const columns: { key: keyof Employee; label: string; width: number }[] = [
     { key: 'employeeNumber', label: "Employee's Number", width: 120 },
@@ -350,14 +461,62 @@ export default function EmployeesList() {
           <Filter className="w-4 h-4" />
           Filter
         </button>
-        <button
-          onClick={exportToExcel}
-          className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-white font-semibold text-sm transition-all hover:scale-105 hover:shadow-lg"
-          style={{ background: 'var(--gradient-primary)' }}
-        >
-          <Download className="w-4 h-4" />
-          Export to Excel
-        </button>
+        <div className="relative" ref={exportDropdownRef}>
+          <button
+            onClick={() => setShowExportDropdown(!showExportDropdown)}
+            className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-white font-semibold text-sm transition-all hover:scale-105 hover:shadow-lg"
+            style={{ background: 'var(--gradient-primary)' }}
+          >
+            <Download className="w-4 h-4" />
+            Export
+            <ChevronDown className="w-4 h-4" />
+          </button>
+          
+          <AnimatePresence>
+            {showExportDropdown && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.2 }}
+                className="absolute right-0 top-full mt-2 w-56 rounded-xl overflow-hidden z-50"
+                style={{ 
+                  background: 'var(--bg-popup)',
+                  border: '1px solid var(--border-color)',
+                  boxShadow: 'var(--shadow-lg)'
+                }}
+              >
+                <button
+                  onClick={exportToExcel}
+                  className="w-full px-4 py-3 text-left text-sm font-medium transition-colors flex items-center gap-3"
+                  style={{ 
+                    color: 'var(--text-primary)',
+                    borderBottom: '1px solid var(--border-subtle)'
+                  }}
+                  onMouseEnter={(e) => e.currentTarget.style.background = 'var(--bg-tertiary)'}
+                  onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
+                >
+                  <svg className="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20M9,13V15H11V13H9M9,17V19H11V17H9M13,13V15H15V13H13M13,17V19H15V17H13Z" />
+                  </svg>
+                  Export as Excel file
+                </button>
+                <button
+                  onClick={exportToPDF}
+                  className="w-full px-4 py-3 text-left text-sm font-medium transition-colors flex items-center gap-3"
+                  style={{ color: 'var(--text-primary)' }}
+                  onMouseEnter={(e) => e.currentTarget.style.background = 'var(--bg-tertiary)'}
+                  onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
+                >
+                  <svg className="w-5 h-5 text-red-600" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20M10,13H9V14.5H10V13M10,17H9V18.5H10V17M15,13H13V14.5H15V13M15,17H13V18.5H15V17Z" />
+                  </svg>
+                  Export as PDF file
+                </button>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
         <button
           onClick={() => window.print()}
           className="flex items-center gap-2 px-4 py-2.5 rounded-xl font-semibold text-sm transition-all hover:scale-105"
@@ -411,7 +570,11 @@ export default function EmployeesList() {
             <tbody>
               {sortedEmployees.length > 0 ? (
                 sortedEmployees.map((emp, rowIdx) => (
-                  <tr key={emp.id} className="transition-colors employee-row">
+                  <tr 
+                    key={emp.id} 
+                    className="transition-colors employee-row cursor-pointer"
+                    onDoubleClick={() => handleRowDoubleClick(emp)}
+                  >
                     {columns.map((col, colIdx) => (
                       <td
                         key={`${col.key}-${colIdx}`}
@@ -661,6 +824,74 @@ export default function EmployeesList() {
           )}
         </AnimatePresence>
       , document.body)}
+
+      {/* Profile Confirmation Modal */}
+      <AnimatePresence>
+        {showProfileConfirm && selectedEmployee && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="fixed inset-0 z-[60]"
+              style={{ background: 'rgba(0, 0, 0, 0.5)', backdropFilter: 'blur(4px)' }}
+              onClick={() => setShowProfileConfirm(false)}
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              transition={{ duration: 0.2, ease: "easeOut" }}
+              className="fixed inset-0 z-[70] flex items-center justify-center p-4 pointer-events-none"
+            >
+              <div 
+                className="w-full max-w-md rounded-2xl p-6 pointer-events-auto"
+                style={{ 
+                  background: 'var(--bg-popup)',
+                  border: '1px solid var(--border-color)',
+                  boxShadow: 'var(--shadow-lg)'
+                }}
+              >
+                <div className="text-center mb-6">
+                  <div className="w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center"
+                    style={{ background: 'rgba(var(--primary-color-rgb), 0.1)' }}>
+                    <svg className="w-8 h-8" style={{ color: 'var(--phoenix-500)' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    </svg>
+                  </div>
+                  <h3 className="text-lg font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
+                    Open Employee Profile
+                  </h3>
+                  <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+                    Would you like to open {selectedEmployee.employeeNumber} {selectedEmployee.lastName} {selectedEmployee.firstName}'s profile?
+                  </p>
+                </div>
+                <div className="flex gap-3">
+                  <button
+                    onClick={() => setShowProfileConfirm(false)}
+                    className="flex-1 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all hover:scale-105"
+                    style={{ 
+                      background: 'var(--bg-tertiary)',
+                      border: '1px solid var(--border-color)',
+                      color: 'var(--text-secondary)'
+                    }}
+                  >
+                    No
+                  </button>
+                  <button
+                    onClick={handleConfirmProfile}
+                    className="flex-1 px-4 py-2.5 rounded-xl text-white text-sm font-semibold transition-all hover:scale-105 hover:shadow-lg"
+                    style={{ background: 'var(--gradient-primary)' }}
+                  >
+                    Yes
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
