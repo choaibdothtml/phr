@@ -232,9 +232,6 @@ export default function DepartmentsTab() {
                   color: 'var(--text-primary)' 
                 }}
               />
-              <p className="text-[10px] mt-1" style={{ color: 'var(--text-tertiary)' }}>
-                Latin letters and numbers only
-              </p>
             </div>
 
             {/* Employee Number Dropdown */}
@@ -280,11 +277,6 @@ export default function DepartmentsTab() {
                 }}
                 disabled={selectedEmployeeNumber !== 'no-id' && selectedEmployeeNumber !== ''}
               />
-              {selectedEmployeeNumber === 'no-id' && (
-                <p className="text-[10px] mt-1" style={{ color: 'var(--text-tertiary)' }}>
-                  Latin letters only
-                </p>
-              )}
             </div>
 
             {/* Action Buttons */}

@@ -154,9 +154,6 @@ export default function BanksTab() {
                   color: 'var(--text-primary)'
                 }}
               />
-              <p className="text-[10px] mt-1" style={{ color: 'var(--text-tertiary)' }}>
-                Latin letters only
-              </p>
             </div>
 
             {/* Action Buttons */}
