@@ -189,8 +189,8 @@ export default function EmployeeWizard() {
   const handleInputChange = (field: keyof FormData, value: string) => {
     let processedValue = value;
     
-    if (field === 'lastName' || field === 'firstName') {
-      processedValue = value.replace(/[^a-zA-Z\s]/g, '').toLowerCase();
+    if (field === 'lastName' || field === 'firstName' || field === 'emergencyContactName') {
+      processedValue = value.replace(/[^a-zA-Z\s'éèàï-]/g, '').toLowerCase();
       processedValue = processedValue.replace(/\b\w/g, l => l.toUpperCase());
     } else if (field === 'email') {
       processedValue = value.toLowerCase();
@@ -231,7 +231,7 @@ export default function EmployeeWizard() {
       if (numbers.length !== 18) return 'National ID must be 18 digits';
     }
     
-    if (field === 'socialSecurityNumber') {
+    if (field === 'socialSecurityNumber' && value.trim() !== '') {
       const numbers = value.replace(/\s/g, '');
       if (numbers.length !== 12) return 'Social security number must be 12 digits';
       
@@ -341,8 +341,7 @@ export default function EmployeeWizard() {
         if (error) newErrors.driverLicenseNumber = error;
       }
       
-      if (!formData.socialSecurityNumber) newErrors.socialSecurityNumber = 'Required';
-      else {
+      if (formData.socialSecurityNumber) {
         const error = validateField('socialSecurityNumber', formData.socialSecurityNumber);
         if (error) newErrors.socialSecurityNumber = error;
       }
@@ -508,6 +507,11 @@ export default function EmployeeWizard() {
               <Input
                 value={formData.lastName}
                 onChange={(e) => handleInputChange('lastName', e.target.value)}
+                onBlur={() => {
+                  if (!formData.lastName) {
+                    setErrors(prev => ({ ...prev, lastName: 'Required' }));
+                  }
+                }}
                 error={errors.lastName}
               />
             </FormField>
@@ -515,6 +519,11 @@ export default function EmployeeWizard() {
               <Input
                 value={formData.firstName}
                 onChange={(e) => handleInputChange('firstName', e.target.value)}
+                onBlur={() => {
+                  if (!formData.firstName) {
+                    setErrors(prev => ({ ...prev, firstName: 'Required' }));
+                  }
+                }}
                 error={errors.firstName}
               />
             </FormField>
@@ -527,6 +536,11 @@ export default function EmployeeWizard() {
                 placeholder="xx/xx/xxxx"
                 value={formData.dateOfBirth}
                 onChange={(e) => handleInputChange('dateOfBirth', e.target.value)}
+                onBlur={() => {
+                  if (!formData.dateOfBirth) {
+                    setErrors(prev => ({ ...prev, dateOfBirth: 'Required' }));
+                  }
+                }}
                 error={errors.dateOfBirth}
               />
               <p className="text-xs mt-1" style={{ color: 'var(--text-tertiary)' }}>
@@ -543,6 +557,11 @@ export default function EmployeeWizard() {
               <Input
                 value={formData.provinceOfBirth}
                 onChange={(e) => handleInputChange('provinceOfBirth', e.target.value)}
+                onBlur={() => {
+                  if (!formData.provinceOfBirth) {
+                    setErrors(prev => ({ ...prev, provinceOfBirth: 'Required' }));
+                  }
+                }}
                 error={errors.provinceOfBirth}
               />
             </FormField>
@@ -550,6 +569,11 @@ export default function EmployeeWizard() {
               <Input
                 value={formData.municipalityOfBirth}
                 onChange={(e) => handleInputChange('municipalityOfBirth', e.target.value)}
+                onBlur={() => {
+                  if (!formData.municipalityOfBirth) {
+                    setErrors(prev => ({ ...prev, municipalityOfBirth: 'Required' }));
+                  }
+                }}
                 error={errors.municipalityOfBirth}
               />
             </FormField>
@@ -560,7 +584,13 @@ export default function EmployeeWizard() {
               <Input
                 value={formData.phoneNumber}
                 onChange={(e) => handleInputChange('phoneNumber', e.target.value)}
-                onBlur={() => handleBlur('phoneNumber')}
+                onBlur={() => {
+                  if (!formData.phoneNumber) {
+                    setErrors(prev => ({ ...prev, phoneNumber: 'Required' }));
+                  } else {
+                    handleBlur('phoneNumber');
+                  }
+                }}
                 placeholder="xx xx xx xx xx"
                 error={errors.phoneNumber}
               />
@@ -578,7 +608,16 @@ export default function EmployeeWizard() {
 
           <div className="grid grid-cols-2 gap-6">
             <FormField label="Situation" required error={errors.situation}>
-              <Select value={formData.situation} onChange={(e) => handleInputChange('situation', e.target.value)} error={errors.situation}>
+              <Select 
+                value={formData.situation} 
+                onChange={(e) => handleInputChange('situation', e.target.value)}
+                onBlur={() => {
+                  if (!formData.situation) {
+                    setErrors(prev => ({ ...prev, situation: 'Required' }));
+                  }
+                }}
+                error={errors.situation}
+              >
                 <option value="">Select situation</option>
                 <option value="Single">Single</option>
                 <option value="Married">Married</option>
@@ -586,11 +625,16 @@ export default function EmployeeWizard() {
                 <option value="Widowed">Widowed</option>
               </Select>
             </FormField>
-            <FormField label="Number of Kids" required error={errors.numberOfKids}>
+            <FormField label="Number of kids" required={formData.situation !== 'Single'} error={errors.numberOfKids}>
               <Input
                 type="number"
                 value={formData.numberOfKids}
                 onChange={(e) => handleInputChange('numberOfKids', e.target.value)}
+                onBlur={() => {
+                  if (formData.situation !== 'Single' && !formData.numberOfKids) {
+                    setErrors(prev => ({ ...prev, numberOfKids: 'Required' }));
+                  }
+                }}
                 disabled={formData.situation === 'Single'}
                 max="99"
                 error={errors.numberOfKids}
@@ -641,6 +685,11 @@ export default function EmployeeWizard() {
             <Input
               value={formData.emergencyContactName}
               onChange={(e) => handleInputChange('emergencyContactName', e.target.value)}
+              onBlur={() => {
+                if (!formData.emergencyContactName) {
+                  setErrors(prev => ({ ...prev, emergencyContactName: 'Required' }));
+                }
+              }}
               error={errors.emergencyContactName}
             />
           </FormField>
@@ -763,7 +812,7 @@ export default function EmployeeWizard() {
         <div className="space-y-6">
           <div className="p-4 rounded-xl" style={{ background: 'rgba(59, 130, 246, 0.05)', border: '1px solid rgba(59, 130, 246, 0.2)' }}>
             <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
-              You may enter either an ID card only or a driving license or both together. Both NIN and social security number are mandatory.
+              You may enter either an ID card only, or a driving license only, or both together. NIN is always mandatory.
             </p>
           </div>
 
@@ -852,14 +901,26 @@ export default function EmployeeWizard() {
           </div>
 
           <div className="pt-6" style={{ borderTop: '1px solid var(--border-subtle)' }}>
-            <FormField label="Social security number" required error={errors.socialSecurityNumber}>
+            <FormField label="Social security number" error={errors.socialSecurityNumber}>
               <Input
                 value={formData.socialSecurityNumber}
                 onChange={(e) => handleInputChange('socialSecurityNumber', e.target.value)}
-                onBlur={() => handleBlur('socialSecurityNumber')}
+                onBlur={() => {
+                  if (formData.socialSecurityNumber) {
+                    handleBlur('socialSecurityNumber');
+                  } else {
+                    setErrors(prev => {
+                      const newErrors = { ...prev };
+                      delete newErrors.socialSecurityNumber;
+                      return newErrors;
+                    });
+                  }
+                }}
+                disabled={!formData.dateOfBirth}
                 placeholder="xx xxxx xxxx xx"
                 maxLength={14}
                 error={errors.socialSecurityNumber}
+                className={!formData.dateOfBirth ? 'cursor-not-allowed opacity-60' : ''}
               />
             </FormField>
           </div>
@@ -992,7 +1053,9 @@ export default function EmployeeWizard() {
                 ) : (
                   <button
                     onClick={handleSubmit}
-                    className="px-6 py-3 rounded-xl text-white text-sm font-semibold transition-all hover:scale-105 hover:shadow-lg"
+                    disabled={Object.keys(errors).length > 0}
+                    title={Object.keys(errors).length > 0 ? 'Please fix all the highlighted errors first' : ''}
+                    className="px-6 py-3 rounded-xl text-white text-sm font-semibold transition-all hover:scale-105 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
                     style={{ background: 'var(--gradient-primary)' }}
                   >
                     Add Employee
