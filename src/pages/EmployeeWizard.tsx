@@ -89,19 +89,26 @@ const Input = ({ error, ...props }: { error?: string; [key: string]: any }) => (
 );
 
 const Select = ({ error, children, ...props }: { error?: string; children: React.ReactNode; [key: string]: any }) => (
-  <select
-    {...props}
-    className={`w-full px-4 py-2.5 rounded-xl text-sm outline-none cursor-pointer transition-all focus:ring-2 focus:ring-phoenix-500/30 ${
-      error ? 'border-red-500' : ''
-    }`}
-    style={{ 
-      background: 'var(--bg-tertiary)', 
-      border: `1px solid ${error ? '#ef4444' : 'var(--border-color)'}`, 
-      color: 'var(--text-primary)' 
-    }}
-  >
-    {children}
-  </select>
+  <div className="relative">
+    <select
+      {...props}
+      className={`w-full px-4 py-2.5 pr-10 rounded-xl text-sm outline-none cursor-pointer transition-all appearance-none focus:ring-2 focus:ring-phoenix-500/30 ${
+        error ? 'border-red-500' : ''
+      } ${props.disabled ? 'cursor-not-allowed opacity-60' : ''}`}
+      style={{ 
+        background: 'var(--bg-tertiary)', 
+        border: `1px solid ${error ? '#ef4444' : 'var(--border-color)'}`, 
+        color: 'var(--text-primary)' 
+      }}
+    >
+      {children}
+    </select>
+    <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
+      <svg className="w-4 h-4" style={{ color: 'var(--text-tertiary)' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+      </svg>
+    </div>
+  </div>
 );
 
 const Textarea = ({ error, ...props }: { error?: string; [key: string]: any }) => (
@@ -667,10 +674,10 @@ export default function EmployeeWizard() {
                     setErrors(prev => ({ ...prev, numberOfKids: 'Required' }));
                   }
                 }}
-                disabled={formData.situation === 'Single'}
+                disabled={!formData.situation || formData.situation === 'Single'}
                 max="99"
                 error={errors.numberOfKids}
-                className={formData.situation === 'Single' ? 'cursor-not-allowed opacity-60' : ''}
+                className={!formData.situation || formData.situation === 'Single' ? 'cursor-not-allowed opacity-60' : ''}
               />
             </FormField>
           </div>
