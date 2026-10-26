@@ -524,6 +524,7 @@ export default function EmployeeWizard() {
             <FormField label="Date of birth" required error={errors.dateOfBirth}>
               <Input
                 type="date"
+                placeholder="xx/xx/xxxx"
                 value={formData.dateOfBirth}
                 onChange={(e) => handleInputChange('dateOfBirth', e.target.value)}
                 error={errors.dateOfBirth}
@@ -708,6 +709,7 @@ export default function EmployeeWizard() {
           <FormField label="Entry date" required error={errors.entryDate}>
             <Input
               type="date"
+              placeholder="xx/xx/xxxx"
               value={formData.entryDate}
               onChange={(e) => handleInputChange('entryDate', e.target.value)}
               error={errors.entryDate}
@@ -789,6 +791,7 @@ export default function EmployeeWizard() {
               <FormField label="ID issuing date" required={!!formData.idNumber} error={errors.idIssuingDate}>
                 <Input
                   type="date"
+                  placeholder="xx/xx/xxxx"
                   value={formData.idIssuingDate}
                   onChange={(e) => handleInputChange('idIssuingDate', e.target.value)}
                   error={errors.idIssuingDate}
@@ -825,6 +828,7 @@ export default function EmployeeWizard() {
               <FormField label="Driver license issuing date" required={!!formData.driverLicenseNumber} error={errors.driverLicenseIssuingDate}>
                 <Input
                   type="date"
+                  placeholder="xx/xx/xxxx"
                   value={formData.driverLicenseIssuingDate}
                   onChange={(e) => handleInputChange('driverLicenseIssuingDate', e.target.value)}
                   error={errors.driverLicenseIssuingDate}
