@@ -89,21 +89,21 @@ const Input = ({ error, ...props }: { error?: string; [key: string]: any }) => (
 );
 
 const Select = ({ error, children, ...props }: { error?: string; children: React.ReactNode; [key: string]: any }) => (
-  <div className="relative">
+  <div className="relative group">
     <select
       {...props}
-      className={`w-full px-4 py-2.5 pr-10 rounded-xl text-sm outline-none cursor-pointer transition-all appearance-none focus:ring-2 focus:ring-phoenix-500/30 ${
-        error ? 'border-red-500' : ''
-      } ${props.disabled ? 'cursor-not-allowed opacity-60' : ''}`}
+      className={`w-full px-4 py-2.5 pr-10 rounded-xl text-sm outline-none cursor-pointer transition-all appearance-none focus:ring-2 focus:ring-orange-500/30 ${
+        error ? 'border-red-500' : 'hover:border-orange-300'
+      } ${props.disabled ? 'cursor-not-allowed opacity-50 bg-gray-100 dark:bg-gray-800' : ''}`}
       style={{ 
-        background: 'var(--bg-tertiary)', 
+        background: props.disabled ? undefined : 'var(--bg-tertiary)', 
         border: `1px solid ${error ? '#ef4444' : 'var(--border-color)'}`, 
         color: 'var(--text-primary)' 
       }}
     >
       {children}
     </select>
-    <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
+    <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none transition-colors group-hover:text-orange-500">
       <svg className="w-4 h-4" style={{ color: 'var(--text-tertiary)' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
       </svg>
