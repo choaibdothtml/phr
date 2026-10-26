@@ -20,10 +20,12 @@ export default function BanksTab() {
     }
   }, []);
 
-  // Validate bank name (Latin letters only)
+  // Validate bank name (Latin letters only, capitalize first letter of each word)
   const handleBankNameChange = (value: string) => {
     const filtered = value.replace(/[^a-zA-Z\s]/g, '');
-    setBankName(filtered);
+    // Capitalize first letter of each word
+    const capitalized = filtered.replace(/\b\w/g, l => l.toUpperCase());
+    setBankName(capitalized);
   };
 
   // Check if form is valid

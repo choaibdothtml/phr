@@ -42,17 +42,21 @@ export default function DepartmentsTab() {
     }
   }, [selectedEmployeeNumber, employees]);
 
-  // Validate department name (Latin letters and numbers only)
+  // Validate department name (Latin letters and numbers only, capitalize first letter of each word)
   const handleDepartmentNameChange = (value: string) => {
     const filtered = value.replace(/[^a-zA-Z0-9\s]/g, '');
-    setDepartmentName(filtered);
+    // Capitalize first letter of each word
+    const capitalized = filtered.replace(/\b\w/g, l => l.toUpperCase());
+    setDepartmentName(capitalized);
   };
 
-  // Validate manager name (Latin letters only when editable)
+  // Validate manager name (Latin letters only when editable, capitalize first letter of each word)
   const handleManagerNameChange = (value: string) => {
     if (selectedEmployeeNumber === 'no-id') {
       const filtered = value.replace(/[^a-zA-Z\s]/g, '');
-      setManagerName(filtered);
+      // Capitalize first letter of each word
+      const capitalized = filtered.replace(/\b\w/g, l => l.toUpperCase());
+      setManagerName(capitalized);
     }
   };
 

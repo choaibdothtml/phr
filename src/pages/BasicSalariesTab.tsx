@@ -29,6 +29,20 @@ export default function BasicSalariesTab() {
     }
   }, []);
 
+  // Format number with thousands separator (xx xxx format)
+  const formatSalary = (value: string): string => {
+    if (!value || value === '') return '';
+    
+    // Remove any non-digit characters except decimal point
+    const numStr = value.replace(/[^\d.]/g, '');
+    const parts = numStr.split('.');
+    
+    // Add thousands separator to integer part
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+    
+    return parts.join('.');
+  };
+
   // Handle cell input change
   const handleCellChange = (classification: number, degree: number, value: string) => {
     const key = `${classification}-${degree}`;
@@ -42,8 +56,20 @@ export default function BasicSalariesTab() {
     }
   };
 
-  // Handle cell blur (exit editing mode)
-  const handleCellBlur = () => {
+  // Handle cell blur (exit editing mode and format)
+  const handleCellBlur = (classification: number, degree: number) => {
+    const key = `${classification}-${degree}`;
+    const value = salaryData[key];
+    
+    // Format the value when exiting edit mode
+    if (value && value !== '') {
+      const formatted = formatSalary(value);
+      setSalaryData(prev => ({
+        ...prev,
+        [key]: formatted
+      }));
+    }
+    
     setEditingCell(null);
   };
 
@@ -165,7 +191,7 @@ export default function BasicSalariesTab() {
                             type="text"
                             value={value}
                             onChange={(e) => handleCellChange(classification, degree, e.target.value)}
-                            onBlur={handleCellBlur}
+                            onBlur={() => handleCellBlur(classification, degree)}
                             autoFocus
                             className="w-full px-2 py-1.5 text-sm text-center outline-none rounded-lg"
                             style={{
@@ -186,7 +212,7 @@ export default function BasicSalariesTab() {
                               justifyContent: 'center'
                             }}
                           >
-                            {value || '—'}
+                            {value ? `${value} DA` : ''}
                           </div>
                         )}
                       </td>

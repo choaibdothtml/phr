@@ -84,10 +84,12 @@ export default function GroupsClassificationsTab() {
     setTimeout(() => setSaveSuccess(false), 3000);
   };
 
-  // Validate group name (Latin letters and numbers only)
+  // Validate group name (Latin letters and numbers only, capitalize first letter of each word)
   const handleGroupNameChange = (value: string) => {
     const filtered = value.replace(/[^a-zA-Z0-9\s]/g, '');
-    setGroupName(filtered);
+    // Capitalize first letter of each word
+    const capitalized = filtered.replace(/\b\w/g, l => l.toUpperCase());
+    setGroupName(capitalized);
   };
 
   // Validate group classifications

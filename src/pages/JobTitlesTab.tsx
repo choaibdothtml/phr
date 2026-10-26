@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Edit2 } from 'lucide-react';
+import { Edit2, ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react';
 
 interface JobTitle {
   id: string;
@@ -8,12 +8,17 @@ interface JobTitle {
   classification: number;
 }
 
+type SortField = 'number' | 'title' | 'classification';
+type SortDirection = 'asc' | 'desc';
+
 export default function JobTitlesTab() {
   const [jobTitles, setJobTitles] = useState<JobTitle[]>([]);
   const [newTitle, setNewTitle] = useState('');
   const [newClassification, setNewClassification] = useState('');
   const [editingJob, setEditingJob] = useState<JobTitle | null>(null);
   const [maxClassification, setMaxClassification] = useState(0);
+  const [sortField, setSortField] = useState<SortField>('title');
+  const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
 
   useEffect(() => {
     // Load job titles from localStorage
@@ -30,10 +35,12 @@ export default function JobTitlesTab() {
     }
   }, []);
 
-  // Validate job title (Latin letters only)
+  // Validate job title (Latin letters only, capitalize first letter of first word)
   const handleTitleChange = (value: string) => {
     const filtered = value.replace(/[^a-zA-Z\s]/g, '');
-    setNewTitle(filtered);
+    // Capitalize first letter of first word only
+    const capitalized = filtered.charAt(0).toUpperCase() + filtered.slice(1);
+    setNewTitle(capitalized);
   };
 
   // Check if form is valid
@@ -85,6 +92,37 @@ export default function JobTitlesTab() {
     setNewClassification('');
   };
 
+  // Handle sort
+  const handleSort = (field: SortField) => {
+    if (sortField === field) {
+      // Toggle direction if same field
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+    } else {
+      // New field, default to ascending
+      setSortField(field);
+      setSortDirection('asc');
+    }
+  };
+
+  // Get sorted job titles
+  const getSortedJobTitles = () => {
+    const sorted = [...jobTitles].sort((a, b) => {
+      let comparison = 0;
+      
+      if (sortField === 'number') {
+        comparison = a.number - b.number;
+      } else if (sortField === 'title') {
+        comparison = a.title.localeCompare(b.title);
+      } else if (sortField === 'classification') {
+        comparison = a.classification - b.classification;
+      }
+      
+      return sortDirection === 'asc' ? comparison : -comparison;
+    });
+    
+    return sorted;
+  };
+
   // Generate classification options
   const classificationOptions = Array.from(
     { length: maxClassification },
@@ -107,14 +145,47 @@ export default function JobTitlesTab() {
               <table className="w-full">
                 <thead>
                   <tr style={{ background: 'var(--bg-tertiary)' }}>
-                    <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider" style={{ color: 'var(--text-tertiary)' }}>
-                      N°
+                    <th 
+                      className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider cursor-pointer select-none transition-colors hover:bg-[var(--bg-tertiary)]" 
+                      style={{ color: 'var(--text-tertiary)' }}
+                      onClick={() => handleSort('number')}
+                    >
+                      <div className="flex items-center gap-1">
+                        N°
+                        {sortField === 'number' ? (
+                          sortDirection === 'asc' ? <ArrowUp className="w-3 h-3" /> : <ArrowDown className="w-3 h-3" />
+                        ) : (
+                          <ArrowUpDown className="w-3 h-3 opacity-30" />
+                        )}
+                      </div>
                     </th>
-                    <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider" style={{ color: 'var(--text-tertiary)' }}>
-                      Job title
+                    <th 
+                      className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider cursor-pointer select-none transition-colors hover:bg-[var(--bg-tertiary)]" 
+                      style={{ color: 'var(--text-tertiary)' }}
+                      onClick={() => handleSort('title')}
+                    >
+                      <div className="flex items-center gap-1">
+                        Job title
+                        {sortField === 'title' ? (
+                          sortDirection === 'asc' ? <ArrowUp className="w-3 h-3" /> : <ArrowDown className="w-3 h-3" />
+                        ) : (
+                          <ArrowUpDown className="w-3 h-3 opacity-30" />
+                        )}
+                      </div>
                     </th>
-                    <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider" style={{ color: 'var(--text-tertiary)' }}>
-                      Classification
+                    <th 
+                      className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider cursor-pointer select-none transition-colors hover:bg-[var(--bg-tertiary)]" 
+                      style={{ color: 'var(--text-tertiary)' }}
+                      onClick={() => handleSort('classification')}
+                    >
+                      <div className="flex items-center gap-1">
+                        Classification
+                        {sortField === 'classification' ? (
+                          sortDirection === 'asc' ? <ArrowUp className="w-3 h-3" /> : <ArrowDown className="w-3 h-3" />
+                        ) : (
+                          <ArrowUpDown className="w-3 h-3 opacity-30" />
+                        )}
+                      </div>
                     </th>
                     <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider" style={{ color: 'var(--text-tertiary)' }}>
                       Actions
@@ -122,7 +193,7 @@ export default function JobTitlesTab() {
                   </tr>
                 </thead>
                 <tbody>
-                  {jobTitles.map((job) => (
+                  {getSortedJobTitles().map((job) => (
                     <tr
                       key={job.id}
                       className="transition-colors hover:bg-[var(--bg-tertiary)]"
