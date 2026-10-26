@@ -931,9 +931,6 @@ export default function EmployeeWizard() {
                     <p className="text-sm font-semibold" style={{ color: isActive ? 'var(--text-primary)' : 'var(--text-secondary)' }}>
                       {step.label}
                     </p>
-                    {isCompleted && (
-                      <p className="text-xs mt-0.5" style={{ color: 'var(--text-tertiary)' }}>Completed</p>
-                    )}
                   </div>
                 </button>
               );
