@@ -562,7 +562,7 @@ export default function EmployeesList() {
                 {columns.map((col, idx) => (
                   <th
                     key={`${col.key}-${idx}`}
-                    className={`px-3 py-4 text-left text-[11px] font-semibold uppercase tracking-wider cursor-pointer select-none transition-colors hover:bg-[var(--bg-tertiary)] whitespace-nowrap ${
+                    className={`px-3 py-2 text-left text-[11px] font-semibold uppercase tracking-wider cursor-pointer select-none transition-colors hover:bg-[var(--bg-tertiary)] whitespace-nowrap ${
                       idx < 3 ? 'sticky z-10' : ''
                     }`}
                     style={{ 
@@ -594,7 +594,7 @@ export default function EmployeesList() {
                     {columns.map((col, colIdx) => (
                       <td
                         key={`${col.key}-${colIdx}`}
-                        className={`px-3 py-4 text-sm whitespace-nowrap ${
+                        className={`px-3 py-2 text-sm whitespace-nowrap ${
                           colIdx < 3 ? 'sticky z-[5]' : ''
                         }`}
                         style={{ 
