@@ -225,7 +225,6 @@ export default function DepartmentsTab() {
                 type="text"
                 value={departmentName}
                 onChange={(e) => handleDepartmentNameChange(e.target.value)}
-                placeholder="e.g., Engineering"
                 className="w-full px-3 py-2.5 rounded-xl text-sm outline-none focus:ring-2 focus:ring-phoenix-500/30"
                 style={{ 
                   background: 'var(--bg-tertiary)', 
@@ -273,7 +272,6 @@ export default function DepartmentsTab() {
                 value={managerName}
                 onChange={(e) => handleManagerNameChange(e.target.value)}
                 readOnly={selectedEmployeeNumber !== 'no-id' && selectedEmployeeNumber !== ''}
-                placeholder={selectedEmployeeNumber === 'no-id' ? 'Enter manager name' : 'Auto-filled from employee'}
                 className="w-full px-3 py-2.5 rounded-xl text-sm outline-none focus:ring-2 focus:ring-phoenix-500/30 disabled:opacity-60 disabled:cursor-not-allowed"
                 style={{ 
                   background: 'var(--bg-tertiary)', 

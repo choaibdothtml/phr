@@ -174,7 +174,6 @@ export default function JobTitlesTab() {
                 value={newTitle}
                 onChange={(e) => handleTitleChange(e.target.value)}
                 disabled={editingJob !== null}
-                placeholder="e.g., Software Engineer"
                 className="w-full px-3 py-2.5 rounded-xl text-sm outline-none focus:ring-2 focus:ring-phoenix-500/30 disabled:opacity-60 disabled:cursor-not-allowed"
                 style={{
                   background: 'var(--bg-tertiary)',

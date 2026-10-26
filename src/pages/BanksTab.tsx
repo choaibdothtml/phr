@@ -147,7 +147,6 @@ export default function BanksTab() {
                 type="text"
                 value={bankName}
                 onChange={(e) => handleBankNameChange(e.target.value)}
-                placeholder="e.g., Chase Bank"
                 className="w-full px-3 py-2.5 rounded-xl text-sm outline-none focus:ring-2 focus:ring-phoenix-500/30"
                 style={{
                   background: 'var(--bg-tertiary)',

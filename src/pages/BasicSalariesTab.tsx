@@ -173,7 +173,6 @@ export default function BasicSalariesTab() {
                               border: '2px solid var(--phoenix-500)',
                               color: 'var(--text-primary)'
                             }}
-                            placeholder="0.00"
                           />
                         ) : (
                           <div

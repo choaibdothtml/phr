@@ -308,7 +308,6 @@ export default function GroupsClassificationsTab() {
                 max="99"
                 value={highestClassification}
                 onChange={(e) => setHighestClassification(e.target.value)}
-                placeholder="1-99"
                 className="w-32 px-3 py-2.5 rounded-xl text-sm outline-none focus:ring-2 focus:ring-phoenix-500/30"
                 style={{
                   background: 'var(--bg-tertiary)',
@@ -329,7 +328,6 @@ export default function GroupsClassificationsTab() {
                 max="99"
                 value={lowestDegree}
                 onChange={(e) => setLowestDegree(e.target.value)}
-                placeholder="0-99"
                 className="w-32 px-3 py-2.5 rounded-xl text-sm outline-none focus:ring-2 focus:ring-phoenix-500/30"
                 style={{
                   background: 'var(--bg-tertiary)',
@@ -350,7 +348,6 @@ export default function GroupsClassificationsTab() {
                 max="99"
                 value={highestDegree}
                 onChange={(e) => setHighestDegree(e.target.value)}
-                placeholder={lowestDegree ? `${parseInt(lowestDegree) + 1}-99` : '0-99'}
                 className="w-32 px-3 py-2.5 rounded-xl text-sm outline-none focus:ring-2 focus:ring-phoenix-500/30"
                 style={{
                   background: 'var(--bg-tertiary)',
@@ -397,7 +394,6 @@ export default function GroupsClassificationsTab() {
                     type="text"
                     value={groupName}
                     onChange={(e) => handleGroupNameChange(e.target.value)}
-                    placeholder="e.g., Management"
                     className="w-full px-3 py-2.5 rounded-xl text-sm outline-none focus:ring-2 focus:ring-phoenix-500/30"
                     style={{
                       background: 'var(--bg-tertiary)',
@@ -421,7 +417,6 @@ export default function GroupsClassificationsTab() {
                     max="99"
                     value={groupLowestClass}
                     onChange={(e) => setGroupLowestClass(e.target.value)}
-                    placeholder={getNextAvailableClassification().toString()}
                     className="w-32 px-3 py-2.5 rounded-xl text-sm outline-none focus:ring-2 focus:ring-phoenix-500/30"
                     style={{
                       background: 'var(--bg-tertiary)',
@@ -442,7 +437,6 @@ export default function GroupsClassificationsTab() {
                     max="99"
                     value={groupHighestClass}
                     onChange={(e) => setGroupHighestClass(e.target.value)}
-                    placeholder="0-99"
                     className="w-32 px-3 py-2.5 rounded-xl text-sm outline-none focus:ring-2 focus:ring-phoenix-500/30"
                     style={{
                       background: 'var(--bg-tertiary)',
