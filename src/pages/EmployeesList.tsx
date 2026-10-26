@@ -81,6 +81,7 @@ export default function EmployeesList() {
   const [showExportDropdown, setShowExportDropdown] = useState(false);
   const tableRef = useRef<HTMLDivElement>(null);
   const exportDropdownRef = useRef<HTMLDivElement>(null);
+  const [stickyColumnPositions, setStickyColumnPositions] = useState<number[]>([0, 0, 0]);
   const { jobTitles, departments, groups, maxClassification } = useSettings();
 
   useEffect(() => {
@@ -90,6 +91,30 @@ export default function EmployeesList() {
       setLoading(false);
     });
   }, []);
+
+  // Calculate sticky column positions after render
+  useEffect(() => {
+    if (tableRef.current && !loading) {
+      // Use setTimeout to ensure table is fully rendered
+      setTimeout(() => {
+        const table = tableRef.current?.querySelector('table');
+        if (table) {
+          const headerCells = table.querySelectorAll('thead th');
+          const positions: number[] = [];
+          let currentLeft = 0;
+          
+          for (let i = 0; i < 3; i++) {
+            positions.push(currentLeft);
+            if (headerCells[i]) {
+              currentLeft += (headerCells[i] as HTMLElement).offsetWidth;
+            }
+          }
+          
+          setStickyColumnPositions(positions);
+        }
+      }, 0);
+    }
+  }, [loading, filteredEmployees, sort]);
 
   const handleSort = (column: keyof Employee) => {
     if (sort.column === column) {
@@ -394,13 +419,6 @@ export default function EmployeesList() {
     { key: 'reasonForLeaving', label: 'Reason for Leaving', width: 160 },
   ];
 
-  // Calculate cumulative left positions for sticky columns
-  const stickyColumnPositions = [
-    0, // Column 0 (Employee Number)
-    columns[0].width, // Column 1 (Family Name)
-    columns[0].width + columns[1].width, // Column 2 (Name)
-  ];
-
   const getCellValue = (emp: Employee, col: typeof columns[0]) => {
     if (col.label === 'Age') {
       return emp.dateOfBirth ? calculateAge(emp.dateOfBirth) : '-';
@@ -538,13 +556,13 @@ export default function EmployeesList() {
         style={{ border: '1px solid var(--border-color)' }}
       >
         <div className="overflow-auto flex-1 h-full">
-          <table className="w-full border-collapse" style={{ minWidth: '3600px', height: '100%' }}>
+          <table className="border-collapse" style={{ height: '100%' }}>
             <thead>
               <tr>
                 {columns.map((col, idx) => (
                   <th
                     key={`${col.key}-${idx}`}
-                    className={`px-3 py-3 text-left text-[11px] font-semibold uppercase tracking-wider cursor-pointer select-none transition-colors hover:bg-[var(--bg-tertiary)] ${
+                    className={`px-3 py-3 text-left text-[11px] font-semibold uppercase tracking-wider cursor-pointer select-none transition-colors hover:bg-[var(--bg-tertiary)] whitespace-nowrap ${
                       idx < 3 ? 'sticky z-10' : ''
                     }`}
                     style={{ 
@@ -552,8 +570,6 @@ export default function EmployeesList() {
                       background: idx < 3 ? 'var(--bg-solid-primary)' : 'var(--bg-card)',
                       borderBottom: '2px solid var(--border-color)',
                       left: idx < 3 ? `${stickyColumnPositions[idx]}px` : undefined,
-                      width: `${col.width}px`,
-                      minWidth: `${col.width}px`,
                     }}
                     onClick={() => handleSort(col.key)}
                   >
@@ -578,7 +594,7 @@ export default function EmployeesList() {
                     {columns.map((col, colIdx) => (
                       <td
                         key={`${col.key}-${colIdx}`}
-                        className={`px-3 py-3 text-sm ${
+                        className={`px-3 py-3 text-sm whitespace-nowrap ${
                           colIdx < 3 ? 'sticky z-[5]' : ''
                         }`}
                         style={{ 
@@ -586,8 +602,6 @@ export default function EmployeesList() {
                           background: colIdx < 3 ? (rowIdx % 2 === 0 ? 'var(--bg-solid-primary)' : 'var(--bg-solid-secondary)') : 'transparent',
                           borderBottom: '1px solid var(--border-subtle)',
                           left: colIdx < 3 ? `${stickyColumnPositions[colIdx]}px` : undefined,
-                          width: `${col.width}px`,
-                          minWidth: `${col.width}px`,
                           fontWeight: colIdx < 3 ? 500 : 400,
                         }}
                       >
