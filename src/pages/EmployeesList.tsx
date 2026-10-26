@@ -75,7 +75,7 @@ export default function EmployeesList() {
   const [showFilter, setShowFilter] = useState(false);
   const [filter, setFilter] = useState<FilterState>(defaultFilter);
   const [appliedFilter, setAppliedFilter] = useState<FilterState | null>(null);
-  const [sort, setSort] = useState<SortState>({ column: null, direction: null });
+  const [sort, setSort] = useState<SortState>({ column: 'employeeNumber', direction: 'desc' });
   const [showProfileConfirm, setShowProfileConfirm] = useState(false);
   const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
   const [showExportDropdown, setShowExportDropdown] = useState(false);
