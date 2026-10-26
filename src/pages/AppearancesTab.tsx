@@ -178,11 +178,11 @@ export default function AppearancesTab() {
       </div>
 
       {/* Primary Color Section */}
-      <div className="glass-card p-6">
+      <div className="glass-card p-4">
         <h3 className="font-semibold mb-1" style={{ color: 'var(--text-primary)' }}>
           Primary Color
         </h3>
-        <p className="text-xs mb-5" style={{ color: 'var(--text-tertiary)' }}>
+        <p className="text-xs mb-4" style={{ color: 'var(--text-tertiary)' }}>
           Used for buttons, active states, and section highlights
         </p>
 
@@ -221,46 +221,14 @@ export default function AppearancesTab() {
             );
           })}
         </div>
-
-        {/* Preview */}
-        <div className="mt-6 pt-6" style={{ borderTop: '1px solid var(--border-subtle)' }}>
-          <p className="text-xs font-semibold mb-3 uppercase tracking-wider" style={{ color: 'var(--text-tertiary)' }}>
-            Preview
-          </p>
-          <div className="flex items-center gap-3">
-            <button
-              className="px-4 py-2 rounded-xl text-white text-sm font-semibold"
-              style={{ background: primaryColors.find(c => c.id === selectedPrimary)?.gradient }}
-            >
-              Sample Button
-            </button>
-            <div
-              className="px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider text-white"
-              style={{ background: primaryColors.find(c => c.id === selectedPrimary)?.value }}
-            >
-              Active
-            </div>
-            <span
-              className="text-sm font-semibold"
-              style={{ 
-                background: `linear-gradient(135deg, ${primaryColors.find(c => c.id === selectedPrimary)?.value}, #d946ef)`,
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text'
-              }}
-            >
-              Gradient Text
-            </span>
-          </div>
-        </div>
       </div>
 
       {/* Sidebar Color Section */}
-      <div className="glass-card p-6">
+      <div className="glass-card p-4">
         <h3 className="font-semibold mb-1" style={{ color: 'var(--text-primary)' }}>
           Sidebar Color
         </h3>
-        <p className="text-xs mb-5" style={{ color: 'var(--text-tertiary)' }}>
+        <p className="text-xs mb-4" style={{ color: 'var(--text-tertiary)' }}>
           Background color of the main navigation sidebar
         </p>
 
@@ -305,41 +273,6 @@ export default function AppearancesTab() {
             );
           })}
         </div>
-
-        {/* Preview */}
-        <div className="mt-6 pt-6" style={{ borderTop: '1px solid var(--border-subtle)' }}>
-          <p className="text-xs font-semibold mb-3 uppercase tracking-wider" style={{ color: 'var(--text-tertiary)' }}>
-            Sidebar Preview
-          </p>
-          <div
-            className="w-full max-w-xs h-32 rounded-xl p-4 flex flex-col justify-between"
-            style={{ 
-              background: selectedSidebar === 'default' 
-                ? (isDarkMode ? '#0f1629' : '#f4f6f9')
-                : getSidebarPreviewColor(sidebarColors.find(c => c.id === selectedSidebar)!),
-              border: '1px solid var(--border-color)'
-            }}
-          >
-            <div className="flex items-center gap-2">
-              <div className="w-6 h-6 rounded-md" style={{ background: primaryColors.find(c => c.id === selectedPrimary)?.gradient }} />
-              <div className="h-2 w-16 rounded" style={{ background: 'var(--text-tertiary)', opacity: 0.5 }} />
-            </div>
-            <div className="space-y-1.5">
-              <div className="h-1.5 w-full rounded" style={{ background: 'var(--text-tertiary)', opacity: 0.3 }} />
-              <div className="h-1.5 w-3/4 rounded" style={{ background: 'var(--text-tertiary)', opacity: 0.3 }} />
-              <div className="h-1.5 w-5/6 rounded" style={{ background: 'var(--text-tertiary)', opacity: 0.3 }} />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Info Note */}
-      <div className="glass-card p-4">
-        <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>
-          <strong>Note:</strong> Colors cannot be the same for both primary and sidebar. 
-          Selecting a color in one picker will disable it in the other. 
-          Changes are saved automatically and applied immediately.
-        </p>
       </div>
     </div>
   );
