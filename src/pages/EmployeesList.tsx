@@ -565,8 +565,8 @@ export default function EmployeesList() {
         className="glass-card overflow-hidden flex-1 flex flex-col min-h-0"
         style={{ border: '1px solid var(--border-color)' }}
       >
-        <div className="overflow-auto flex-1 h-full">
-          <table className="border-collapse" style={{ height: '100%' }}>
+        <div className="overflow-auto flex-1">
+          <table className="border-collapse w-full">
             <thead>
               <tr>
                 {columns.map((col, idx) => (
