@@ -173,14 +173,14 @@ export default function AppearancesTab() {
           }}
         >
           <RotateCcw className="w-4 h-4" />
-          Reset to Defaults
+          Reset to defaults
         </button>
       </div>
 
       {/* Primary Color Section */}
       <div className="glass-card p-4">
         <h3 className="font-semibold mb-1" style={{ color: 'var(--text-primary)' }}>
-          Primary Color
+          Primary color
         </h3>
         <p className="text-xs mb-4" style={{ color: 'var(--text-tertiary)' }}>
           Used for buttons, active states, and section highlights
@@ -226,7 +226,7 @@ export default function AppearancesTab() {
       {/* Sidebar Color Section */}
       <div className="glass-card p-4">
         <h3 className="font-semibold mb-1" style={{ color: 'var(--text-primary)' }}>
-          Sidebar Color
+          Sidebar color
         </h3>
         <p className="text-xs mb-4" style={{ color: 'var(--text-tertiary)' }}>
           Background color of the main navigation sidebar

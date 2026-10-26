@@ -109,7 +109,7 @@ export default function BasicSalariesTab() {
                     minWidth: '120px'
                   }}
                 >
-                  Classification / Degree
+                  Classification / degree
                 </th>
                 
                 {/* Degree headers */}
@@ -207,7 +207,7 @@ export default function BasicSalariesTab() {
           style={{ background: 'var(--gradient-primary)' }}
         >
           <Save className="w-4 h-4" />
-          Save Salaries
+          Save salaries
         </button>
         
         {saveSuccess && (

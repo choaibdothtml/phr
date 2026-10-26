@@ -228,13 +228,13 @@ export default function GroupsClassificationsTab() {
                       N°
                     </th>
                     <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider" style={{ color: 'var(--text-tertiary)' }}>
-                      Group Name
+                      Group name
                     </th>
                     <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider" style={{ color: 'var(--text-tertiary)' }}>
-                      Lowest Classification
+                      Lowest classification
                     </th>
                     <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider" style={{ color: 'var(--text-tertiary)' }}>
-                      Highest Classification
+                      Highest classification
                     </th>
                     <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider" style={{ color: 'var(--text-tertiary)' }}>
                       Actions
@@ -293,7 +293,7 @@ export default function GroupsClassificationsTab() {
       <div className="h-full">
         <div className="glass-card p-6 sticky top-6 h-full overflow-y-auto">
           <h3 className="font-semibold mb-4" style={{ color: 'var(--text-primary)' }}>
-            Classification Settings
+            Classification settings
           </h3>
 
           <div className="space-y-4">
@@ -388,7 +388,7 @@ export default function GroupsClassificationsTab() {
                 {/* Group Name */}
                 <div>
                   <label className="block text-xs font-semibold mb-1.5" style={{ color: 'var(--text-secondary)' }}>
-                    Group Name <span className="text-red-500">*</span>
+                    Group name <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
@@ -470,7 +470,7 @@ export default function GroupsClassificationsTab() {
                     className="flex-1 px-4 py-2.5 rounded-xl text-white text-sm font-semibold transition-all hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
                     style={{ background: 'var(--gradient-primary)' }}
                   >
-                    {editingGroup ? 'Save Modifications' : 'Add Group'}
+                    {editingGroup ? 'Save modifications' : 'Add group'}
                   </button>
                 </div>
               </div>
@@ -501,7 +501,7 @@ export default function GroupsClassificationsTab() {
               <div className="glass-card p-6 max-w-md w-full" style={{ background: 'var(--bg-card)' }}>
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="font-semibold text-lg" style={{ color: 'var(--text-primary)' }}>
-                    Confirm Removal
+                    Confirm removal
                   </h3>
                   <button
                     onClick={() => setShowRemoveModal(false)}

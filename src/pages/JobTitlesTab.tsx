@@ -111,7 +111,7 @@ export default function JobTitlesTab() {
                       N°
                     </th>
                     <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider" style={{ color: 'var(--text-tertiary)' }}>
-                      Job Title
+                      Job title
                     </th>
                     <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider" style={{ color: 'var(--text-tertiary)' }}>
                       Classification
@@ -160,14 +160,14 @@ export default function JobTitlesTab() {
       <div className="h-full">
         <div className="glass-card p-6 sticky top-6 h-full">
           <h3 className="font-semibold mb-4" style={{ color: 'var(--text-primary)' }}>
-            {editingJob ? 'Edit Job Title' : 'Add New Job Title'}
+            {editingJob ? 'Edit job title' : 'Add new job title'}
           </h3>
 
           <div className="space-y-4">
             {/* Job Title */}
             <div>
               <label className="block text-xs font-semibold mb-1.5" style={{ color: 'var(--text-secondary)' }}>
-                Job Title <span className="text-red-500">*</span>
+                Job title <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
@@ -232,7 +232,7 @@ export default function JobTitlesTab() {
                 className="flex-1 px-4 py-2.5 rounded-xl text-white text-sm font-semibold transition-all hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
                 style={{ background: 'var(--gradient-primary)' }}
               >
-                {editingJob ? 'Save Modifications' : 'Add Job Title'}
+                {editingJob ? 'Save modifications' : 'Add job title'}
               </button>
             </div>
           </div>

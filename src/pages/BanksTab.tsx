@@ -91,7 +91,7 @@ export default function BanksTab() {
                       N°
                     </th>
                     <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider" style={{ color: 'var(--text-tertiary)' }}>
-                      Bank Name
+                      Bank name
                     </th>
                     <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider" style={{ color: 'var(--text-tertiary)' }}>
                       Actions
@@ -134,14 +134,14 @@ export default function BanksTab() {
       <div className="h-full">
         <div className="glass-card p-6 sticky top-6 h-full">
           <h3 className="font-semibold mb-4" style={{ color: 'var(--text-primary)' }}>
-            {editingBank ? 'Edit Bank' : 'Add New Bank'}
+            {editingBank ? 'Edit bank' : 'Add new bank'}
           </h3>
 
           <div className="space-y-4">
             {/* Bank Name */}
             <div>
               <label className="block text-xs font-semibold mb-1.5" style={{ color: 'var(--text-secondary)' }}>
-                Bank's Name <span className="text-red-500">*</span>
+                Bank's name <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
@@ -176,7 +176,7 @@ export default function BanksTab() {
                 className="flex-1 px-4 py-2.5 rounded-xl text-white text-sm font-semibold transition-all hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
                 style={{ background: 'var(--gradient-primary)' }}
               >
-                {editingBank ? 'Save Modifications' : 'Add Bank'}
+                {editingBank ? 'Save modifications' : 'Add bank'}
               </button>
             </div>
           </div>
