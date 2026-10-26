@@ -53,7 +53,7 @@ const sidebarColorsDark: Record<string, string> = {
 
 export default function AppearancesTab() {
   const [selectedPrimary, setSelectedPrimary] = useState('phoenix');
-  const [selectedSidebar, setSelectedSidebar] = useState('default');
+  const [selectedSidebar, setSelectedSidebar] = useState('blush');
   const [isDarkMode, setIsDarkMode] = useState(false);
 
   // Load saved preferences
@@ -139,7 +139,7 @@ export default function AppearancesTab() {
   // Reset to defaults
   const handleReset = () => {
     setSelectedPrimary('phoenix');
-    setSelectedSidebar('default');
+    setSelectedSidebar('blush');
     document.documentElement.style.removeProperty('--phoenix-500');
     document.documentElement.style.removeProperty('--gradient-primary');
     document.documentElement.style.removeProperty('--gradient-accent');
