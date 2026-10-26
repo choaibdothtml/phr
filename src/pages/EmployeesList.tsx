@@ -844,33 +844,34 @@ export default function EmployeesList() {
       , document.body)}
 
       {/* Profile Confirmation Modal */}
-      <AnimatePresence>
-        {showProfileConfirm && selectedEmployee && (
-          <>
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              className="fixed inset-0 z-[60]"
-              style={{ background: 'rgba(0, 0, 0, 0.5)', backdropFilter: 'blur(4px)' }}
-              onClick={() => setShowProfileConfirm(false)}
-            />
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              transition={{ duration: 0.2, ease: "easeOut" }}
-              className="fixed inset-0 z-[70] flex items-center justify-center p-4 pointer-events-none"
-            >
-              <div 
-                className="w-full max-w-md rounded-2xl p-6 pointer-events-auto"
-                style={{ 
-                  background: 'var(--bg-popup)',
-                  border: '1px solid var(--border-color)',
-                  boxShadow: 'var(--shadow-lg)'
-                }}
+      {createPortal(
+        <AnimatePresence>
+          {showProfileConfirm && selectedEmployee && (
+            <>
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
+                className="fixed inset-0 z-[60]"
+                style={{ background: 'rgba(0, 0, 0, 0.5)', backdropFilter: 'blur(4px)', WebkitBackdropFilter: 'blur(4px)' }}
+                onClick={() => setShowProfileConfirm(false)}
+              />
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                transition={{ duration: 0.2, ease: "easeOut" }}
+                className="fixed inset-0 z-[70] flex items-center justify-center p-4 pointer-events-none"
               >
+                <div 
+                  className="w-full max-w-md rounded-2xl p-6 pointer-events-auto"
+                  style={{ 
+                    background: 'var(--bg-popup)',
+                    border: '1px solid var(--border-color)',
+                    boxShadow: 'var(--shadow-lg)'
+                  }}
+                >
                 <div className="text-center mb-6">
                   <div className="w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center"
                     style={{ background: 'rgba(var(--primary-color-rgb), 0.1)' }}>
@@ -910,6 +911,7 @@ export default function EmployeesList() {
           </>
         )}
       </AnimatePresence>
+      , document.body)}
     </div>
   );
 }
