@@ -523,7 +523,7 @@ export default function EmployeeWizard() {
           <div className="grid grid-cols-2 gap-6">
             <FormField label="Date of birth" required error={errors.dateOfBirth}>
               <Input
-                type="date"
+                type="text"
                 placeholder="xx/xx/xxxx"
                 value={formData.dateOfBirth}
                 onChange={(e) => handleInputChange('dateOfBirth', e.target.value)}
@@ -708,7 +708,7 @@ export default function EmployeeWizard() {
         <div className="space-y-6">
           <FormField label="Entry date" required error={errors.entryDate}>
             <Input
-              type="date"
+              type="text"
               placeholder="xx/xx/xxxx"
               value={formData.entryDate}
               onChange={(e) => handleInputChange('entryDate', e.target.value)}
@@ -790,7 +790,7 @@ export default function EmployeeWizard() {
             <div className="grid grid-cols-3 gap-6 mt-6">
               <FormField label="ID issuing date" required={!!formData.idNumber} error={errors.idIssuingDate}>
                 <Input
-                  type="date"
+                  type="text"
                   placeholder="xx/xx/xxxx"
                   value={formData.idIssuingDate}
                   onChange={(e) => handleInputChange('idIssuingDate', e.target.value)}
@@ -827,7 +827,7 @@ export default function EmployeeWizard() {
             <div className="grid grid-cols-3 gap-6 mt-6">
               <FormField label="Driver license issuing date" required={!!formData.driverLicenseNumber} error={errors.driverLicenseIssuingDate}>
                 <Input
-                  type="date"
+                  type="text"
                   placeholder="xx/xx/xxxx"
                   value={formData.driverLicenseIssuingDate}
                   onChange={(e) => handleInputChange('driverLicenseIssuingDate', e.target.value)}
