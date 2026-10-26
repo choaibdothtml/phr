@@ -578,7 +578,7 @@ export default function EmployeesList() {
                     {columns.map((col, colIdx) => (
                       <td
                         key={`${col.key}-${colIdx}`}
-                        className={`px-3 py-2.5 text-xs ${
+                        className={`px-3 py-3 text-sm ${
                           colIdx < 3 ? 'sticky z-[5]' : ''
                         }`}
                         style={{ 
