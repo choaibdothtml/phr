@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Download, Filter, X, ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react';
+import { Download, Filter, X, ArrowUpDown, ArrowUp, ArrowDown, Printer } from 'lucide-react';
 import { api, Employee } from '../services/api';
 import { useSettings } from '../contexts/SettingsContext';
 import * as XLSX from 'xlsx';
@@ -357,6 +357,18 @@ export default function EmployeesList() {
         >
           <Download className="w-4 h-4" />
           Export to Excel
+        </button>
+        <button
+          onClick={() => window.print()}
+          className="flex items-center gap-2 px-4 py-2.5 rounded-xl font-semibold text-sm transition-all hover:scale-105"
+          style={{ 
+            background: 'var(--bg-tertiary)', 
+            border: '1px solid var(--border-color)',
+            color: 'var(--text-primary)'
+          }}
+        >
+          <Printer className="w-4 h-4" />
+          Print
         </button>
       </div>
 

@@ -212,6 +212,42 @@ export default function EmployeeWizard() {
     return `${age} years old`;
   };
 
+  const checkDocumentValidity = (dateString: string) => {
+    if (!dateString) return { expired: false, message: '' };
+    
+    // Parse dd/mm/yyyy format
+    const parts = dateString.split('/');
+    if (parts.length !== 3) return { expired: false, message: '' };
+    
+    const day = parseInt(parts[0], 10);
+    const month = parseInt(parts[1], 10) - 1;
+    const year = parseInt(parts[2], 10);
+    
+    if (isNaN(day) || isNaN(month) || isNaN(year)) return { expired: false, message: '' };
+    
+    const issueDate = new Date(year, month, day);
+    const today = new Date();
+    
+    // Calculate difference in years and days
+    let years = today.getFullYear() - issueDate.getFullYear();
+    const monthDiff = today.getMonth() - issueDate.getMonth();
+    const dayDiff = today.getDate() - issueDate.getDate();
+    
+    if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
+      years--;
+    }
+    
+    // Check if 10 years or more have passed
+    if (years >= 10) {
+      return { 
+        expired: true, 
+        message: 'This document is 10 years old or more. Please ask the employee to renew it.' 
+      };
+    }
+    
+    return { expired: false, message: '' };
+  };
+
   // Calculate age when dateOfBirth changes
   useEffect(() => {
     if (formData.dateOfBirth) {
@@ -874,15 +910,23 @@ export default function EmployeeWizard() {
             </FormField>
 
             <div className="grid grid-cols-3 gap-6 mt-6">
-              <FormField label="ID issuing date" required={!!formData.idNumber} error={errors.idIssuingDate}>
-                <Input
-                  type="text"
-                  placeholder="xx/xx/xxxx"
-                  value={formData.idIssuingDate}
-                  onChange={(e) => handleInputChange('idIssuingDate', e.target.value)}
-                  error={errors.idIssuingDate}
-                />
-              </FormField>
+              <div>
+                <FormField label="ID issuing date" required={!!formData.idNumber} error={errors.idIssuingDate}>
+                  <Input
+                    type="text"
+                    placeholder="xx/xx/xxxx"
+                    value={formData.idIssuingDate}
+                    onChange={(e) => handleInputChange('idIssuingDate', e.target.value)}
+                    error={errors.idIssuingDate}
+                  />
+                </FormField>
+                {checkDocumentValidity(formData.idIssuingDate).expired && (
+                  <p className="text-xs text-red-500 mt-1 flex items-center gap-1">
+                    <AlertCircle className="w-3 h-3" />
+                    {checkDocumentValidity(formData.idIssuingDate).message}
+                  </p>
+                )}
+              </div>
               <FormField label="ID issuing province" required={!!formData.idNumber} error={errors.idIssuingProvince}>
                 <Input
                   value={formData.idIssuingProvince}
@@ -911,15 +955,23 @@ export default function EmployeeWizard() {
             </FormField>
 
             <div className="grid grid-cols-3 gap-6 mt-6">
-              <FormField label="Driver license issuing date" required={!!formData.driverLicenseNumber} error={errors.driverLicenseIssuingDate}>
-                <Input
-                  type="text"
-                  placeholder="xx/xx/xxxx"
-                  value={formData.driverLicenseIssuingDate}
-                  onChange={(e) => handleInputChange('driverLicenseIssuingDate', e.target.value)}
-                  error={errors.driverLicenseIssuingDate}
-                />
-              </FormField>
+              <div>
+                <FormField label="Driver license issuing date" required={!!formData.driverLicenseNumber} error={errors.driverLicenseIssuingDate}>
+                  <Input
+                    type="text"
+                    placeholder="xx/xx/xxxx"
+                    value={formData.driverLicenseIssuingDate}
+                    onChange={(e) => handleInputChange('driverLicenseIssuingDate', e.target.value)}
+                    error={errors.driverLicenseIssuingDate}
+                  />
+                </FormField>
+                {checkDocumentValidity(formData.driverLicenseIssuingDate).expired && (
+                  <p className="text-xs text-red-500 mt-1 flex items-center gap-1">
+                    <AlertCircle className="w-3 h-3" />
+                    {checkDocumentValidity(formData.driverLicenseIssuingDate).message}
+                  </p>
+                )}
+              </div>
               <FormField label="Driver license issuing province" required={!!formData.driverLicenseNumber} error={errors.driverLicenseIssuingProvince}>
                 <Input
                   value={formData.driverLicenseIssuingProvince}
