@@ -368,7 +368,7 @@ export default function EmployeeWizard() {
           const year = parseInt(dateParts[2], 10);
           const yearDigits = String(year).slice(-2);
           if (!numbers.startsWith(yearDigits)) {
-            return 'Wrong social security number, try again please';
+            return 'Wrong social security number or date of birth, try again please';
           }
         }
       }
