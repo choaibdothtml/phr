@@ -562,7 +562,7 @@ export default function EmployeesList() {
                 {columns.map((col, idx) => (
                   <th
                     key={`${col.key}-${idx}`}
-                    className={`px-3 py-3 text-left text-[11px] font-semibold uppercase tracking-wider cursor-pointer select-none transition-colors hover:bg-[var(--bg-tertiary)] whitespace-nowrap ${
+                    className={`px-3 text-left text-[11px] font-semibold uppercase tracking-wider cursor-pointer select-none transition-colors hover:bg-[var(--bg-tertiary)] whitespace-nowrap ${
                       idx < 3 ? 'sticky z-10' : ''
                     }`}
                     style={{ 
@@ -570,6 +570,9 @@ export default function EmployeesList() {
                       background: idx < 3 ? 'var(--bg-solid-primary)' : 'var(--bg-card)',
                       borderBottom: '2px solid var(--border-color)',
                       left: idx < 3 ? `${stickyColumnPositions[idx]}px` : undefined,
+                      paddingTop: '14px',
+                      paddingBottom: '14px',
+                      height: '40px',
                     }}
                     onClick={() => handleSort(col.key)}
                   >
@@ -594,7 +597,7 @@ export default function EmployeesList() {
                     {columns.map((col, colIdx) => (
                       <td
                         key={`${col.key}-${colIdx}`}
-                        className={`px-3 py-1 text-sm whitespace-nowrap ${
+                        className={`px-3 text-sm whitespace-nowrap ${
                           colIdx < 3 ? 'sticky z-[5]' : ''
                         }`}
                         style={{ 
@@ -603,6 +606,9 @@ export default function EmployeesList() {
                           borderBottom: '1px solid var(--border-subtle)',
                           left: colIdx < 3 ? `${stickyColumnPositions[colIdx]}px` : undefined,
                           fontWeight: colIdx < 3 ? 500 : 400,
+                          paddingTop: '6px',
+                          paddingBottom: '6px',
+                          height: '27px',
                         }}
                       >
                         {getCellValue(emp, col)}
