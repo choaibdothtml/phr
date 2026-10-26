@@ -1,17 +1,19 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Building2, Users, DollarSign, Landmark, Palette, Key, Database, Settings as SettingsIcon } from 'lucide-react';
+import { Building2, Users, DollarSign, Landmark, Palette, Key, Database, Briefcase } from 'lucide-react';
 import DepartmentsTab from './DepartmentsTab';
 import GroupsClassificationsTab from './GroupsClassificationsTab';
 import BasicSalariesTab from './BasicSalariesTab';
 import BanksTab from './BanksTab';
 import AppearancesTab from './AppearancesTab';
+import JobTitlesTab from './JobTitlesTab';
 
 export default function Settings() {
   const [activeTab, setActiveTab] = useState('departments');
 
   const tabs = [
     { id: 'departments', label: 'Departments', icon: Building2 },
+    { id: 'jobTitles', label: 'Job titles', icon: Briefcase },
     { id: 'groups', label: 'Groups and classifications', icon: Users },
     { id: 'salaries', label: 'Basic salaries', icon: DollarSign },
     { id: 'banks', label: 'Banks', icon: Landmark },
@@ -65,6 +67,7 @@ export default function Settings() {
           transition={{ duration: 0.2 }}
         >
           {activeTab === 'departments' && <DepartmentsTab />}
+          {activeTab === 'jobTitles' && <JobTitlesTab />}
           {activeTab === 'groups' && <GroupsClassificationsTab />}
           {activeTab === 'salaries' && <BasicSalariesTab />}
           {activeTab === 'banks' && <BanksTab />}

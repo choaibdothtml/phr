@@ -820,11 +820,18 @@ export default function EmployeeWizard() {
     }
     
     if (step === 'job') {
+      // Read latest data from localStorage
       const savedSettings = localStorage.getItem('phoenix-hr-classification-settings');
       const settings = savedSettings ? JSON.parse(savedSettings) : null;
       const lowestDegree = settings?.lowestDegree || 0;
       const highestDegree = settings?.highestDegree || 5;
       const degrees = Array.from({ length: highestDegree - lowestDegree + 1 }, (_, i) => lowestDegree + i);
+      
+      const savedJobTitles = localStorage.getItem('phoenix-hr-job-titles');
+      const currentJobTitles = savedJobTitles ? JSON.parse(savedJobTitles) : [];
+      
+      const savedDepartments = localStorage.getItem('phoenix-hr-departments');
+      const currentDepartments = savedDepartments ? JSON.parse(savedDepartments) : [];
       
       return (
         <div className="space-y-6">
@@ -841,7 +848,7 @@ export default function EmployeeWizard() {
           <FormField label="Job" required error={errors.job}>
             <Select value={formData.job} onChange={(e) => handleInputChange('job', e.target.value)} error={errors.job}>
               <option value="">Select job</option>
-              {jobTitles.map(title => (
+              {currentJobTitles.map((title: string) => (
                 <option key={title} value={title}>{title}</option>
               ))}
             </Select>
@@ -871,7 +878,7 @@ export default function EmployeeWizard() {
           <FormField label="Department" required error={errors.department}>
             <Select value={formData.department} onChange={(e) => handleInputChange('department', e.target.value)} error={errors.department}>
               <option value="">Select department</option>
-              {departments.map(dept => (
+              {currentDepartments.map((dept: any) => (
                 <option key={dept.id} value={dept.name}>{dept.name}</option>
               ))}
             </Select>

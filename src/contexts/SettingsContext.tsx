@@ -27,30 +27,17 @@ const SettingsContext = createContext<SettingsContextType | undefined>(undefined
 export function SettingsProvider({ children }: { children: ReactNode }) {
   const [jobTitles, setJobTitles] = useState<string[]>(() => {
     const stored = localStorage.getItem('phoenix-hr-job-titles');
-    return stored ? JSON.parse(stored) : [
-      'HR Director', 'Senior Developer', 'UI/UX Designer', 'Backend Developer',
-      'Marketing Manager', 'Financial Analyst', 'Graphic Designer', 'DevOps Engineer',
-      'HR Specialist', 'Content Strategist'
-    ];
+    return stored ? JSON.parse(stored) : [];
   });
 
   const [departments, setDepartments] = useState<Department[]>(() => {
     const stored = localStorage.getItem('phoenix-hr-departments');
-    return stored ? JSON.parse(stored) : [
-      { id: '1', name: 'Human Resources', managerName: 'Sarah Mitchell', managerEmployeeNumber: '0001' },
-      { id: '2', name: 'Engineering', managerName: 'James Rodriguez', managerEmployeeNumber: '0002' },
-      { id: '3', name: 'Design', managerName: 'Emily Chen', managerEmployeeNumber: '0003' },
-      { id: '4', name: 'Marketing', managerName: 'Lisa Park', managerEmployeeNumber: '0005' },
-      { id: '5', name: 'Finance', managerName: 'David Wilson', managerEmployeeNumber: '0006' },
-    ];
+    return stored ? JSON.parse(stored) : [];
   });
 
   const [groups, setGroups] = useState<string[]>(() => {
     const stored = localStorage.getItem('phoenix-hr-groups');
-    return stored ? JSON.parse(stored) : [
-      'Management', 'Backend', 'UI Team', 'Digital Marketing', 'Accounting',
-      'Creative', 'Infrastructure', 'Recruitment', 'Content'
-    ];
+    return stored ? JSON.parse(stored) : [];
   });
 
   const [maxClassification, setMaxClassificationState] = useState<number>(() => {
