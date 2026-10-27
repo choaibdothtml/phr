@@ -30,6 +30,7 @@ export default function Sidebar() {
   const [collapsed, setCollapsed] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
+  const [showEmployeeMenu, setShowEmployeeMenu] = useState(false);
   const [notifications, setNotifications] = useState(mockNotifications);
   const [currentDateTime, setCurrentDateTime] = useState(new Date());
   const [dateFormat, setDateFormat] = useState('full');
@@ -38,6 +39,7 @@ export default function Sidebar() {
 
   const sidebarRef = useRef<HTMLDivElement>(null);
   const notificationsDropdownRef = useRef<HTMLDivElement>(null);
+  const employeeMenuRef = useRef<HTMLDivElement>(null);
 
   // Load date/time format preferences
   useEffect(() => {
@@ -150,9 +152,17 @@ export default function Sidebar() {
         return;
       }
       
+      // Don't close if clicking inside the employee menu
+      if (employeeMenuRef.current && employeeMenuRef.current.contains(target)) {
+        return;
+      }
+      
       // Check if click is outside sidebar
       if (sidebarRef.current && !sidebarRef.current.contains(target)) {
         closeDropdowns();
+      } else {
+        // Close employee menu when clicking elsewhere in sidebar
+        setShowEmployeeMenu(false);
       }
     };
 
@@ -213,6 +223,91 @@ export default function Sidebar() {
         {navItems.map((item) => {
           const isActive = location.pathname === item.path;
           const Icon = item.icon;
+          
+          // Special handling for "Add/Edit an employee" button
+          if (item.path === '/employees') {
+            return (
+              <div key={item.path} className="relative" ref={employeeMenuRef}>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setShowEmployeeMenu(!showEmployeeMenu);
+                  }}
+                  className={`sidebar-indicator w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group ${
+                    isActive ? 'active nav-item-active' : 'nav-item'
+                  }`}
+                  title={collapsed ? item.label : undefined}
+                >
+                  <div className={`flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center transition-all ${
+                    isActive ? 'phoenix-glow' : 'group-hover:scale-105'
+                  }`}
+                    style={{ 
+                      background: isActive ? 'var(--gradient-primary)' : 'transparent',
+                    }}
+                  >
+                    <Icon className={`w-4 h-4 ${isActive ? 'text-white' : ''}`} 
+                      style={{ color: isActive ? 'white' : 'var(--text-secondary)' }} 
+                    />
+                  </div>
+                  {!collapsed && (
+                    <span className="text-sm font-medium flex-1 text-left" style={{ color: isActive ? 'var(--text-primary)' : 'var(--text-secondary)' }}>
+                      {item.label}
+                    </span>
+                  )}
+                </button>
+                
+                {/* Employee Action Dropdown */}
+                <AnimatePresence>
+                  {showEmployeeMenu && !collapsed && (
+                    <motion.div
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -10 }}
+                      transition={{ duration: 0.2 }}
+                      className="absolute left-full top-0 ml-2 w-56 rounded-xl overflow-hidden z-50"
+                      style={{ 
+                        background: 'var(--bg-card)',
+                        border: '1px solid var(--border-color)',
+                        boxShadow: 'var(--shadow-lg)'
+                      }}
+                    >
+                      <button
+                        onClick={() => {
+                          setShowEmployeeMenu(false);
+                          navigate('/employees');
+                        }}
+                        className="w-full px-4 py-3 text-left text-sm font-medium transition-colors flex items-center gap-3"
+                        style={{ 
+                          color: 'var(--text-primary)',
+                          borderBottom: '1px solid var(--border-subtle)'
+                        }}
+                        onMouseEnter={(e) => e.currentTarget.style.background = 'var(--bg-tertiary)'}
+                        onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
+                      >
+                        <UserPlus className="w-4 h-4" style={{ color: 'var(--phoenix-500)' }} />
+                        Add a new employee
+                      </button>
+                      <button
+                        onClick={() => {
+                          setShowEmployeeMenu(false);
+                          // Do nothing for now - will be implemented later
+                        }}
+                        className="w-full px-4 py-3 text-left text-sm font-medium transition-colors flex items-center gap-3"
+                        style={{ color: 'var(--text-primary)' }}
+                        onMouseEnter={(e) => e.currentTarget.style.background = 'var(--bg-tertiary)'}
+                        onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
+                      >
+                        <Users className="w-4 h-4" style={{ color: 'var(--phoenix-500)' }} />
+                        Edit an existing employee
+                      </button>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            );
+          }
+          
+          // Regular navigation for other items
           return (
             <button
               key={item.path}
