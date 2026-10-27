@@ -98,6 +98,20 @@ export default function EmployeesList() {
   const exportDropdownRef = useRef<HTMLDivElement>(null);
   const [stickyColumnPositions, setStickyColumnPositions] = useState<number[]>([0, 0, 0]);
   const { jobTitles, departments, groups, maxClassification } = useSettings();
+  
+  // Track current date to force age recalculation at midnight
+  const [currentDate, setCurrentDate] = useState(new Date().toDateString());
+  useEffect(() => {
+    // Check every minute if the date has changed
+    const interval = setInterval(() => {
+      const newDate = new Date().toDateString();
+      if (newDate !== currentDate) {
+        setCurrentDate(newDate);
+      }
+    }, 60000); // Check every minute
+    
+    return () => clearInterval(interval);
+  }, [currentDate]);
 
   useEffect(() => {
     // Load employees from localStorage first
