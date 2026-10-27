@@ -226,7 +226,7 @@ export default function BasicSalariesTab() {
       </div>
 
       {/* Save Button */}
-      <div className="flex items-center gap-3">
+      <div className="flex items-center justify-center gap-3">
         <button
           onClick={handleSave}
           className="flex items-center gap-2 px-6 py-3 rounded-xl text-white font-semibold text-sm transition-all hover:scale-105 hover:shadow-lg"
@@ -242,15 +242,6 @@ export default function BasicSalariesTab() {
             <span className="text-sm font-medium">Saved successfully</span>
           </div>
         )}
-      </div>
-
-      {/* Help Text */}
-      <div className="glass-card p-4">
-        <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>
-          <strong>Instructions:</strong> Click on any cell to enter a basic salary amount. 
-          You can enter decimal numbers (e.g., 1500.50). 
-          You don't need to fill all cells at once - you can save your progress and continue later.
-        </p>
       </div>
     </div>
   );
