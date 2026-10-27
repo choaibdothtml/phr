@@ -1,7 +1,7 @@
 // @ts-nocheck
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { X, Check, AlertCircle, User, MapPin, Phone, FileText, CreditCard, Building2, ChevronsLeft, ChevronLeft, ChevronRight, ChevronsRight, FileX } from 'lucide-react';
+import { X, Check, AlertCircle, User, MapPin, Phone, FileText, CreditCard, Building2, ChevronsLeft, ChevronLeft, ChevronRight, ChevronsRight, FileX, GraduationCap } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSettings } from '../contexts/SettingsContext';
 import { Employee } from '../services/api';
@@ -112,6 +112,10 @@ export default function EmployeeEdit() {
     emergencyContactRelationship: '',
     bloodType: '',
     chronicDiseases: '',
+    studyDegree: '',
+    studyField: '',
+    studyInstitution: '',
+    studyDate: '',
     entryDate: '',
     job: '',
     classification: '',
@@ -220,6 +224,10 @@ export default function EmployeeEdit() {
       emergencyContactRelationship: employee.emergencyContactRelationship || '',
       bloodType: employee.bloodType || '',
       chronicDiseases: employee.chronicDiseases || '',
+      studyDegree: employee.studyDegree || '',
+      studyField: employee.studyField || '',
+      studyInstitution: employee.studyInstitution || '',
+      studyDate: employee.studyDate || '',
       entryDate: employee.joinDate || '',
       job: employee.position || '',
       classification: employee.classification || '',
@@ -344,6 +352,10 @@ export default function EmployeeEdit() {
           emergencyContactRelationship: formData.emergencyContactRelationship,
           bloodType: formData.bloodType,
           chronicDiseases: formData.chronicDiseases,
+          studyDegree: formData.studyDegree,
+          studyField: formData.studyField,
+          studyInstitution: formData.studyInstitution,
+          studyDate: formData.studyDate,
           classification: formData.classification,
           group: formData.group,
           payBasis: formData.payBasis,
@@ -439,6 +451,7 @@ export default function EmployeeEdit() {
     { id: 'personal', label: 'Personal info', icon: User },
     { id: 'address', label: 'Address', icon: MapPin },
     { id: 'emergency', label: 'Emergency', icon: Phone },
+    { id: 'study', label: 'Study', icon: GraduationCap },
     { id: 'job', label: 'Job details', icon: FileText },
     { id: 'identification', label: 'Identification', icon: CreditCard },
     { id: 'payment', label: 'Payment', icon: Building2 },
@@ -783,8 +796,64 @@ export default function EmployeeEdit() {
                     </div>
                   )}
 
-                  {/* Job Details Step */}
+                  {/* Study Step */}
                   {currentStep === 3 && (
+                    <div className="space-y-6">
+                      <FormField label="Degree/Certification" required error={errors.studyDegree}>
+                        <Select 
+                          value={formData.studyDegree} 
+                          onChange={(e) => handleInputChange('studyDegree', e.target.value)} 
+                          error={errors.studyDegree}
+                        >
+                          <option value="">Select degree/certification</option>
+                          <option value="PhD">PhD</option>
+                          <option value="Magister">Magister</option>
+                          <option value="Engineer/ Structural engineer">Engineer/ Structural engineer</option>
+                          <option value="Master">Master</option>
+                          <option value="Bachelor">Bachelor</option>
+                          <option value="DEUA">DEUA</option>
+                          <option value="Higher technician">Higher technician</option>
+                          <option value="High school degree">High school degree</option>
+                          <option value="Technician">Technician</option>
+                          <option value="CAP">CAP</option>
+                          <option value="Secondary school">Secondary school</option>
+                          <option value="Middle school">Middle school</option>
+                          <option value="None">None</option>
+                        </Select>
+                      </FormField>
+
+                      <FormField label="Study field" required error={errors.studyField}>
+                        <Input
+                          value={formData.studyField}
+                          onChange={(e) => handleInputChange('studyField', e.target.value)}
+                          error={errors.studyField}
+                          placeholder="Enter study field"
+                        />
+                      </FormField>
+
+                      <FormField label="Issued by (Institution)" required error={errors.studyInstitution}>
+                        <Input
+                          value={formData.studyInstitution}
+                          onChange={(e) => handleInputChange('studyInstitution', e.target.value)}
+                          error={errors.studyInstitution}
+                          placeholder="Enter institution name"
+                        />
+                      </FormField>
+
+                      <FormField label="Issued in (Date)" required error={errors.studyDate}>
+                        <Input
+                          type="text"
+                          value={formData.studyDate}
+                          onChange={(e) => handleInputChange('studyDate', e.target.value)}
+                          placeholder="xx/xx/xxxx"
+                          error={errors.studyDate}
+                        />
+                      </FormField>
+                    </div>
+                  )}
+
+                  {/* Job Details Step */}
+                  {currentStep === 4 && (
                     <div className="space-y-6">
                       <div className="grid grid-cols-2 gap-6">
                         <FormField label="Entry date" required error={errors.entryDate}>
@@ -998,7 +1067,7 @@ export default function EmployeeEdit() {
                   )}
 
                   {/* Identification Step */}
-                  {currentStep === 4 && (
+                  {currentStep === 5 && (
                     <div className="space-y-6">
                       <div className="p-4 rounded-xl" style={{ background: 'rgba(59, 130, 246, 0.05)', border: '1px solid rgba(59, 130, 246, 0.2)' }}>
                         <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
@@ -1103,7 +1172,7 @@ export default function EmployeeEdit() {
                   )}
 
                   {/* Payment Step */}
-                  {currentStep === 5 && (
+                  {currentStep === 6 && (
                     <div className="space-y-6">
                       <FormField label="Bank name" required error={errors.bankName}>
                         <Select value={formData.bankName} onChange={(e) => handleInputChange('bankName', e.target.value)} error={errors.bankName}>
@@ -1127,7 +1196,7 @@ export default function EmployeeEdit() {
                   )}
 
                   {/* Termination Step */}
-                  {currentStep === 6 && (
+                  {currentStep === 7 && (
                     <div className="space-y-6">
                       <div>
                         <p className="text-sm mb-2" style={{ color: 'var(--text-secondary)' }}>

@@ -52,6 +52,10 @@ export interface Employee {
   numberOfKids?: number;
   bloodType?: string;
   chronicDiseases?: string;
+  studyDegree?: string;
+  studyField?: string;
+  studyInstitution?: string;
+  studyDate?: string;
   bankName?: string;
   accountNumber?: string;
   currentContractStartDate?: string;

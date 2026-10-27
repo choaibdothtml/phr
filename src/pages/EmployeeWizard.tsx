@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { useState, useEffect } from 'react';
-import { X, Check, AlertCircle, User, MapPin, Phone, FileText, CreditCard, Building2 } from 'lucide-react';
+import { X, Check, AlertCircle, User, MapPin, Phone, FileText, CreditCard, Building2, GraduationCap } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSettings } from '../contexts/SettingsContext';
 import { Employee } from '../services/api';
@@ -26,6 +26,10 @@ interface FormData {
   emergencyContactRelationship: string;
   bloodType: string;
   chronicDiseases: string;
+  studyDegree: string;
+  studyField: string;
+  studyInstitution: string;
+  studyDate: string;
   entryDate: string;
   job: string;
   classification: string;
@@ -65,6 +69,7 @@ const steps = [
   { id: 'personal', label: 'Personal info', icon: User },
   { id: 'address', label: 'Address', icon: MapPin },
   { id: 'emergency', label: 'Emergency', icon: Phone },
+  { id: 'study', label: 'Study', icon: GraduationCap },
   { id: 'job', label: 'Job details', icon: FileText },
   { id: 'identification', label: 'Identification', icon: CreditCard },
   { id: 'payment', label: 'Payment', icon: Building2 },
@@ -164,6 +169,10 @@ export default function EmployeeWizard() {
     emergencyContactRelationship: '',
     bloodType: '',
     chronicDiseases: '',
+    studyDegree: '',
+    studyField: '',
+    studyInstitution: '',
+    studyDate: '',
     entryDate: '',
     job: '',
     classification: '',
@@ -359,6 +368,9 @@ export default function EmployeeWizard() {
     if (field === 'lastName' || field === 'firstName' || field === 'emergencyContactName') {
       processedValue = value.replace(/[^a-zA-Z\s'éèàï-]/g, '').toLowerCase();
       processedValue = processedValue.replace(/\b\w/g, l => l.toUpperCase());
+    } else if (field === 'studyField' || field === 'studyInstitution') {
+      processedValue = value.replace(/[^a-zA-Z\s'éèàï-]/g, '');
+      processedValue = processedValue.split(' ').filter(word => word.length > 0).slice(0, 10).join(' ');
     } else if (field === 'email') {
       processedValue = value.toLowerCase();
     } else if (field === 'phoneNumber' || field === 'emergencyContactPhone') {
@@ -498,6 +510,11 @@ export default function EmployeeWizard() {
       }
       if (!formData.emergencyContactRelationship) newErrors.emergencyContactRelationship = 'Required';
       if (!formData.bloodType) newErrors.bloodType = 'Required';
+    } else if (step === 'study') {
+      if (!formData.studyDegree) newErrors.studyDegree = 'Required';
+      if (!formData.studyField) newErrors.studyField = 'Required';
+      if (!formData.studyInstitution) newErrors.studyInstitution = 'Required';
+      if (!formData.studyDate) newErrors.studyDate = 'Required';
     } else if (step === 'job') {
       if (!formData.entryDate) newErrors.entryDate = 'Required';
       if (!formData.job) newErrors.job = 'Required';
@@ -651,6 +668,10 @@ export default function EmployeeWizard() {
         numberOfKids: parseInt(formData.numberOfKids) || 0,
         bloodType: formData.bloodType,
         chronicDiseases: formData.chronicDiseases,
+        studyDegree: formData.studyDegree,
+        studyField: formData.studyField,
+        studyInstitution: formData.studyInstitution,
+        studyDate: formData.studyDate,
         bankName: formData.bankName,
         accountNumber: formData.accountNumber,
         contractDuration: formData.contractualStatus === 'Permanent' ? '' : formData.contractDuration,
@@ -705,6 +726,10 @@ export default function EmployeeWizard() {
       emergencyContactRelationship: '',
       bloodType: '',
       chronicDiseases: '',
+      studyDegree: '',
+      studyField: '',
+      studyInstitution: '',
+      studyDate: '',
       entryDate: '',
       job: '',
       classification: '',
@@ -1052,6 +1077,63 @@ export default function EmployeeWizard() {
               value={formData.chronicDiseases}
               onChange={(e) => handleInputChange('chronicDiseases', e.target.value)}
               rows={3}
+            />
+          </FormField>
+        </div>
+      );
+    }
+    
+    if (step === 'study') {
+      return (
+        <div className="space-y-6">
+          <FormField label="Degree/Certification" required error={errors.studyDegree}>
+            <Select 
+              value={formData.studyDegree} 
+              onChange={(e) => handleInputChange('studyDegree', e.target.value)} 
+              error={errors.studyDegree}
+            >
+              <option value="">Select degree/certification</option>
+              <option value="PhD">PhD</option>
+              <option value="Magister">Magister</option>
+              <option value="Engineer/ Structural engineer">Engineer/ Structural engineer</option>
+              <option value="Master">Master</option>
+              <option value="Bachelor">Bachelor</option>
+              <option value="DEUA">DEUA</option>
+              <option value="Higher technician">Higher technician</option>
+              <option value="High school degree">High school degree</option>
+              <option value="Technician">Technician</option>
+              <option value="CAP">CAP</option>
+              <option value="Secondary school">Secondary school</option>
+              <option value="Middle school">Middle school</option>
+              <option value="None">None</option>
+            </Select>
+          </FormField>
+
+          <FormField label="Study field" required error={errors.studyField}>
+            <Input
+              value={formData.studyField}
+              onChange={(e) => handleInputChange('studyField', e.target.value)}
+              error={errors.studyField}
+              placeholder="Enter study field"
+            />
+          </FormField>
+
+          <FormField label="Issued by (Institution)" required error={errors.studyInstitution}>
+            <Input
+              value={formData.studyInstitution}
+              onChange={(e) => handleInputChange('studyInstitution', e.target.value)}
+              error={errors.studyInstitution}
+              placeholder="Enter institution name"
+            />
+          </FormField>
+
+          <FormField label="Issued in (Date)" required error={errors.studyDate}>
+            <Input
+              type="text"
+              value={formData.studyDate}
+              onChange={(e) => handleInputChange('studyDate', e.target.value)}
+              placeholder="xx/xx/xxxx"
+              error={errors.studyDate}
             />
           </FormField>
         </div>
