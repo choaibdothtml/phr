@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Check, RotateCcw } from 'lucide-react';
+import { Check } from 'lucide-react';
 
 interface ColorOption {
   id: string;
@@ -156,22 +156,6 @@ export default function AppearancesTab() {
 
   return (
     <div className="space-y-6">
-      {/* Header with Reset */}
-      <div className="flex items-center justify-end">
-        <button
-          onClick={handleReset}
-          className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all hover:scale-105"
-          style={{ 
-            background: 'var(--bg-tertiary)',
-            border: '1px solid var(--border-color)',
-            color: 'var(--text-secondary)'
-          }}
-        >
-          <RotateCcw className="w-4 h-4" />
-          Reset to defaults
-        </button>
-      </div>
-
       {/* Color Sections - Side by Side */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Primary Color Section */}
