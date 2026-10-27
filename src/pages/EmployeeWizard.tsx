@@ -130,6 +130,7 @@ export default function EmployeeWizard() {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [errors, setErrors] = useState<FormErrors>({});
   const [banks, setBanks] = useState<Array<{ id: string; name: string }>>([]);
+  const [basicSalary, setBasicSalary] = useState('0 DA');
   
   const [formData, setFormData] = useState<FormData>({
     employeeNumber: '',
@@ -186,6 +187,23 @@ export default function EmployeeWizard() {
       employeeNumber: String(nextNumber).padStart(4, '0'),
     }));
   }, []);
+
+  // Update basic salary when classification or degree changes
+  useEffect(() => {
+    const savedSalaries = localStorage.getItem('phoenix-hr-basic-salaries');
+    if (savedSalaries && formData.classification && formData.degree) {
+      const salaries = JSON.parse(savedSalaries);
+      const key = `${formData.classification}-${formData.degree}`;
+      const salary = salaries[key];
+      if (salary && salary !== '') {
+        setBasicSalary(`${salary} DA`);
+      } else {
+        setBasicSalary('0 DA');
+      }
+    } else {
+      setBasicSalary('0 DA');
+    }
+  }, [formData.classification, formData.degree]);
 
   const calculateAge = (dateString: string) => {
     if (!dateString) return '';
@@ -1006,18 +1024,7 @@ export default function EmployeeWizard() {
             {/* Basic Salary - Read-only field that pulls from Basic salaries table */}
             <FormField label="Basic salary">
               <Input
-                value={(() => {
-                  const savedSalaries = localStorage.getItem('phoenix-hr-basic-salaries');
-                  if (savedSalaries && formData.classification && formData.degree) {
-                    const salaries = JSON.parse(savedSalaries);
-                    const key = `${formData.classification}-${formData.degree}`;
-                    const salary = salaries[key];
-                    if (salary && salary !== '') {
-                      return `${salary} DA`;
-                    }
-                  }
-                  return '0 DA';
-                })()}
+                value={basicSalary}
                 readOnly
                 className="cursor-not-allowed opacity-60"
               />
