@@ -293,7 +293,7 @@ export default function Sidebar() {
                           color: 'var(--text-primary)',
                           borderBottom: '1px solid var(--border-subtle)'
                         }}
-                        onMouseEnter={(e) => e.currentTarget.style.background = 'var(--bg-tertiary)'}
+                        onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(var(--primary-color-rgb), 0.1)'}
                         onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
                       >
                         <UserPlus className="w-4 h-4" style={{ color: 'var(--phoenix-500)' }} />
@@ -306,7 +306,7 @@ export default function Sidebar() {
                         }}
                         className="w-full px-4 py-3 text-left text-sm font-medium transition-colors flex items-center gap-3"
                         style={{ color: 'var(--text-primary)' }}
-                        onMouseEnter={(e) => e.currentTarget.style.background = 'var(--bg-tertiary)'}
+                        onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(var(--primary-color-rgb), 0.1)'}
                         onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
                       >
                         <Users className="w-4 h-4" style={{ color: 'var(--phoenix-500)' }} />
