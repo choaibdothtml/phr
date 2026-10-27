@@ -114,17 +114,17 @@ export default function EmployeesList() {
     }
   }, [loading, filteredEmployees, sort]);
 
-  const handleSort = (column: keyof Employee) => {
+  const handleSort = (column: string) => {
     if (sort.column === column) {
       if (sort.direction === 'asc') {
-        setSort({ column, direction: 'desc' });
+        setSort({ column: column as keyof Employee, direction: 'desc' });
       } else if (sort.direction === 'desc') {
         setSort({ column: null, direction: null });
       } else {
-        setSort({ column, direction: 'asc' });
+        setSort({ column: column as keyof Employee, direction: 'asc' });
       }
     } else {
-      setSort({ column, direction: 'asc' });
+      setSort({ column: column as keyof Employee, direction: 'asc' });
     }
   };
 
@@ -150,7 +150,20 @@ export default function EmployeesList() {
   };
 
   const exportToExcel = () => {
-    const dataToExport = getSortedEmployees().map(emp => ({
+    const dataToExport = getSortedEmployees().map(emp => {
+      // Calculate basic salary
+      let basicSalary = '0 DA';
+      const savedSalaries = localStorage.getItem('phoenix-hr-basic-salaries');
+      if (savedSalaries && emp.classification && emp.degree) {
+        const salaries = JSON.parse(savedSalaries);
+        const key = `${emp.classification}-${emp.degree}`;
+        const salary = salaries[key];
+        if (salary && salary !== '') {
+          basicSalary = `${salary} DA`;
+        }
+      }
+      
+      return {
       'Employee Number': emp.employeeNumber,
       'Family Name': emp.lastName,
       'Name': emp.firstName,
@@ -161,6 +174,7 @@ export default function EmployeesList() {
       'Group': emp.group,
       'Classification': emp.classification || '',
       'Degree': emp.degree || '',
+      'Basic Salary': basicSalary,
       'Social Security Number': emp.socialSecurityNumber || '',
       'Phone Number': emp.phone,
       'Email Address': emp.email,
@@ -185,7 +199,8 @@ export default function EmployeesList() {
       'Current Contract End Date': emp.currentContractEndDate || '',
       'Date of Leaving Work': emp.dateOfLeavingWork || '',
       'Reason for Leaving': emp.reasonForLeaving || '',
-    }));
+    };
+    });
 
     const ws = XLSX.utils.json_to_sheet(dataToExport);
     const wb = XLSX.utils.book_new();
@@ -201,7 +216,20 @@ export default function EmployeesList() {
       format: 'a4'
     });
 
-    const dataToExport = getSortedEmployees().map(emp => [
+    const dataToExport = getSortedEmployees().map(emp => {
+      // Calculate basic salary
+      let basicSalary = '0 DA';
+      const savedSalaries = localStorage.getItem('phoenix-hr-basic-salaries');
+      if (savedSalaries && emp.classification && emp.degree) {
+        const salaries = JSON.parse(savedSalaries);
+        const key = `${emp.classification}-${emp.degree}`;
+        const salary = salaries[key];
+        if (salary && salary !== '') {
+          basicSalary = `${salary} DA`;
+        }
+      }
+      
+      return [
       emp.employeeNumber,
       emp.lastName,
       emp.firstName,
@@ -212,6 +240,7 @@ export default function EmployeesList() {
       emp.group,
       emp.classification || '',
       emp.degree || '',
+      basicSalary,
       emp.socialSecurityNumber || '',
       emp.phone,
       emp.email,
@@ -236,11 +265,12 @@ export default function EmployeesList() {
       emp.currentContractEndDate || '',
       emp.dateOfLeavingWork || '',
       emp.reasonForLeaving || '',
-    ]);
+    ];
+    });
 
     const headers = [[
       'Employee Number', 'Family Name', 'Name', 'Existing/Departing', 'Entry Date',
-      'Job', 'Department', 'Group', 'Classification', 'Degree',
+      'Job', 'Department', 'Group', 'Classification', 'Degree', 'Basic Salary',
       'Social Security Number', 'Phone Number', 'Email Address',
       'Province of Residency', 'Municipality of Residency', 'Address',
       'ID Number', 'Driver License Number', 'NIN', 'Gender',
@@ -304,7 +334,7 @@ export default function EmployeesList() {
     setShowClearConfirm(false);
   };
 
-  const columns: { key: keyof Employee; label: string; width: number }[] = [
+  const columns: { key: string; label: string; width: number }[] = [
     { key: 'employeeNumber', label: "Employee's Number", width: 120 },
     { key: 'lastName', label: 'Family Name', width: 130 },
     { key: 'firstName', label: 'Name', width: 120 },
@@ -315,6 +345,7 @@ export default function EmployeesList() {
     { key: 'group', label: 'Group', width: 130 },
     { key: 'classification', label: 'Classification', width: 110 },
     { key: 'degree', label: 'Degree', width: 160 },
+    { key: 'basicSalary', label: 'Basic Salary', width: 140 },
     { key: 'socialSecurityNumber', label: 'Social Security Number', width: 160 },
     { key: 'phone', label: 'Phone Number', width: 130 },
     { key: 'email', label: 'Email Address', width: 200 },
@@ -351,7 +382,20 @@ export default function EmployeesList() {
       if (emp.status === 'on-leave') return 'On Leave';
       return '-';
     }
-    const val = emp[col.key];
+    if (col.label === 'Basic Salary') {
+      // Get basic salary from localStorage based on classification and degree
+      const savedSalaries = localStorage.getItem('phoenix-hr-basic-salaries');
+      if (savedSalaries && emp.classification && emp.degree) {
+        const salaries = JSON.parse(savedSalaries);
+        const key = `${emp.classification}-${emp.degree}`;
+        const salary = salaries[key];
+        if (salary && salary !== '') {
+          return `${salary} DA`;
+        }
+      }
+      return '0 DA';
+    }
+    const val = emp[col.key as keyof Employee];
     return val !== undefined && val !== null && val !== '' ? val : '-';
   };
 
