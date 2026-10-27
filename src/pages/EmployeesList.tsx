@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Download, Filter, X, ArrowUpDown, ArrowUp, ArrowDown, Printer, ChevronDown, Trash2 } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { api, Employee } from '../services/api';
 import { useSettings } from '../contexts/SettingsContext';
 import * as XLSX from 'xlsx';
@@ -69,6 +69,7 @@ function calculateAge(dateOfBirth: string): number {
 
 export default function EmployeesList() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [filteredEmployees, setFilteredEmployees] = useState<Employee[]>([]);
   const [loading, setLoading] = useState(true);
@@ -101,7 +102,7 @@ export default function EmployeesList() {
         setLoading(false);
       });
     }
-  }, []);
+  }, [location.key]); // Reload when location changes (e.g., when navigating from wizard)
 
   // Calculate sticky column positions after render
   useEffect(() => {
