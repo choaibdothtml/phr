@@ -10,6 +10,7 @@ import EmployeesProfiles from './pages/EmployeesProfiles';
 import EmployeesList from './pages/EmployeesList';
 import Departments from './pages/Departments';
 import Attendance from './pages/Attendance';
+import RestEntitlements from './pages/RestEntitlements';
 import Payroll from './pages/Payroll';
 import LeaveManagement from './pages/LeaveManagement';
 import Settings from './pages/Settings';
@@ -50,6 +51,7 @@ function AppRoutes() {
         <Route path="employees/profiles" element={<EmployeesProfiles />} />
         <Route path="departments" element={<Departments />} />
         <Route path="attendance" element={<Attendance />} />
+        <Route path="rest-entitlements" element={<RestEntitlements />} />
         <Route path="payroll" element={<Payroll />} />
         <Route path="leave" element={<LeaveManagement />} />
         <Route path="settings" element={<Settings />} />

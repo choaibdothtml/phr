@@ -17,6 +17,7 @@ const navItems = [
   { path: '/employees/list', label: "Employees' list", icon: List },
   { path: '/employees/profiles', label: "Employees' profiles", icon: Users },
   { path: '/attendance', label: 'Attendance', icon: CalendarClock },
+  { path: '/rest-entitlements', label: 'Rest entitlements/taken', icon: CalendarClock },
   { path: '/payroll', label: 'Payroll', icon: DollarSign },
   { path: '/settings', label: 'Settings', icon: Settings },
 ];
