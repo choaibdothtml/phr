@@ -1,12 +1,13 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Building2, Users, DollarSign, Landmark, Palette, Key, Database, Briefcase } from 'lucide-react';
+import { Building2, Users, DollarSign, Landmark, Palette, Key, Database, Briefcase, FileText } from 'lucide-react';
 import DepartmentsTab from './DepartmentsTab';
 import GroupsClassificationsTab from './GroupsClassificationsTab';
 import BasicSalariesTab from './BasicSalariesTab';
 import BanksTab from './BanksTab';
 import AppearancesTab from './AppearancesTab';
 import JobTitlesTab from './JobTitlesTab';
+import AdministrativeDecisionsTab from './AdministrativeDecisionsTab';
 
 export default function Settings() {
   const [activeTab, setActiveTab] = useState('departments');
@@ -17,6 +18,7 @@ export default function Settings() {
     { id: 'jobTitles', label: 'Job titles', icon: Briefcase },
     { id: 'salaries', label: 'Basic salaries', icon: DollarSign },
     { id: 'banks', label: 'Banks', icon: Landmark },
+    { id: 'adminDecisions', label: 'Administrative decisions', icon: FileText },
     { id: 'appearances', label: 'Preferences', icon: Palette },
     { id: 'password', label: 'Change password', icon: Key },
     { id: 'backup', label: 'Backup/Restore', icon: Database },
@@ -71,6 +73,7 @@ export default function Settings() {
           {activeTab === 'jobTitles' && <JobTitlesTab />}
           {activeTab === 'salaries' && <BasicSalariesTab />}
           {activeTab === 'banks' && <BanksTab />}
+          {activeTab === 'adminDecisions' && <AdministrativeDecisionsTab />}
           {activeTab === 'appearances' && <AppearancesTab />}
           {activeTab === 'password' && <div className="glass-card p-6"><p className="text-sm" style={{ color: 'var(--text-tertiary)' }}>Coming soon...</p></div>}
           {activeTab === 'backup' && <div className="glass-card p-6"><p className="text-sm" style={{ color: 'var(--text-tertiary)' }}>Coming soon...</p></div>}
