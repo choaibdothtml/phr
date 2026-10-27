@@ -267,7 +267,7 @@ export default function Sidebar() {
                 </button>
                 
                 {/* Employee Action Dropdown */}
-                {showEmployeeMenu && !collapsed && createPortal(
+                {showEmployeeMenu && createPortal(
                   <AnimatePresence>
                     <motion.div
                       initial={{ opacity: 0, x: -10 }}
