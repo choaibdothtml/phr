@@ -214,241 +214,236 @@ export default function AppearancesTab() {
 
   return (
     <div className="space-y-6">
-      {/* Color Sections - Side by Side */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Primary Color Section */}
-        <div className="glass-card p-4">
-          <h3 className="font-semibold mb-1" style={{ color: 'var(--text-primary)' }}>
-            Primary color
-          </h3>
-          <p className="text-xs mb-4" style={{ color: 'var(--text-tertiary)' }}>
-            Used for buttons, active states, and section highlights
-          </p>
+      {/* Primary Color Section */}
+      <div className="glass-card p-4">
+        <h3 className="font-semibold mb-1" style={{ color: 'var(--text-primary)' }}>
+          Primary color
+        </h3>
+        <p className="text-xs mb-4" style={{ color: 'var(--text-tertiary)' }}>
+          Used for buttons, active states, and section highlights
+        </p>
 
-          <div className="grid grid-cols-5 gap-3">
-            {primaryColors.map(color => {
-              const isSelected = selectedPrimary === color.id;
-              const isDisabled = selectedSidebar !== 'default' && color.id === selectedSidebar;
-              
-              return (
-                <button
-                  key={color.id}
-                  onClick={() => handlePrimarySelect(color.id)}
-                  disabled={isDisabled}
-                  className="group relative flex flex-col items-center gap-1.5"
-                  title={color.name}
-                >
-                  <div
-                    className={`w-12 h-12 rounded-xl transition-all ${
-                      isSelected ? 'ring-2 ring-offset-2 scale-110' : 'hover:scale-105'
-                    } ${isDisabled ? 'opacity-30 cursor-not-allowed' : 'cursor-pointer'}`}
-                    style={{ 
-                      background: color.gradient || color.value,
-                      boxShadow: isSelected ? `0 0 20px ${color.value}40` : 'none'
-                    }}
-                  >
-                    {isSelected && (
-                      <div className="w-full h-full flex items-center justify-center">
-                        <Check className="w-5 h-5 text-white" strokeWidth={3} />
-                      </div>
-                    )}
-                  </div>
-                  <span className="text-[10px] font-medium text-center leading-tight" style={{ color: 'var(--text-tertiary)' }}>
-                    {color.name.split(' ')[0]}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Sidebar Color Section */}
-        <div className="glass-card p-4">
-          <h3 className="font-semibold mb-1" style={{ color: 'var(--text-primary)' }}>
-            Sidebar color
-          </h3>
-          <p className="text-xs mb-4" style={{ color: 'var(--text-tertiary)' }}>
-            Background color of the main navigation sidebar
-          </p>
-
-          <div className="grid grid-cols-5 gap-3">
-            {sidebarColors.map(color => {
-              const isSelected = selectedSidebar === color.id;
-              const isDisabled = color.id === selectedPrimary;
-              const previewColor = getSidebarPreviewColor(color);
-              
-              return (
-                <button
-                  key={color.id}
-                  onClick={() => handleSidebarSelect(color.id)}
-                  disabled={isDisabled}
-                  className="group relative flex flex-col items-center gap-1.5"
-                  title={color.name}
-                >
-                  <div
-                    className={`w-12 h-12 rounded-xl transition-all flex items-center justify-center ${
-                      isSelected ? 'ring-2 ring-offset-2 ring-phoenix-500 scale-110' : 'hover:scale-105'
-                    } ${isDisabled ? 'opacity-30 cursor-not-allowed' : 'cursor-pointer'}`}
-                    style={{ 
-                      background: previewColor,
-                      border: color.isDefault ? '2px dashed var(--border-color)' : '1px solid var(--border-color)'
-                    }}
-                  >
-                    {isSelected && (
-                      <Check className="w-5 h-5" strokeWidth={3} style={{ 
-                        color: isDarkMode ? '#f1f5f9' : '#0f172a' 
-                      }} />
-                    )}
-                    {color.isDefault && !isSelected && (
-                      <span className="text-[10px] font-bold" style={{ color: 'var(--text-tertiary)' }}>
-                        Def
-                      </span>
-                    )}
-                  </div>
-                  <span className="text-[10px] font-medium text-center leading-tight" style={{ color: 'var(--text-tertiary)' }}>
-                    {color.name}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Hourly Percentages Section */}
-        <div className="glass-card p-4">
-          <h3 className="font-semibold mb-1" style={{ color: 'var(--text-primary)' }}>
-            Hourly pay percentages
-          </h3>
-          <p className="text-xs mb-4" style={{ color: 'var(--text-tertiary)' }}>
-            For employees whose pay basis is Hourly, please enter the percentages that you are willing to apply
-          </p>
-
-          <div className="space-y-4">
-            {/* Input for adding percentages */}
-            <div className="flex items-end gap-3">
-              <div className="flex-1">
-                <label className="block text-xs font-semibold mb-1.5" style={{ color: 'var(--text-secondary)' }}>
-                  Add percentage (50-99)
-                </label>
-                <input
-                  type="text"
-                  value={percentageInput}
-                  onChange={(e) => handlePercentageInput(e.target.value)}
-                  placeholder="50-99"
-                  className="w-full px-3 py-2.5 rounded-xl text-sm outline-none transition-all focus:ring-2 focus:ring-orange-500/30"
+        <div className="grid grid-cols-5 sm:grid-cols-10 gap-3">
+          {primaryColors.map(color => {
+            const isSelected = selectedPrimary === color.id;
+            const isDisabled = selectedSidebar !== 'default' && color.id === selectedSidebar;
+            
+            return (
+              <button
+                key={color.id}
+                onClick={() => handlePrimarySelect(color.id)}
+                disabled={isDisabled}
+                className="group relative flex flex-col items-center gap-1.5"
+                title={color.name}
+              >
+                <div
+                  className={`w-12 h-12 rounded-xl transition-all ${
+                    isSelected ? 'ring-2 ring-offset-2 scale-110' : 'hover:scale-105'
+                  } ${isDisabled ? 'opacity-30 cursor-not-allowed' : 'cursor-pointer'}`}
                   style={{ 
-                    background: 'var(--bg-tertiary)', 
-                    border: '1px solid var(--border-color)', 
-                    color: 'var(--text-primary)' 
+                    background: color.gradient || color.value,
+                    boxShadow: isSelected ? `0 0 20px ${color.value}40` : 'none'
                   }}
-                />
-              </div>
-            </div>
-
-            {/* Display added percentages */}
-            {tempPercentages.length > 0 && (
-              <div className="flex flex-wrap gap-2">
-                {tempPercentages.map(percentage => (
-                  <div
-                    key={percentage}
-                    className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium"
-                    style={{ 
-                      background: 'rgba(var(--primary-color-rgb), 0.1)',
-                      color: 'var(--text-primary)',
-                      border: '1px solid var(--border-color)'
-                    }}
-                  >
-                    <span>{percentage}%</span>
-                    <button
-                      onClick={() => handleRemovePercentage(percentage)}
-                      className="hover:opacity-70 transition-opacity"
-                      style={{ color: 'var(--text-secondary)' }}
-                    >
-                      <X className="w-3.5 h-3.5" />
-                    </button>
-                  </div>
-                ))}
-              </div>
-            )}
-
-            {/* Save and Cancel buttons */}
-            <div className="flex gap-3 pt-2">
-              <button
-                onClick={handleCancelPercentages}
-                className="px-4 py-2 rounded-xl text-sm font-medium transition-all hover:scale-105"
-                style={{ 
-                  background: 'var(--bg-tertiary)',
-                  border: '1px solid var(--border-color)',
-                  color: 'var(--text-secondary)'
-                }}
-              >
-                Cancel
+                >
+                  {isSelected && (
+                    <div className="w-full h-full flex items-center justify-center">
+                      <Check className="w-5 h-5 text-white" strokeWidth={3} />
+                    </div>
+                  )}
+                </div>
+                <span className="text-[10px] font-medium text-center leading-tight" style={{ color: 'var(--text-tertiary)' }}>
+                  {color.name.split(' ')[0]}
+                </span>
               </button>
-              <button
-                onClick={handleSavePercentages}
-                className="px-4 py-2 rounded-xl text-white text-sm font-semibold transition-all hover:scale-105 hover:shadow-lg"
-                style={{ background: 'var(--gradient-primary)' }}
-              >
-                Save
-              </button>
-            </div>
-          </div>
+            );
+          })}
         </div>
       </div>
 
       {/* Date and Time Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="glass-card p-4">
-          <h3 className="font-semibold mb-1" style={{ color: 'var(--text-primary)' }}>
-            Date and time
-          </h3>
-          <p className="text-xs mb-4" style={{ color: 'var(--text-tertiary)' }}>
-            Choose how dates and times are displayed
-          </p>
+      <div className="glass-card p-4">
+        <h3 className="font-semibold mb-1" style={{ color: 'var(--text-primary)' }}>
+          Date and time
+        </h3>
+        <p className="text-xs mb-4" style={{ color: 'var(--text-tertiary)' }}>
+          Choose how dates and times are displayed
+        </p>
 
-          <div className="space-y-4">
-            {/* Date Format */}
-            <div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {/* Date Format */}
+          <div>
+            <label className="block text-xs font-semibold mb-1.5" style={{ color: 'var(--text-secondary)' }}>
+              Date format
+            </label>
+            <select
+              value={dateFormat}
+              onChange={(e) => setDateFormat(e.target.value)}
+              className="w-full px-3 py-2.5 rounded-xl text-sm outline-none cursor-pointer transition-all focus:ring-2 focus:ring-orange-500/30"
+              style={{ 
+                background: 'var(--bg-tertiary)', 
+                border: '1px solid var(--border-color)', 
+                color: 'var(--text-primary)' 
+              }}
+            >
+              <option value="full">Full date</option>
+              <option value="dd/mm/yyyy">dd/mm/yyyy</option>
+              <option value="dd/mm/yy">dd/mm/yy</option>
+              <option value="mm/dd/yyyy">mm/dd/yyyy</option>
+              <option value="mm/dd/yy">mm/dd/yy</option>
+            </select>
+          </div>
+
+          {/* Time Format */}
+          <div>
+            <label className="block text-xs font-semibold mb-1.5" style={{ color: 'var(--text-secondary)' }}>
+              Time format
+            </label>
+            <select
+              value={timeFormat}
+              onChange={(e) => setTimeFormat(e.target.value)}
+              className="w-full px-3 py-2.5 rounded-xl text-sm outline-none cursor-pointer transition-all focus:ring-2 focus:ring-orange-500/30"
+              style={{ 
+                background: 'var(--bg-tertiary)', 
+                border: '1px solid var(--border-color)', 
+                color: 'var(--text-primary)' 
+              }}
+            >
+              <option value="12h">12h format</option>
+              <option value="24h">24h format</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      {/* Sidebar Color Section */}
+      <div className="glass-card p-4">
+        <h3 className="font-semibold mb-1" style={{ color: 'var(--text-primary)' }}>
+          Sidebar color
+        </h3>
+        <p className="text-xs mb-4" style={{ color: 'var(--text-tertiary)' }}>
+          Background color of the main navigation sidebar
+        </p>
+
+        <div className="grid grid-cols-5 sm:grid-cols-10 gap-3">
+          {sidebarColors.map(color => {
+            const isSelected = selectedSidebar === color.id;
+            const isDisabled = color.id === selectedPrimary;
+            const previewColor = getSidebarPreviewColor(color);
+            
+            return (
+              <button
+                key={color.id}
+                onClick={() => handleSidebarSelect(color.id)}
+                disabled={isDisabled}
+                className="group relative flex flex-col items-center gap-1.5"
+                title={color.name}
+              >
+                <div
+                  className={`w-12 h-12 rounded-xl transition-all flex items-center justify-center ${
+                    isSelected ? 'ring-2 ring-offset-2 ring-phoenix-500 scale-110' : 'hover:scale-105'
+                  } ${isDisabled ? 'opacity-30 cursor-not-allowed' : 'cursor-pointer'}`}
+                  style={{ 
+                    background: previewColor,
+                    border: color.isDefault ? '2px dashed var(--border-color)' : '1px solid var(--border-color)'
+                  }}
+                >
+                  {isSelected && (
+                    <Check className="w-5 h-5" strokeWidth={3} style={{ 
+                      color: isDarkMode ? '#f1f5f9' : '#0f172a' 
+                    }} />
+                  )}
+                  {color.isDefault && !isSelected && (
+                    <span className="text-[10px] font-bold" style={{ color: 'var(--text-tertiary)' }}>
+                      Def
+                    </span>
+                  )}
+                </div>
+                <span className="text-[10px] font-medium text-center leading-tight" style={{ color: 'var(--text-tertiary)' }}>
+                  {color.name}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Hourly Percentages Section */}
+      <div className="glass-card p-4">
+        <h3 className="font-semibold mb-1" style={{ color: 'var(--text-primary)' }}>
+          Hourly pay percentages
+        </h3>
+        <p className="text-xs mb-4" style={{ color: 'var(--text-tertiary)' }}>
+          For employees whose pay basis is Hourly, please enter the percentages that you are willing to apply
+        </p>
+
+        <div className="space-y-4">
+          {/* Input for adding percentages */}
+          <div className="flex items-end gap-3">
+            <div className="flex-1">
               <label className="block text-xs font-semibold mb-1.5" style={{ color: 'var(--text-secondary)' }}>
-                Date format
+                Add percentage (50-99)
               </label>
-              <select
-                value={dateFormat}
-                onChange={(e) => setDateFormat(e.target.value)}
-                className="w-full px-3 py-2.5 rounded-xl text-sm outline-none cursor-pointer transition-all focus:ring-2 focus:ring-orange-500/30"
+              <input
+                type="text"
+                value={percentageInput}
+                onChange={(e) => handlePercentageInput(e.target.value)}
+                placeholder="50-99"
+                className="w-full px-3 py-2.5 rounded-xl text-sm outline-none transition-all focus:ring-2 focus:ring-orange-500/30"
                 style={{ 
                   background: 'var(--bg-tertiary)', 
                   border: '1px solid var(--border-color)', 
                   color: 'var(--text-primary)' 
                 }}
-              >
-                <option value="full">Full date</option>
-                <option value="dd/mm/yyyy">dd/mm/yyyy</option>
-                <option value="dd/mm/yy">dd/mm/yy</option>
-                <option value="mm/dd/yyyy">mm/dd/yyyy</option>
-                <option value="mm/dd/yy">mm/dd/yy</option>
-              </select>
+              />
             </div>
+          </div>
 
-            {/* Time Format */}
-            <div>
-              <label className="block text-xs font-semibold mb-1.5" style={{ color: 'var(--text-secondary)' }}>
-                Time format
-              </label>
-              <select
-                value={timeFormat}
-                onChange={(e) => setTimeFormat(e.target.value)}
-                className="w-full px-3 py-2.5 rounded-xl text-sm outline-none cursor-pointer transition-all focus:ring-2 focus:ring-orange-500/30"
-                style={{ 
-                  background: 'var(--bg-tertiary)', 
-                  border: '1px solid var(--border-color)', 
-                  color: 'var(--text-primary)' 
-                }}
-              >
-                <option value="12h">12h format</option>
-                <option value="24h">24h format</option>
-              </select>
+          {/* Display added percentages */}
+          {tempPercentages.length > 0 && (
+            <div className="flex flex-wrap gap-2">
+              {tempPercentages.map(percentage => (
+                <div
+                  key={percentage}
+                  className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium"
+                  style={{ 
+                    background: 'rgba(var(--primary-color-rgb), 0.1)',
+                    color: 'var(--text-primary)',
+                    border: '1px solid var(--border-color)'
+                  }}
+                >
+                  <span>{percentage}%</span>
+                  <button
+                    onClick={() => handleRemovePercentage(percentage)}
+                    className="hover:opacity-70 transition-opacity"
+                    style={{ color: 'var(--text-secondary)' }}
+                  >
+                    <X className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              ))}
             </div>
+          )}
+
+          {/* Save and Cancel buttons */}
+          <div className="flex gap-3 pt-2">
+            <button
+              onClick={handleCancelPercentages}
+              className="px-4 py-2 rounded-xl text-sm font-medium transition-all hover:scale-105"
+              style={{ 
+                background: 'var(--bg-tertiary)',
+                border: '1px solid var(--border-color)',
+                color: 'var(--text-secondary)'
+              }}
+            >
+              Cancel
+            </button>
+            <button
+              onClick={handleSavePercentages}
+              className="px-4 py-2 rounded-xl text-white text-sm font-semibold transition-all hover:scale-105 hover:shadow-lg"
+              style={{ background: 'var(--gradient-primary)' }}
+            >
+              Save
+            </button>
           </div>
         </div>
       </div>
