@@ -32,6 +32,13 @@ interface FormData {
   degree: string;
   group: string;
   department: string;
+  contractDuration: string;
+  contractDurationUnit: string;
+  probationaryPeriod: string;
+  probationaryPeriodUnit: string;
+  unsuccessfulProbationNotice: string;
+  resignationNotice: string;
+  appointmentPurpose: string;
   nationalIdNumber: string;
   idNumber: string;
   idIssuingDate: string;
@@ -159,6 +166,13 @@ export default function EmployeeWizard() {
     degree: '',
     group: '',
     department: '',
+    contractDuration: '',
+    contractDurationUnit: 'days',
+    probationaryPeriod: '',
+    probationaryPeriodUnit: 'days',
+    unsuccessfulProbationNotice: '',
+    resignationNotice: '',
+    appointmentPurpose: '',
     nationalIdNumber: '',
     idNumber: '',
     idIssuingDate: '',
@@ -481,6 +495,34 @@ export default function EmployeeWizard() {
       if (!formData.job) newErrors.job = 'Required';
       if (!formData.degree) newErrors.degree = 'Required';
       if (!formData.department) newErrors.department = 'Required';
+      if (!formData.contractDuration) newErrors.contractDuration = 'Required';
+      else {
+        const duration = parseInt(formData.contractDuration, 10);
+        if (isNaN(duration) || duration < 1) {
+          newErrors.contractDuration = 'Minimum value is 1';
+        }
+      }
+      if (!formData.probationaryPeriod) newErrors.probationaryPeriod = 'Required';
+      else {
+        const period = parseInt(formData.probationaryPeriod, 10);
+        if (isNaN(period) || period < 1) {
+          newErrors.probationaryPeriod = 'Minimum value is 1';
+        }
+      }
+      if (!formData.unsuccessfulProbationNotice) newErrors.unsuccessfulProbationNotice = 'Required';
+      else {
+        const notice = parseInt(formData.unsuccessfulProbationNotice, 10);
+        if (isNaN(notice) || notice < 1) {
+          newErrors.unsuccessfulProbationNotice = 'Minimum value is 1';
+        }
+      }
+      if (!formData.resignationNotice) newErrors.resignationNotice = 'Required';
+      else {
+        const notice = parseInt(formData.resignationNotice, 10);
+        if (isNaN(notice) || notice < 1) {
+          newErrors.resignationNotice = 'Minimum value is 1';
+        }
+      }
     } else if (step === 'identification') {
       if (!formData.nationalIdNumber) newErrors.nationalIdNumber = 'Required';
       else {
@@ -620,6 +662,13 @@ export default function EmployeeWizard() {
       degree: '',
       group: '',
       department: '',
+      contractDuration: '',
+      contractDurationUnit: 'days',
+      probationaryPeriod: '',
+      probationaryPeriodUnit: 'days',
+      unsuccessfulProbationNotice: '',
+      resignationNotice: '',
+      appointmentPurpose: '',
       nationalIdNumber: '',
       idNumber: '',
       idIssuingDate: '',
@@ -663,6 +712,13 @@ export default function EmployeeWizard() {
       degree: '',
       group: '',
       department: '',
+      contractDuration: '',
+      contractDurationUnit: 'days',
+      probationaryPeriod: '',
+      probationaryPeriodUnit: 'days',
+      unsuccessfulProbationNotice: '',
+      resignationNotice: '',
+      appointmentPurpose: '',
       nationalIdNumber: '',
       idNumber: '',
       idIssuingDate: '',
@@ -962,6 +1018,82 @@ export default function EmployeeWizard() {
       
       const savedDepartments = localStorage.getItem('phoenix-hr-departments-custom');
       const currentDepartments = savedDepartments ? JSON.parse(savedDepartments) : [];
+
+      // Helper function to parse dd/mm/yyyy date
+      const parseDate = (dateStr: string): Date | null => {
+        if (!dateStr) return null;
+        const parts = dateStr.split('/');
+        if (parts.length !== 3) return null;
+        const day = parseInt(parts[0], 10);
+        const month = parseInt(parts[1], 10) - 1;
+        const year = parseInt(parts[2], 10);
+        if (isNaN(day) || isNaN(month) || isNaN(year)) return null;
+        return new Date(year, month, day);
+      };
+
+      // Helper function to format date to dd/mm/yyyy
+      const formatDate = (date: Date): string => {
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const year = date.getFullYear();
+        return `${day}/${month}/${year}`;
+      };
+
+      // Calculate contract end date
+      const calculateContractEndDate = (): string => {
+        if (!formData.entryDate || !formData.contractDuration) return '';
+        const startDate = parseDate(formData.entryDate);
+        if (!startDate) return '';
+        
+        const duration = parseInt(formData.contractDuration, 10);
+        if (isNaN(duration)) return '';
+
+        const endDate = new Date(startDate);
+        
+        switch (formData.contractDurationUnit) {
+          case 'days':
+            endDate.setDate(endDate.getDate() + duration);
+            break;
+          case 'months':
+            endDate.setMonth(endDate.getMonth() + duration);
+            break;
+          case 'years':
+            endDate.setFullYear(endDate.getFullYear() + duration);
+            break;
+        }
+
+        // Subtract 1 day because contract ends the day before
+        endDate.setDate(endDate.getDate() - 1);
+        
+        return formatDate(endDate);
+      };
+
+      // Calculate confirmation date
+      const calculateConfirmationDate = (): string => {
+        if (!formData.entryDate || !formData.probationaryPeriod) return '';
+        const startDate = parseDate(formData.entryDate);
+        if (!startDate) return '';
+        
+        const period = parseInt(formData.probationaryPeriod, 10);
+        if (isNaN(period)) return '';
+
+        const confirmDate = new Date(startDate);
+        
+        switch (formData.probationaryPeriodUnit) {
+          case 'days':
+            confirmDate.setDate(confirmDate.getDate() + period + 1);
+            break;
+          case 'months':
+            confirmDate.setMonth(confirmDate.getMonth() + period);
+            confirmDate.setDate(confirmDate.getDate() + 1);
+            break;
+        }
+        
+        return formatDate(confirmDate);
+      };
+
+      const contractEndDate = calculateContractEndDate();
+      const confirmationDate = calculateConfirmationDate();
       
       return (
         <div className="space-y-6">
@@ -1038,6 +1170,121 @@ export default function EmployeeWizard() {
                 <option key={dept.id} value={dept.name}>{dept.name}</option>
               ))}
             </Select>
+          </FormField>
+
+          <div className="grid grid-cols-2 gap-6">
+            <FormField label="Contract start date">
+              <Input
+                value={formData.entryDate}
+                readOnly
+                className="cursor-not-allowed opacity-60"
+              />
+            </FormField>
+
+            <div className="flex gap-2">
+              <div className="flex-1">
+                <FormField label="Contract duration" required error={errors.contractDuration}>
+                  <Input
+                    type="number"
+                    min="1"
+                    max="99"
+                    value={formData.contractDuration}
+                    onChange={(e) => handleInputChange('contractDuration', e.target.value)}
+                    error={errors.contractDuration}
+                  />
+                </FormField>
+              </div>
+              <div className="w-32">
+                <FormField label="Unit">
+                  <Select
+                    value={formData.contractDurationUnit}
+                    onChange={(e) => handleInputChange('contractDurationUnit', e.target.value)}
+                  >
+                    <option value="days">Days</option>
+                    <option value="months">Months</option>
+                    <option value="years">Years</option>
+                  </Select>
+                </FormField>
+              </div>
+            </div>
+          </div>
+
+          <FormField label="Contract end date">
+            <Input
+              value={contractEndDate}
+              readOnly
+              className="cursor-not-allowed opacity-60"
+            />
+          </FormField>
+
+          <div className="flex gap-2">
+            <div className="flex-1">
+              <FormField label="Probationary period" required error={errors.probationaryPeriod}>
+                <Input
+                  type="number"
+                  min="1"
+                  max="99"
+                  value={formData.probationaryPeriod}
+                  onChange={(e) => handleInputChange('probationaryPeriod', e.target.value)}
+                  error={errors.probationaryPeriod}
+                />
+              </FormField>
+            </div>
+            <div className="w-32">
+              <FormField label="Unit">
+                <Select
+                  value={formData.probationaryPeriodUnit}
+                  onChange={(e) => handleInputChange('probationaryPeriodUnit', e.target.value)}
+                >
+                  <option value="days">Days</option>
+                  <option value="months">Months</option>
+                </Select>
+              </FormField>
+            </div>
+          </div>
+
+          <FormField label="Confirmation date">
+            <Input
+              value={confirmationDate}
+              readOnly
+              className="cursor-not-allowed opacity-60"
+            />
+          </FormField>
+
+          <div className="grid grid-cols-2 gap-6">
+            <FormField label="Unsuccessful probation notice period (days)" required error={errors.unsuccessfulProbationNotice}>
+              <Input
+                type="number"
+                min="1"
+                max="999"
+                value={formData.unsuccessfulProbationNotice}
+                onChange={(e) => handleInputChange('unsuccessfulProbationNotice', e.target.value)}
+                error={errors.unsuccessfulProbationNotice}
+              />
+            </FormField>
+
+            <FormField label="Resignation notice period (days)" required error={errors.resignationNotice}>
+              <Input
+                type="number"
+                min="1"
+                max="999"
+                value={formData.resignationNotice}
+                onChange={(e) => handleInputChange('resignationNotice', e.target.value)}
+                error={errors.resignationNotice}
+              />
+            </FormField>
+          </div>
+
+          <FormField label="Purpose of the appointment">
+            <Textarea
+              value={formData.appointmentPurpose}
+              onChange={(e) => {
+                const value = e.target.value;
+                const capitalized = value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
+                handleInputChange('appointmentPurpose', capitalized);
+              }}
+              rows={3}
+            />
           </FormField>
         </div>
       );
