@@ -799,56 +799,60 @@ export default function EmployeeEdit() {
                   {/* Study Step */}
                   {currentStep === 3 && (
                     <div className="space-y-6">
-                      <FormField label="Degree/Certification" required error={errors.studyDegree}>
-                        <Select 
-                          value={formData.studyDegree} 
-                          onChange={(e) => handleInputChange('studyDegree', e.target.value)} 
-                          error={errors.studyDegree}
-                        >
-                          <option value="">Select degree/certification</option>
-                          <option value="PhD">PhD</option>
-                          <option value="Magister">Magister</option>
-                          <option value="Engineer/ Structural engineer">Engineer/ Structural engineer</option>
-                          <option value="Master">Master</option>
-                          <option value="Bachelor">Bachelor</option>
-                          <option value="DEUA">DEUA</option>
-                          <option value="Higher technician">Higher technician</option>
-                          <option value="High school degree">High school degree</option>
-                          <option value="Technician">Technician</option>
-                          <option value="CAP">CAP</option>
-                          <option value="Secondary school">Secondary school</option>
-                          <option value="Middle school">Middle school</option>
-                          <option value="None">None</option>
-                        </Select>
-                      </FormField>
+                      <div className="grid grid-cols-2 gap-6">
+                        <FormField label="Degree/Certification" required error={errors.studyDegree}>
+                          <Select 
+                            value={formData.studyDegree} 
+                            onChange={(e) => handleInputChange('studyDegree', e.target.value)} 
+                            error={errors.studyDegree}
+                          >
+                            <option value="">Select degree/certification</option>
+                            <option value="PhD">PhD</option>
+                            <option value="Magister">Magister</option>
+                            <option value="Engineer/ Structural engineer">Engineer/ Structural engineer</option>
+                            <option value="Master">Master</option>
+                            <option value="Bachelor">Bachelor</option>
+                            <option value="DEUA">DEUA</option>
+                            <option value="Higher technician">Higher technician</option>
+                            <option value="High school degree">High school degree</option>
+                            <option value="Technician">Technician</option>
+                            <option value="CAP">CAP</option>
+                            <option value="Secondary school">Secondary school</option>
+                            <option value="Middle school">Middle school</option>
+                            <option value="None">None</option>
+                          </Select>
+                        </FormField>
 
-                      <FormField label="Study field" required error={errors.studyField}>
-                        <Input
-                          value={formData.studyField}
-                          onChange={(e) => handleInputChange('studyField', e.target.value)}
-                          error={errors.studyField}
-                          placeholder="Enter study field"
-                        />
-                      </FormField>
+                        <FormField label="Study field" required error={errors.studyField}>
+                          <Input
+                            value={formData.studyField}
+                            onChange={(e) => handleInputChange('studyField', e.target.value)}
+                            error={errors.studyField}
+                            placeholder="Enter study field"
+                          />
+                        </FormField>
+                      </div>
 
-                      <FormField label="Issued by (Institution)" required error={errors.studyInstitution}>
-                        <Input
-                          value={formData.studyInstitution}
-                          onChange={(e) => handleInputChange('studyInstitution', e.target.value)}
-                          error={errors.studyInstitution}
-                          placeholder="Enter institution name"
-                        />
-                      </FormField>
+                      <div className="grid grid-cols-2 gap-6">
+                        <FormField label="Issued by (Institution)" required error={errors.studyInstitution}>
+                          <Input
+                            value={formData.studyInstitution}
+                            onChange={(e) => handleInputChange('studyInstitution', e.target.value)}
+                            error={errors.studyInstitution}
+                            placeholder="Enter institution name"
+                          />
+                        </FormField>
 
-                      <FormField label="Issued in (Date)" required error={errors.studyDate}>
-                        <Input
-                          type="text"
-                          value={formData.studyDate}
-                          onChange={(e) => handleInputChange('studyDate', e.target.value)}
-                          placeholder="xx/xx/xxxx"
-                          error={errors.studyDate}
-                        />
-                      </FormField>
+                        <FormField label="Issued in (Date)" required error={errors.studyDate}>
+                          <Input
+                            type="text"
+                            value={formData.studyDate}
+                            onChange={(e) => handleInputChange('studyDate', e.target.value)}
+                            placeholder="xx/xx/xxxx"
+                            error={errors.studyDate}
+                          />
+                        </FormField>
+                      </div>
                     </div>
                   )}
 
