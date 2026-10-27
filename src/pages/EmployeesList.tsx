@@ -57,8 +57,21 @@ interface SortState {
 }
 
 function calculateAge(dateOfBirth: string): number {
+  if (!dateOfBirth) return 0;
+  
+  // Parse dd/mm/yyyy format
+  const parts = dateOfBirth.split('/');
+  if (parts.length !== 3) return 0;
+  
+  const day = parseInt(parts[0], 10);
+  const month = parseInt(parts[1], 10) - 1; // Month is 0-indexed in JavaScript
+  const year = parseInt(parts[2], 10);
+  
+  if (isNaN(day) || isNaN(month) || isNaN(year)) return 0;
+  
   const today = new Date();
-  const birth = new Date(dateOfBirth);
+  const birth = new Date(year, month, day);
+  
   let age = today.getFullYear() - birth.getFullYear();
   const monthDiff = today.getMonth() - birth.getMonth();
   if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
