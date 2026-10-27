@@ -32,6 +32,10 @@ interface FormData {
   degree: string;
   group: string;
   department: string;
+  payBasis: string;
+  contractualStatus: string;
+  employmentType: string;
+  hoursWorkedPerDay: string;
   contractDuration: string;
   contractDurationUnit: string;
   probationaryPeriod: string;
@@ -166,6 +170,10 @@ export default function EmployeeWizard() {
     degree: '',
     group: '',
     department: '',
+    payBasis: 'Salaried',
+    contractualStatus: 'Fixed-term',
+    employmentType: 'Full-time',
+    hoursWorkedPerDay: '',
     contractDuration: '',
     contractDurationUnit: 'days',
     probationaryPeriod: '',
@@ -645,8 +653,12 @@ export default function EmployeeWizard() {
         chronicDiseases: formData.chronicDiseases,
         bankName: formData.bankName,
         accountNumber: formData.accountNumber,
-        contractDuration: formData.contractDuration,
-        contractDurationUnit: formData.contractDurationUnit,
+        contractDuration: formData.contractualStatus === 'Permanent' ? '' : formData.contractDuration,
+        contractDurationUnit: formData.contractualStatus === 'Permanent' ? '' : formData.contractDurationUnit,
+        payBasis: formData.payBasis,
+        contractualStatus: formData.contractualStatus,
+        employmentType: formData.employmentType,
+        hoursWorkedPerDay: formData.employmentType === 'Part-time' ? formData.hoursWorkedPerDay : '',
         probationaryPeriod: formData.probationaryPeriod,
         probationaryPeriodUnit: formData.probationaryPeriodUnit,
         confirmationDate: calculateConfirmationDate(),
@@ -699,6 +711,10 @@ export default function EmployeeWizard() {
       degree: '',
       group: '',
       department: '',
+      payBasis: 'Salaried',
+      contractualStatus: 'Fixed-term',
+      employmentType: 'Full-time',
+      hoursWorkedPerDay: '',
       contractDuration: '',
       contractDurationUnit: 'days',
       probationaryPeriod: '',
@@ -1218,14 +1234,16 @@ export default function EmployeeWizard() {
               />
             </FormField>
 
-            <FormField label="Contract duration" required error={errors.contractDuration}>
+            <FormField label="Contract duration" required={formData.contractualStatus !== 'Permanent'} error={errors.contractDuration}>
               <Input
                 type="number"
                 min="1"
                 max="99"
                 value={formData.contractDuration}
                 onChange={(e) => handleInputChange('contractDuration', e.target.value)}
+                disabled={formData.contractualStatus === 'Permanent'}
                 error={errors.contractDuration}
+                className={formData.contractualStatus === 'Permanent' ? 'cursor-not-allowed opacity-60' : ''}
               />
             </FormField>
 
@@ -1233,6 +1251,8 @@ export default function EmployeeWizard() {
               <Select
                 value={formData.contractDurationUnit}
                 onChange={(e) => handleInputChange('contractDurationUnit', e.target.value)}
+                disabled={formData.contractualStatus === 'Permanent'}
+                className={formData.contractualStatus === 'Permanent' ? 'cursor-not-allowed opacity-60' : ''}
               >
                 <option value="days">Days</option>
                 <option value="months">Months</option>
@@ -1242,7 +1262,7 @@ export default function EmployeeWizard() {
 
             <FormField label="Contract end date">
               <Input
-                value={contractEndDate}
+                value={formData.contractualStatus === 'Permanent' ? '' : contractEndDate}
                 readOnly
                 className="cursor-not-allowed opacity-60"
               />
@@ -1303,6 +1323,73 @@ export default function EmployeeWizard() {
               />
             </FormField>
           </div>
+
+          <div className="grid grid-cols-3 gap-6">
+            <FormField label="Pay basis" required error={errors.payBasis}>
+              <Select
+                value={formData.payBasis}
+                onChange={(e) => handleInputChange('payBasis', e.target.value)}
+                error={errors.payBasis}
+              >
+                <option value="Salaried">Salaried</option>
+                <option value="Hourly">Hourly</option>
+              </Select>
+            </FormField>
+
+            <FormField label="Contractual status" required error={errors.contractualStatus}>
+              <Select
+                value={formData.contractualStatus}
+                onChange={(e) => {
+                  handleInputChange('contractualStatus', e.target.value);
+                  // Clear contract duration and end date if Permanent is selected
+                  if (e.target.value === 'Permanent') {
+                    handleInputChange('contractDuration', '');
+                    handleInputChange('contractDurationUnit', 'days');
+                  }
+                }}
+                error={errors.contractualStatus}
+              >
+                <option value="Fixed-term">Fixed-term</option>
+                <option value="Permanent">Permanent</option>
+              </Select>
+            </FormField>
+
+            <FormField label="Employment type" required error={errors.employmentType}>
+              <Select
+                value={formData.employmentType}
+                onChange={(e) => {
+                  handleInputChange('employmentType', e.target.value);
+                  // Clear hours worked per day if Full-time is selected
+                  if (e.target.value === 'Full-time') {
+                    handleInputChange('hoursWorkedPerDay', '');
+                  }
+                }}
+                error={errors.employmentType}
+              >
+                <option value="Full-time">Full-time</option>
+                <option value="Part-time">Part-time</option>
+              </Select>
+            </FormField>
+          </div>
+
+          <FormField label="Hours worked per day" error={errors.hoursWorkedPerDay}>
+            <Input
+              type="number"
+              min="4"
+              max="7"
+              value={formData.hoursWorkedPerDay}
+              onChange={(e) => {
+                const value = e.target.value;
+                if (value === '' || (parseInt(value) >= 4 && parseInt(value) <= 7)) {
+                  handleInputChange('hoursWorkedPerDay', value);
+                }
+              }}
+              disabled={formData.employmentType !== 'Part-time'}
+              error={errors.hoursWorkedPerDay}
+              className={formData.employmentType !== 'Part-time' ? 'cursor-not-allowed opacity-60' : ''}
+              maxLength={1}
+            />
+          </FormField>
 
           <FormField label="Purpose of the appointment">
             <Textarea

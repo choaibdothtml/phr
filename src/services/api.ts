@@ -58,6 +58,10 @@ export interface Employee {
   currentContractEndDate?: string;
   contractDuration?: string;
   contractDurationUnit?: string;
+  payBasis?: string;
+  contractualStatus?: string;
+  employmentType?: string;
+  hoursWorkedPerDay?: string;
   probationaryPeriod?: string;
   probationaryPeriodUnit?: string;
   confirmationDate?: string;

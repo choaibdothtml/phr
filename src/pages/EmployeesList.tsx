@@ -196,8 +196,12 @@ export default function EmployeesList() {
       'Bank Name': emp.bankName || '',
       'Account Number': emp.accountNumber || '',
       'Current Contract Start Date': emp.currentContractStartDate || '',
-      'Contract Duration': emp.contractDuration && emp.contractDurationUnit ? `${emp.contractDuration} ${emp.contractDurationUnit}` : '',
-      'Current Contract End Date': emp.currentContractEndDate || '',
+      'Pay Basis': emp.payBasis || '',
+      'Contractual Status': emp.contractualStatus || '',
+      'Employment Type': emp.employmentType || '',
+      'Hours Worked Per Day': emp.employmentType === 'Part-time' ? emp.hoursWorkedPerDay || '' : '',
+      'Contract Duration': emp.contractualStatus === 'Permanent' ? 'None' : (emp.contractDuration && emp.contractDurationUnit ? `${emp.contractDuration} ${emp.contractDurationUnit}` : ''),
+      'Current Contract End Date': emp.contractualStatus === 'Permanent' ? 'None' : (emp.currentContractEndDate || ''),
       'Probationary Period': emp.probationaryPeriod && emp.probationaryPeriodUnit ? `${emp.probationaryPeriod} ${emp.probationaryPeriodUnit}` : '',
       'Confirmation Date': emp.confirmationDate || '',
       'Unsuccessful Probation Notice (days)': emp.unsuccessfulProbationNotice || '',
@@ -268,8 +272,12 @@ export default function EmployeesList() {
       emp.bankName || '',
       emp.accountNumber || '',
       emp.currentContractStartDate || '',
-      emp.contractDuration && emp.contractDurationUnit ? `${emp.contractDuration} ${emp.contractDurationUnit}` : '',
-      emp.currentContractEndDate || '',
+      emp.payBasis || '',
+      emp.contractualStatus || '',
+      emp.employmentType || '',
+      emp.employmentType === 'Part-time' ? emp.hoursWorkedPerDay || '' : '',
+      emp.contractualStatus === 'Permanent' ? 'None' : (emp.contractDuration && emp.contractDurationUnit ? `${emp.contractDuration} ${emp.contractDurationUnit}` : ''),
+      emp.contractualStatus === 'Permanent' ? 'None' : (emp.currentContractEndDate || ''),
       emp.probationaryPeriod && emp.probationaryPeriodUnit ? `${emp.probationaryPeriod} ${emp.probationaryPeriodUnit}` : '',
       emp.confirmationDate || '',
       emp.unsuccessfulProbationNotice || '',
@@ -288,7 +296,7 @@ export default function EmployeesList() {
       'ID Number', 'Driver License Number', 'NIN', 'Gender',
       'Date of Birth', 'Province of Birth', 'Municipality of Birth', 'Age',
       'Situation', 'Number of Kids', 'Blood Type', 'Chronic Diseases',
-      'Bank Name', 'Account Number', 'Contract Start Date', 'Contract Duration', 'Contract End Date',
+      'Bank Name', 'Account Number', 'Contract Start Date', 'Pay Basis', 'Contractual Status', 'Employment Type', 'Hours Worked Per Day', 'Contract Duration', 'Contract End Date',
       'Probationary Period', 'Confirmation Date', 'Unsuccessful Probation Notice (days)', 'Resignation Notice (days)', 'Purpose of the Appointment',
       'Date of Leaving', 'Termination reason'
     ]];
@@ -380,6 +388,10 @@ export default function EmployeesList() {
     { key: 'bankName', label: 'Bank Name', width: 130 },
     { key: 'accountNumber', label: 'Account Number', width: 140 },
     { key: 'currentContractStartDate', label: 'Contract Start Date', width: 150 },
+    { key: 'payBasis', label: 'Pay Basis', width: 120 },
+    { key: 'contractualStatus', label: 'Contractual Status', width: 150 },
+    { key: 'employmentType', label: 'Employment Type', width: 140 },
+    { key: 'hoursWorkedPerDay', label: 'Hours Worked Per Day', width: 160 },
     { key: 'contractDuration', label: 'Contract Duration', width: 140 },
     { key: 'currentContractEndDate', label: 'Contract End Date', width: 150 },
     { key: 'probationaryPeriod', label: 'Probationary Period', width: 150 },
@@ -414,11 +426,35 @@ export default function EmployeesList() {
       }
       return '0 DA';
     }
+    if (col.label === 'Pay Basis') {
+      return emp.payBasis || '-';
+    }
+    if (col.label === 'Contractual Status') {
+      return emp.contractualStatus || '-';
+    }
+    if (col.label === 'Employment Type') {
+      return emp.employmentType || '-';
+    }
+    if (col.label === 'Hours Worked Per Day') {
+      if (emp.employmentType === 'Part-time' && emp.hoursWorkedPerDay) {
+        return emp.hoursWorkedPerDay;
+      }
+      return '-';
+    }
     if (col.label === 'Contract Duration') {
+      if (emp.contractualStatus === 'Permanent') {
+        return 'None';
+      }
       if (emp.contractDuration && emp.contractDurationUnit) {
         return `${emp.contractDuration} ${emp.contractDurationUnit}`;
       }
       return '-';
+    }
+    if (col.label === 'Contract End Date') {
+      if (emp.contractualStatus === 'Permanent') {
+        return 'None';
+      }
+      return emp.currentContractEndDate || '-';
     }
     if (col.label === 'Probationary Period') {
       if (emp.probationaryPeriod && emp.probationaryPeriodUnit) {
