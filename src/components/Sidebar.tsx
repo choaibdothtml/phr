@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Home, UserPlus, Users, List, CalendarClock, DollarSign,
-  Settings, LogOut, Flame, ChevronLeft, ChevronRight,
+  Settings, LogOut, ChevronLeft, ChevronRight,
   Sun, Moon, Bell, User, X, CheckCheck
 } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
@@ -193,10 +193,11 @@ export default function Sidebar() {
       {/* Logo Area */}
       <div className="flex items-center gap-3 px-5 py-6">
         <div className="relative flex-shrink-0">
-          <div className="w-10 h-10 rounded-xl flex items-center justify-center phoenix-glow"
-            style={{ background: 'var(--gradient-primary)' }}>
-            <Flame className="w-5 h-5 text-white" />
-          </div>
+          <img 
+            src="/logo.png" 
+            alt="Phoenix HR Logo" 
+            className="w-10 h-10 rounded-xl object-cover phoenix-glow"
+          />
         </div>
         {!collapsed && (
           <div className="overflow-hidden">
