@@ -267,6 +267,7 @@ export default function EmployeesList() {
     setFilter(defaultFilter);
     setFilteredEmployees(employees);
     setAppliedFilter(null);
+    setShowFilter(false);
   };
 
   const cancelFilter = () => {
