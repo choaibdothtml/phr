@@ -89,6 +89,7 @@ export default function EmployeeEdit() {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showCancelTerminationConfirm, setShowCancelTerminationConfirm] = useState(false);
   const [showCancelTerminationWarning, setShowCancelTerminationWarning] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const selectorListRef = useRef(null);
   
   const [formData, setFormData] = useState({
@@ -457,6 +458,10 @@ export default function EmployeeEdit() {
   };
 
   const handleDeleteEmployee = () => {
+    setShowDeleteConfirm(true);
+  };
+
+  const confirmDeleteEmployee = () => {
     const savedEmployees = localStorage.getItem('phoenix-hr-employees');
     if (savedEmployees) {
       const empList = JSON.parse(savedEmployees);
@@ -474,6 +479,7 @@ export default function EmployeeEdit() {
         navigate('/employees/list');
       }
     }
+    setShowDeleteConfirm(false);
   };
 
   // Check if current employee is the last one (highest employee number)
@@ -1694,6 +1700,62 @@ export default function EmployeeEdit() {
                   >
                     OK
                   </button>
+                </div>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+
+      {/* Delete Employee Confirmation Modal */}
+      <AnimatePresence>
+        {showDeleteConfirm && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-[60]"
+              style={{ background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)' }}
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="fixed inset-0 z-[70] flex items-center justify-center p-4"
+            >
+              <div className="glass-card p-8 max-w-md w-full" style={{ background: 'var(--bg-card)' }}>
+                <div className="text-center">
+                  <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4"
+                    style={{ background: 'rgba(239, 68, 68, 0.1)' }}>
+                    <AlertCircle className="w-8 h-8 text-red-500" />
+                  </div>
+                  <h3 className="text-lg font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
+                    Delete Employee
+                  </h3>
+                  <p className="text-sm mb-6" style={{ color: 'var(--text-secondary)' }}>
+                    Are you sure you want to delete {formData.firstName} {formData.lastName}? This action cannot be undone.
+                  </p>
+                  <div className="flex gap-3 justify-center">
+                    <button
+                      onClick={() => setShowDeleteConfirm(false)}
+                      className="px-6 py-2.5 rounded-xl text-sm font-semibold transition-all hover:scale-105"
+                      style={{
+                        background: 'var(--bg-tertiary)',
+                        border: '1px solid var(--border-color)',
+                        color: 'var(--text-secondary)'
+                      }}
+                    >
+                      No
+                    </button>
+                    <button
+                      onClick={confirmDeleteEmployee}
+                      className="px-6 py-2.5 rounded-xl text-white text-sm font-semibold transition-all hover:scale-105"
+                      style={{ background: '#ef4444' }}
+                    >
+                      Yes
+                    </button>
+                  </div>
                 </div>
               </div>
             </motion.div>
