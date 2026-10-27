@@ -167,7 +167,7 @@ export default function EmployeesList() {
       'Employee Number': emp.employeeNumber,
       'Family Name': emp.lastName,
       'Name': emp.firstName,
-      'Existing/Departing': emp.status === 'active' ? 'Existing' : emp.status === 'terminated' ? 'Departing' : emp.status === 'on-leave' ? 'On Leave' : '',
+      'Existing/Terminated': emp.status === 'active' ? 'Existing' : emp.status === 'terminated' ? 'Terminated' : emp.status === 'on-leave' ? 'On Leave' : '',
       'Entry Date': emp.joinDate,
       'Job': emp.position,
       'Department': emp.department,
@@ -204,7 +204,7 @@ export default function EmployeesList() {
       'Resignation Notice (days)': emp.resignationNotice || '',
       'Purpose of the Appointment': emp.appointmentPurpose || '',
       'Date of Leaving Work': emp.dateOfLeavingWork || '',
-      'Reason for Leaving': emp.reasonForLeaving || '',
+      'Termination reason': emp.reasonForLeaving || '',
     };
     });
 
@@ -281,7 +281,7 @@ export default function EmployeesList() {
     });
 
     const headers = [[
-      'Employee Number', 'Family Name', 'Name', 'Existing/Departing', 'Entry Date',
+      'Employee Number', 'Family Name', 'Name', 'Existing/Terminated', 'Entry Date',
       'Job', 'Department', 'Group', 'Classification', 'Degree', 'Basic Salary',
       'Social Security Number', 'Phone Number', 'Email Address',
       'Province of Residency', 'Municipality of Residency', 'Address',
@@ -290,7 +290,7 @@ export default function EmployeesList() {
       'Situation', 'Number of Kids', 'Blood Type', 'Chronic Diseases',
       'Bank Name', 'Account Number', 'Contract Start Date', 'Contract Duration', 'Contract End Date',
       'Probationary Period', 'Confirmation Date', 'Unsuccessful Probation Notice (days)', 'Resignation Notice (days)', 'Purpose of the Appointment',
-      'Date of Leaving', 'Reason for Leaving'
+      'Date of Leaving', 'Termination reason'
     ]];
 
     autoTable(doc, {
@@ -351,7 +351,7 @@ export default function EmployeesList() {
     { key: 'employeeNumber', label: "Employee's Number", width: 120 },
     { key: 'lastName', label: 'Family Name', width: 130 },
     { key: 'firstName', label: 'Name', width: 120 },
-    { key: 'status', label: 'Existing/Departing', width: 140 },
+    { key: 'status', label: 'Existing/Terminated', width: 140 },
     { key: 'joinDate', label: 'Entry Date', width: 110 },
     { key: 'position', label: 'Job', width: 150 },
     { key: 'department', label: 'Department', width: 140 },
@@ -388,16 +388,16 @@ export default function EmployeesList() {
     { key: 'resignationNotice', label: 'Resignation Notice (days)', width: 180 },
     { key: 'appointmentPurpose', label: 'Purpose of the Appointment', width: 200 },
     { key: 'dateOfLeavingWork', label: 'Date of Leaving', width: 130 },
-    { key: 'reasonForLeaving', label: 'Reason for Leaving', width: 160 },
+    { key: 'reasonForLeaving', label: 'Termination reason', width: 160 },
   ];
 
   const getCellValue = (emp: Employee, col: typeof columns[0]) => {
     if (col.label === 'Age') {
       return emp.dateOfBirth ? calculateAge(emp.dateOfBirth) : '-';
     }
-    if (col.label === 'Existing/Departing') {
+    if (col.label === 'Existing/Terminated') {
       if (emp.status === 'active') return 'Existing';
-      if (emp.status === 'terminated') return 'Departing';
+      if (emp.status === 'terminated') return 'Terminated';
       if (emp.status === 'on-leave') return 'On Leave';
       return '-';
     }
