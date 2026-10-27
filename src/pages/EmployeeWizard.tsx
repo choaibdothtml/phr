@@ -947,35 +947,37 @@ export default function EmployeeWizard() {
       
       return (
         <div className="space-y-6">
-          <FormField label="Entry date" required error={errors.entryDate}>
-            <Input
-              type="text"
-              placeholder="xx/xx/xxxx"
-              value={formData.entryDate}
-              onChange={(e) => handleInputChange('entryDate', e.target.value)}
-              error={errors.entryDate}
-            />
-          </FormField>
+          <div className="grid grid-cols-2 gap-6">
+            <FormField label="Entry date" required error={errors.entryDate}>
+              <Input
+                type="text"
+                placeholder="xx/xx/xxxx"
+                value={formData.entryDate}
+                onChange={(e) => handleInputChange('entryDate', e.target.value)}
+                error={errors.entryDate}
+              />
+            </FormField>
 
-          <FormField label="Job" required error={errors.job}>
-            <Select 
-              value={formData.job} 
-              onChange={(e) => {
-                handleInputChange('job', e.target.value);
-                // Auto-fill classification when job is selected
-                const selectedJob = currentJobTitles.find((j: any) => j.title === e.target.value);
-                if (selectedJob) {
-                  handleInputChange('classification', selectedJob.classification.toString());
-                }
-              }} 
-              error={errors.job}
-            >
-              <option value="">Select job</option>
-              {currentJobTitles.map((job: any) => (
-                <option key={job.id} value={job.title}>{job.title}</option>
-              ))}
-            </Select>
-          </FormField>
+            <FormField label="Job" required error={errors.job}>
+              <Select 
+                value={formData.job} 
+                onChange={(e) => {
+                  handleInputChange('job', e.target.value);
+                  // Auto-fill classification when job is selected
+                  const selectedJob = currentJobTitles.find((j: any) => j.title === e.target.value);
+                  if (selectedJob) {
+                    handleInputChange('classification', selectedJob.classification.toString());
+                  }
+                }} 
+                error={errors.job}
+              >
+                <option value="">Select job</option>
+                {currentJobTitles.map((job: any) => (
+                  <option key={job.id} value={job.title}>{job.title}</option>
+                ))}
+              </Select>
+            </FormField>
+          </div>
 
           <div className="grid grid-cols-2 gap-6">
             <FormField label="Classification">
