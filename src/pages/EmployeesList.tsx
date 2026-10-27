@@ -203,7 +203,7 @@ export default function EmployeesList() {
       'Pay Basis': emp.payBasis || '',
       'Contractual Status': emp.contractualStatus || '',
       'Employment Type': emp.employmentType || '',
-      'Hours Worked Per Day': emp.employmentType === 'Part-time' ? emp.hoursWorkedPerDay || '' : '',
+      'Hours Worked Per Day': emp.employmentType === 'Full-time' ? '8' : (emp.employmentType === 'Part-time' ? emp.hoursWorkedPerDay || '' : ''),
       'Contract Duration': emp.contractualStatus === 'Permanent' ? 'None' : (emp.contractDuration && emp.contractDurationUnit ? `${emp.contractDuration} ${emp.contractDurationUnit}` : ''),
       'Current Contract End Date': emp.contractualStatus === 'Permanent' ? 'None' : (emp.currentContractEndDate || ''),
       'Probationary Period': emp.probationaryPeriod && emp.probationaryPeriodUnit ? `${emp.probationaryPeriod} ${emp.probationaryPeriodUnit}` : '',
@@ -273,13 +273,17 @@ export default function EmployeesList() {
       emp.numberOfKids?.toString() || '0',
       emp.bloodType || '',
       emp.chronicDiseases || '',
+      emp.studyDegree || '',
+      emp.studyField || '',
+      emp.studyInstitution || '',
+      emp.studyDate || '',
       emp.bankName || '',
       emp.accountNumber || '',
       emp.currentContractStartDate || '',
       emp.payBasis || '',
       emp.contractualStatus || '',
       emp.employmentType || '',
-      emp.employmentType === 'Part-time' ? emp.hoursWorkedPerDay || '' : '',
+      emp.employmentType === 'Full-time' ? '8' : (emp.employmentType === 'Part-time' ? emp.hoursWorkedPerDay || '' : ''),
       emp.contractualStatus === 'Permanent' ? 'None' : (emp.contractDuration && emp.contractDurationUnit ? `${emp.contractDuration} ${emp.contractDurationUnit}` : ''),
       emp.contractualStatus === 'Permanent' ? 'None' : (emp.currentContractEndDate || ''),
       emp.probationaryPeriod && emp.probationaryPeriodUnit ? `${emp.probationaryPeriod} ${emp.probationaryPeriodUnit}` : '',
@@ -300,6 +304,7 @@ export default function EmployeesList() {
       'ID Number', 'Driver License Number', 'NIN', 'Gender',
       'Date of Birth', 'Province of Birth', 'Municipality of Birth', 'Age',
       'Situation', 'Number of Kids', 'Blood Type', 'Chronic Diseases',
+      'Study Degree', 'Study Field', 'Study Institution', 'Study Date',
       'Bank Name', 'Account Number', 'Contract Start Date', 'Pay Basis', 'Contractual Status', 'Employment Type', 'Hours Worked Per Day', 'Contract Duration', 'Contract End Date',
       'Probationary Period', 'Confirmation Date', 'Unsuccessful Probation Notice (days)', 'Resignation Notice (days)', 'Purpose of the Appointment',
       'Date of Leaving', 'Termination reason'
@@ -444,6 +449,9 @@ export default function EmployeesList() {
       return emp.employmentType || '-';
     }
     if (col.label === 'Hours Worked Per Day') {
+      if (emp.employmentType === 'Full-time') {
+        return '8';
+      }
       if (emp.employmentType === 'Part-time' && emp.hoursWorkedPerDay) {
         return emp.hoursWorkedPerDay;
       }
