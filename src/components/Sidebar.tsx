@@ -32,19 +32,40 @@ export default function Sidebar() {
   const [showProfile, setShowProfile] = useState(false);
   const [notifications, setNotifications] = useState(mockNotifications);
   const [currentDateTime, setCurrentDateTime] = useState(new Date());
+  const [dateFormat, setDateFormat] = useState('full');
+  const [timeFormat, setTimeFormat] = useState('12h');
   const unreadCount = notifications.filter(n => !n.read).length;
 
   const sidebarRef = useRef<HTMLDivElement>(null);
   const notificationsDropdownRef = useRef<HTMLDivElement>(null);
 
-  // Update time every minute
+  // Load date/time format preferences
+  useEffect(() => {
+    const savedDateFormat = localStorage.getItem('phoenix-hr-date-format');
+    const savedTimeFormat = localStorage.getItem('phoenix-hr-time-format');
+    if (savedDateFormat) setDateFormat(savedDateFormat);
+    if (savedTimeFormat) setTimeFormat(savedTimeFormat);
+  }, []);
+
+  // Update time every minute and check for format changes
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentDateTime(new Date());
     }, 60000); // Update every minute
 
-    return () => clearInterval(timer);
-  }, []);
+    // Check for format preference changes every second
+    const formatChecker = setInterval(() => {
+      const savedDateFormat = localStorage.getItem('phoenix-hr-date-format');
+      const savedTimeFormat = localStorage.getItem('phoenix-hr-time-format');
+      if (savedDateFormat && savedDateFormat !== dateFormat) setDateFormat(savedDateFormat);
+      if (savedTimeFormat && savedTimeFormat !== timeFormat) setTimeFormat(savedTimeFormat);
+    }, 1000); // Check every second
+
+    return () => {
+      clearInterval(timer);
+      clearInterval(formatChecker);
+    };
+  }, [dateFormat, timeFormat]);
 
   // Format date and time
   const formatDateTime = (date: Date) => {
@@ -56,6 +77,7 @@ export default function Sidebar() {
     const monthName = months[date.getMonth()];
     const day = date.getDate();
     const year = date.getFullYear();
+    const month = date.getMonth() + 1; // getMonth() returns 0-11
     
     // Add ordinal suffix to day
     const getOrdinalSuffix = (n: number) => {
@@ -66,16 +88,47 @@ export default function Sidebar() {
     
     const dayWithSuffix = `${day}${getOrdinalSuffix(day)}`;
     
-    // Format time in 12-hour format
+    // Format date based on user preference
+    let dateStr = '';
+    switch (dateFormat) {
+      case 'full':
+        dateStr = `${dayName}, ${monthName} ${dayWithSuffix}, ${year}`;
+        break;
+      case 'dd/mm/yyyy':
+        dateStr = `${day.toString().padStart(2, '0')}/${month.toString().padStart(2, '0')}/${year}`;
+        break;
+      case 'dd/mm/yy':
+        dateStr = `${day.toString().padStart(2, '0')}/${month.toString().padStart(2, '0')}/${year.toString().slice(-2)}`;
+        break;
+      case 'mm/dd/yyyy':
+        dateStr = `${month.toString().padStart(2, '0')}/${day.toString().padStart(2, '0')}/${year}`;
+        break;
+      case 'mm/dd/yy':
+        dateStr = `${month.toString().padStart(2, '0')}/${day.toString().padStart(2, '0')}/${year.toString().slice(-2)}`;
+        break;
+      default:
+        dateStr = `${dayName}, ${monthName} ${dayWithSuffix}, ${year}`;
+    }
+    
+    // Format time based on user preference
     let hours = date.getHours();
     const minutes = date.getMinutes();
-    const ampm = hours >= 12 ? 'PM' : 'AM';
-    hours = hours % 12;
-    hours = hours ? hours : 12; // the hour '0' should be '12'
-    const minutesStr = minutes < 10 ? '0' + minutes : minutes;
-    const timeStr = `${hours}:${minutesStr} ${ampm}`;
+    let timeStr = '';
     
-    return `${dayName}, ${monthName} ${dayWithSuffix}, ${year} • ${timeStr}`;
+    if (timeFormat === '24h') {
+      const hoursStr = hours.toString().padStart(2, '0');
+      const minutesStr = minutes < 10 ? '0' + minutes : minutes;
+      timeStr = `${hoursStr}:${minutesStr}`;
+    } else {
+      // 12h format
+      const ampm = hours >= 12 ? 'PM' : 'AM';
+      hours = hours % 12;
+      hours = hours ? hours : 12; // the hour '0' should be '12'
+      const minutesStr = minutes < 10 ? '0' + minutes : minutes;
+      timeStr = `${hours}:${minutesStr} ${ampm}`;
+    }
+    
+    return `${dateStr} • ${timeStr}`;
   };
 
   const markAllAsRead = () => {
