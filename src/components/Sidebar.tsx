@@ -13,7 +13,7 @@ import { mockNotifications } from '../services/api';
 
 const navItems = [
   { path: '/', label: 'Home', icon: Home },
-  { path: '/employees', label: 'Add a new employee', icon: UserPlus },
+  { path: '/employees', label: 'Add/Edit an employee', icon: UserPlus },
   { path: '/employees/list', label: "Employees' list", icon: List },
   { path: '/employees/profiles', label: "Employees' profiles", icon: Users },
   { path: '/attendance', label: 'Attendance', icon: CalendarClock },
