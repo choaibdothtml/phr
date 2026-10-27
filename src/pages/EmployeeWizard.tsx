@@ -1324,7 +1324,7 @@ export default function EmployeeWizard() {
             </FormField>
           </div>
 
-          <div className="grid grid-cols-3 gap-6">
+          <div className="grid grid-cols-4 gap-4">
             <FormField label="Pay basis" required error={errors.payBasis}>
               <Select
                 value={formData.payBasis}
@@ -1370,26 +1370,26 @@ export default function EmployeeWizard() {
                 <option value="Part-time">Part-time</option>
               </Select>
             </FormField>
-          </div>
 
-          <FormField label="Hours worked per day" error={errors.hoursWorkedPerDay}>
-            <Input
-              type="number"
-              min="4"
-              max="7"
-              value={formData.hoursWorkedPerDay}
-              onChange={(e) => {
-                const value = e.target.value;
-                if (value === '' || (parseInt(value) >= 4 && parseInt(value) <= 7)) {
-                  handleInputChange('hoursWorkedPerDay', value);
-                }
-              }}
-              disabled={formData.employmentType !== 'Part-time'}
-              error={errors.hoursWorkedPerDay}
-              className={formData.employmentType !== 'Part-time' ? 'cursor-not-allowed opacity-60' : ''}
-              maxLength={1}
-            />
-          </FormField>
+            <FormField label="Hours worked per day" error={errors.hoursWorkedPerDay}>
+              <Input
+                type="number"
+                min="4"
+                max="7"
+                value={formData.hoursWorkedPerDay}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  if (value === '' || (parseInt(value) >= 4 && parseInt(value) <= 7)) {
+                    handleInputChange('hoursWorkedPerDay', value);
+                  }
+                }}
+                disabled={formData.employmentType !== 'Part-time'}
+                error={errors.hoursWorkedPerDay}
+                className={formData.employmentType !== 'Part-time' ? 'cursor-not-allowed opacity-60' : ''}
+                maxLength={1}
+              />
+            </FormField>
+          </div>
 
           <FormField label="Purpose of the appointment">
             <Textarea

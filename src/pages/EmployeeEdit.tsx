@@ -118,6 +118,10 @@ export default function EmployeeEdit() {
     degree: '',
     group: '',
     department: '',
+    payBasis: 'Salaried',
+    contractualStatus: 'Fixed-term',
+    employmentType: 'Full-time',
+    hoursWorkedPerDay: '',
     contractDuration: '',
     contractDurationUnit: 'days',
     probationaryPeriod: '',
@@ -222,6 +226,10 @@ export default function EmployeeEdit() {
       degree: employee.degree || '',
       group: employee.group || '',
       department: employee.department || '',
+      payBasis: employee.payBasis || 'Salaried',
+      contractualStatus: employee.contractualStatus || 'Fixed-term',
+      employmentType: employee.employmentType || 'Full-time',
+      hoursWorkedPerDay: employee.hoursWorkedPerDay || '',
       contractDuration: employee.contractDuration || '',
       contractDurationUnit: employee.contractDurationUnit || 'days',
       probationaryPeriod: employee.probationaryPeriod || '',
@@ -338,6 +346,12 @@ export default function EmployeeEdit() {
           chronicDiseases: formData.chronicDiseases,
           classification: formData.classification,
           group: formData.group,
+          payBasis: formData.payBasis,
+          contractualStatus: formData.contractualStatus,
+          employmentType: formData.employmentType,
+          hoursWorkedPerDay: formData.employmentType === 'Part-time' ? formData.hoursWorkedPerDay : '',
+          contractDuration: formData.contractualStatus === 'Permanent' ? '' : formData.contractDuration,
+          contractDurationUnit: formData.contractualStatus === 'Permanent' ? '' : formData.contractDurationUnit,
           probationaryPeriod: formData.probationaryPeriod,
           probationaryPeriodUnit: formData.probationaryPeriodUnit,
           unsuccessfulProbationNotice: formData.unsuccessfulProbationNotice,
@@ -902,6 +916,73 @@ export default function EmployeeEdit() {
                             value={formData.resignationNotice}
                             onChange={(e) => handleInputChange('resignationNotice', e.target.value)}
                             error={errors.resignationNotice}
+                          />
+                        </FormField>
+                      </div>
+
+                      <div className="grid grid-cols-4 gap-4">
+                        <FormField label="Pay basis" required error={errors.payBasis}>
+                          <Select
+                            value={formData.payBasis}
+                            onChange={(e) => handleInputChange('payBasis', e.target.value)}
+                            error={errors.payBasis}
+                          >
+                            <option value="Salaried">Salaried</option>
+                            <option value="Hourly">Hourly</option>
+                          </Select>
+                        </FormField>
+
+                        <FormField label="Contractual status" required error={errors.contractualStatus}>
+                          <Select
+                            value={formData.contractualStatus}
+                            onChange={(e) => {
+                              handleInputChange('contractualStatus', e.target.value);
+                              // Clear contract duration and end date if Permanent is selected
+                              if (e.target.value === 'Permanent') {
+                                handleInputChange('contractDuration', '');
+                                handleInputChange('contractDurationUnit', 'days');
+                              }
+                            }}
+                            error={errors.contractualStatus}
+                          >
+                            <option value="Fixed-term">Fixed-term</option>
+                            <option value="Permanent">Permanent</option>
+                          </Select>
+                        </FormField>
+
+                        <FormField label="Employment type" required error={errors.employmentType}>
+                          <Select
+                            value={formData.employmentType}
+                            onChange={(e) => {
+                              handleInputChange('employmentType', e.target.value);
+                              // Clear hours worked per day if Full-time is selected
+                              if (e.target.value === 'Full-time') {
+                                handleInputChange('hoursWorkedPerDay', '');
+                              }
+                            }}
+                            error={errors.employmentType}
+                          >
+                            <option value="Full-time">Full-time</option>
+                            <option value="Part-time">Part-time</option>
+                          </Select>
+                        </FormField>
+
+                        <FormField label="Hours worked per day" error={errors.hoursWorkedPerDay}>
+                          <Input
+                            type="number"
+                            min="4"
+                            max="7"
+                            value={formData.hoursWorkedPerDay}
+                            onChange={(e) => {
+                              const value = e.target.value;
+                              if (value === '' || (parseInt(value) >= 4 && parseInt(value) <= 7)) {
+                                handleInputChange('hoursWorkedPerDay', value);
+                              }
+                            }}
+                            disabled={formData.employmentType !== 'Part-time'}
+                            error={errors.hoursWorkedPerDay}
+                            className={formData.employmentType !== 'Part-time' ? 'cursor-not-allowed opacity-60' : ''}
+                            maxLength={1}
                           />
                         </FormField>
                       </div>
