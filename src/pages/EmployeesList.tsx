@@ -198,6 +198,11 @@ export default function EmployeesList() {
       'Current Contract Start Date': emp.currentContractStartDate || '',
       'Contract Duration': emp.contractDuration && emp.contractDurationUnit ? `${emp.contractDuration} ${emp.contractDurationUnit}` : '',
       'Current Contract End Date': emp.currentContractEndDate || '',
+      'Probationary Period': emp.probationaryPeriod && emp.probationaryPeriodUnit ? `${emp.probationaryPeriod} ${emp.probationaryPeriodUnit}` : '',
+      'Confirmation Date': emp.confirmationDate || '',
+      'Unsuccessful Probation Notice (days)': emp.unsuccessfulProbationNotice || '',
+      'Resignation Notice (days)': emp.resignationNotice || '',
+      'Purpose of the Appointment': emp.appointmentPurpose || '',
       'Date of Leaving Work': emp.dateOfLeavingWork || '',
       'Reason for Leaving': emp.reasonForLeaving || '',
     };
@@ -265,6 +270,11 @@ export default function EmployeesList() {
       emp.currentContractStartDate || '',
       emp.contractDuration && emp.contractDurationUnit ? `${emp.contractDuration} ${emp.contractDurationUnit}` : '',
       emp.currentContractEndDate || '',
+      emp.probationaryPeriod && emp.probationaryPeriodUnit ? `${emp.probationaryPeriod} ${emp.probationaryPeriodUnit}` : '',
+      emp.confirmationDate || '',
+      emp.unsuccessfulProbationNotice || '',
+      emp.resignationNotice || '',
+      emp.appointmentPurpose || '',
       emp.dateOfLeavingWork || '',
       emp.reasonForLeaving || '',
     ];
@@ -279,6 +289,7 @@ export default function EmployeesList() {
       'Date of Birth', 'Province of Birth', 'Municipality of Birth', 'Age',
       'Situation', 'Number of Kids', 'Blood Type', 'Chronic Diseases',
       'Bank Name', 'Account Number', 'Contract Start Date', 'Contract Duration', 'Contract End Date',
+      'Probationary Period', 'Confirmation Date', 'Unsuccessful Probation Notice (days)', 'Resignation Notice (days)', 'Purpose of the Appointment',
       'Date of Leaving', 'Reason for Leaving'
     ]];
 
@@ -371,6 +382,11 @@ export default function EmployeesList() {
     { key: 'currentContractStartDate', label: 'Contract Start Date', width: 150 },
     { key: 'contractDuration', label: 'Contract Duration', width: 140 },
     { key: 'currentContractEndDate', label: 'Contract End Date', width: 150 },
+    { key: 'probationaryPeriod', label: 'Probationary Period', width: 150 },
+    { key: 'confirmationDate', label: 'Confirmation Date', width: 150 },
+    { key: 'unsuccessfulProbationNotice', label: 'Unsuccessful Probation Notice (days)', width: 200 },
+    { key: 'resignationNotice', label: 'Resignation Notice (days)', width: 180 },
+    { key: 'appointmentPurpose', label: 'Purpose of the Appointment', width: 200 },
     { key: 'dateOfLeavingWork', label: 'Date of Leaving', width: 130 },
     { key: 'reasonForLeaving', label: 'Reason for Leaving', width: 160 },
   ];
@@ -401,6 +417,12 @@ export default function EmployeesList() {
     if (col.label === 'Contract Duration') {
       if (emp.contractDuration && emp.contractDurationUnit) {
         return `${emp.contractDuration} ${emp.contractDurationUnit}`;
+      }
+      return '-';
+    }
+    if (col.label === 'Probationary Period') {
+      if (emp.probationaryPeriod && emp.probationaryPeriodUnit) {
+        return `${emp.probationaryPeriod} ${emp.probationaryPeriodUnit}`;
       }
       return '-';
     }

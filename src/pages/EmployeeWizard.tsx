@@ -584,6 +584,35 @@ export default function EmployeeWizard() {
       const savedEmployees = localStorage.getItem('phoenix-hr-employees');
       const employees = savedEmployees ? JSON.parse(savedEmployees) : [];
       
+      // Calculate confirmation date
+      const calculateConfirmationDate = (): string => {
+        if (!formData.entryDate || !formData.probationaryPeriod) return '';
+        const dateParts = formData.entryDate.split('/');
+        if (dateParts.length !== 3) return '';
+        
+        const day = parseInt(dateParts[0], 10);
+        const month = parseInt(dateParts[1], 10) - 1;
+        const year = parseInt(dateParts[2], 10);
+        const startDate = new Date(year, month, day);
+        
+        const period = parseInt(formData.probationaryPeriod, 10);
+        if (isNaN(period)) return '';
+
+        const confirmDate = new Date(startDate);
+        
+        if (formData.probationaryPeriodUnit === 'days') {
+          confirmDate.setDate(confirmDate.getDate() + period + 1);
+        } else if (formData.probationaryPeriodUnit === 'months') {
+          confirmDate.setMonth(confirmDate.getMonth() + period);
+          confirmDate.setDate(confirmDate.getDate() + 1);
+        }
+        
+        const confirmDay = String(confirmDate.getDate()).padStart(2, '0');
+        const confirmMonth = String(confirmDate.getMonth() + 1).padStart(2, '0');
+        const confirmYear = confirmDate.getFullYear();
+        return `${confirmDay}/${confirmMonth}/${confirmYear}`;
+      };
+
       // Transform FormData to Employee interface format
       const newEmployee: Employee = {
         id: Date.now().toString(),
@@ -618,6 +647,12 @@ export default function EmployeeWizard() {
         accountNumber: formData.accountNumber,
         contractDuration: formData.contractDuration,
         contractDurationUnit: formData.contractDurationUnit,
+        probationaryPeriod: formData.probationaryPeriod,
+        probationaryPeriodUnit: formData.probationaryPeriodUnit,
+        confirmationDate: calculateConfirmationDate(),
+        unsuccessfulProbationNotice: formData.unsuccessfulProbationNotice,
+        resignationNotice: formData.resignationNotice,
+        appointmentPurpose: formData.appointmentPurpose,
       };
       
       employees.push(newEmployee);
