@@ -690,12 +690,12 @@ export default function EmployeesList() {
         </div>
       </div>
 
-      {/* Full-screen blur overlay + Modal (both portaled to body) */}
+      {/* Filter Modal */}
       {createPortal(
         <AnimatePresence>
           {showFilter && (
             <>
-              {/* Blur overlay - covers everything including sidebars */}
+              {/* Blur overlay */}
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -703,18 +703,23 @@ export default function EmployeesList() {
                 transition={{ duration: 0.2 }}
                 className="fixed inset-0 z-40"
                 style={{ backdropFilter: 'blur(10px)', WebkitBackdropFilter: 'blur(10px)' }}
+                onClick={cancelFilter}
               />
               
-              {/* Modal - sits on top of blur, NOT blurred */}
+              {/* Modal content */}
               <motion.div
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.95 }}
-                transition={{ duration: 0.2, ease: "easeOut" }}
-                className="fixed inset-0 z-50 flex items-center justify-center p-4"
+                transition={{ duration: 0.2 }}
+                className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none"
               >
-                <div className="w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-2xl" style={{ background: 'var(--bg-popup)', border: '1px solid var(--border-color)' }}>
-                  <div className="p-6 grid grid-cols-2 gap-8">
+                <div 
+                  className="w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-2xl pointer-events-auto"
+                  style={{ background: 'var(--bg-popup)', border: '1px solid var(--border-color)', boxShadow: 'var(--shadow-lg)' }}
+                >
+                  <div className="p-6">
+                    <div className="grid grid-cols-2 gap-8">
               {/* Left side */}
               <div className="space-y-5">
                 
@@ -898,9 +903,10 @@ export default function EmployeesList() {
                 Apply Filter
               </button>
             </div>
+                  </div>
                 </div>
               </motion.div>
-        </>
+            </>
           )}
         </AnimatePresence>
       , document.body)}
