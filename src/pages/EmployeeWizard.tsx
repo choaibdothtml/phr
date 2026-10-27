@@ -616,6 +616,8 @@ export default function EmployeeWizard() {
         chronicDiseases: formData.chronicDiseases,
         bankName: formData.bankName,
         accountNumber: formData.accountNumber,
+        contractDuration: formData.contractDuration,
+        contractDurationUnit: formData.contractDurationUnit,
       };
       
       employees.push(newEmployee);

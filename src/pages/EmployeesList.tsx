@@ -196,6 +196,7 @@ export default function EmployeesList() {
       'Bank Name': emp.bankName || '',
       'Account Number': emp.accountNumber || '',
       'Current Contract Start Date': emp.currentContractStartDate || '',
+      'Contract Duration': emp.contractDuration && emp.contractDurationUnit ? `${emp.contractDuration} ${emp.contractDurationUnit}` : '',
       'Current Contract End Date': emp.currentContractEndDate || '',
       'Date of Leaving Work': emp.dateOfLeavingWork || '',
       'Reason for Leaving': emp.reasonForLeaving || '',
@@ -262,6 +263,7 @@ export default function EmployeesList() {
       emp.bankName || '',
       emp.accountNumber || '',
       emp.currentContractStartDate || '',
+      emp.contractDuration && emp.contractDurationUnit ? `${emp.contractDuration} ${emp.contractDurationUnit}` : '',
       emp.currentContractEndDate || '',
       emp.dateOfLeavingWork || '',
       emp.reasonForLeaving || '',
@@ -276,7 +278,7 @@ export default function EmployeesList() {
       'ID Number', 'Driver License Number', 'NIN', 'Gender',
       'Date of Birth', 'Province of Birth', 'Municipality of Birth', 'Age',
       'Situation', 'Number of Kids', 'Blood Type', 'Chronic Diseases',
-      'Bank Name', 'Account Number', 'Contract Start Date', 'Contract End Date',
+      'Bank Name', 'Account Number', 'Contract Start Date', 'Contract Duration', 'Contract End Date',
       'Date of Leaving', 'Reason for Leaving'
     ]];
 
@@ -367,6 +369,7 @@ export default function EmployeesList() {
     { key: 'bankName', label: 'Bank Name', width: 130 },
     { key: 'accountNumber', label: 'Account Number', width: 140 },
     { key: 'currentContractStartDate', label: 'Contract Start Date', width: 150 },
+    { key: 'contractDuration', label: 'Contract Duration', width: 140 },
     { key: 'currentContractEndDate', label: 'Contract End Date', width: 150 },
     { key: 'dateOfLeavingWork', label: 'Date of Leaving', width: 130 },
     { key: 'reasonForLeaving', label: 'Reason for Leaving', width: 160 },
@@ -394,6 +397,12 @@ export default function EmployeesList() {
         }
       }
       return '0 DA';
+    }
+    if (col.label === 'Contract Duration') {
+      if (emp.contractDuration && emp.contractDurationUnit) {
+        return `${emp.contractDuration} ${emp.contractDurationUnit}`;
+      }
+      return '-';
     }
     const val = emp[col.key as keyof Employee];
     return val !== undefined && val !== null && val !== '' ? val : '-';

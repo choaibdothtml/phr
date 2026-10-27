@@ -56,6 +56,8 @@ export interface Employee {
   accountNumber?: string;
   currentContractStartDate?: string;
   currentContractEndDate?: string;
+  contractDuration?: string;
+  contractDurationUnit?: string;
   dateOfLeavingWork?: string;
   reasonForLeaving?: string;
 }
