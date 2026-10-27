@@ -274,56 +274,58 @@ export default function AppearancesTab() {
       </div>
 
       {/* Date and Time Section */}
-      <div className="glass-card p-4">
-        <h3 className="font-semibold mb-1" style={{ color: 'var(--text-primary)' }}>
-          Date and time
-        </h3>
-        <p className="text-xs mb-4" style={{ color: 'var(--text-tertiary)' }}>
-          Choose how dates and times are displayed
-        </p>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="glass-card p-4">
+          <h3 className="font-semibold mb-1" style={{ color: 'var(--text-primary)' }}>
+            Date and time
+          </h3>
+          <p className="text-xs mb-4" style={{ color: 'var(--text-tertiary)' }}>
+            Choose how dates and times are displayed
+          </p>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {/* Date Format */}
-          <div>
-            <label className="block text-xs font-semibold mb-1.5" style={{ color: 'var(--text-secondary)' }}>
-              Date format
-            </label>
-            <select
-              value={dateFormat}
-              onChange={(e) => setDateFormat(e.target.value)}
-              className="w-full px-3 py-2.5 rounded-xl text-sm outline-none cursor-pointer transition-all focus:ring-2 focus:ring-orange-500/30"
-              style={{ 
-                background: 'var(--bg-tertiary)', 
-                border: '1px solid var(--border-color)', 
-                color: 'var(--text-primary)' 
-              }}
-            >
-              <option value="full">Full date</option>
-              <option value="dd/mm/yyyy">dd/mm/yyyy</option>
-              <option value="dd/mm/yy">dd/mm/yy</option>
-              <option value="mm/dd/yyyy">mm/dd/yyyy</option>
-              <option value="mm/dd/yy">mm/dd/yy</option>
-            </select>
-          </div>
+          <div className="space-y-4">
+            {/* Date Format */}
+            <div>
+              <label className="block text-xs font-semibold mb-1.5" style={{ color: 'var(--text-secondary)' }}>
+                Date format
+              </label>
+              <select
+                value={dateFormat}
+                onChange={(e) => setDateFormat(e.target.value)}
+                className="w-full px-3 py-2.5 rounded-xl text-sm outline-none cursor-pointer transition-all focus:ring-2 focus:ring-orange-500/30"
+                style={{ 
+                  background: 'var(--bg-tertiary)', 
+                  border: '1px solid var(--border-color)', 
+                  color: 'var(--text-primary)' 
+                }}
+              >
+                <option value="full">Full date</option>
+                <option value="dd/mm/yyyy">dd/mm/yyyy</option>
+                <option value="dd/mm/yy">dd/mm/yy</option>
+                <option value="mm/dd/yyyy">mm/dd/yyyy</option>
+                <option value="mm/dd/yy">mm/dd/yy</option>
+              </select>
+            </div>
 
-          {/* Time Format */}
-          <div>
-            <label className="block text-xs font-semibold mb-1.5" style={{ color: 'var(--text-secondary)' }}>
-              Time format
-            </label>
-            <select
-              value={timeFormat}
-              onChange={(e) => setTimeFormat(e.target.value)}
-              className="w-full px-3 py-2.5 rounded-xl text-sm outline-none cursor-pointer transition-all focus:ring-2 focus:ring-orange-500/30"
-              style={{ 
-                background: 'var(--bg-tertiary)', 
-                border: '1px solid var(--border-color)', 
-                color: 'var(--text-primary)' 
-              }}
-            >
-              <option value="12h">12h format</option>
-              <option value="24h">24h format</option>
-            </select>
+            {/* Time Format */}
+            <div>
+              <label className="block text-xs font-semibold mb-1.5" style={{ color: 'var(--text-secondary)' }}>
+                Time format
+              </label>
+              <select
+                value={timeFormat}
+                onChange={(e) => setTimeFormat(e.target.value)}
+                className="w-full px-3 py-2.5 rounded-xl text-sm outline-none cursor-pointer transition-all focus:ring-2 focus:ring-orange-500/30"
+                style={{ 
+                  background: 'var(--bg-tertiary)', 
+                  border: '1px solid var(--border-color)', 
+                  color: 'var(--text-primary)' 
+                }}
+              >
+                <option value="12h">12h format</option>
+                <option value="24h">24h format</option>
+              </select>
+            </div>
           </div>
         </div>
       </div>
