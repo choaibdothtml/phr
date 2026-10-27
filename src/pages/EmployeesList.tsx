@@ -167,6 +167,9 @@ export default function EmployeesList() {
       'Employee Number': emp.employeeNumber,
       'Family Name': emp.lastName,
       'Name': emp.firstName,
+      "Father's Name": emp.fatherName || '',
+      "Mother's Family Name": emp.motherLastName || '',
+      "Mother's Name": emp.motherFirstName || '',
       'Existing/Terminated': emp.status === 'active' ? 'Existing' : emp.status === 'terminated' ? 'Terminated' : emp.status === 'on-leave' ? 'On Leave' : '',
       'Entry Date': emp.joinDate,
       'Job': emp.position,
@@ -247,6 +250,9 @@ export default function EmployeesList() {
       emp.employeeNumber,
       emp.lastName,
       emp.firstName,
+      emp.fatherName || '',
+      emp.motherLastName || '',
+      emp.motherFirstName || '',
       emp.status === 'active' ? 'Existing' : emp.status === 'terminated' ? 'Departing' : emp.status === 'on-leave' ? 'On Leave' : '',
       emp.joinDate,
       emp.position,
@@ -297,7 +303,7 @@ export default function EmployeesList() {
     });
 
     const headers = [[
-      'Employee Number', 'Family Name', 'Name', 'Existing/Terminated', 'Entry Date',
+      'Employee Number', 'Family Name', 'Name', "Father's Name", "Mother's Family Name", "Mother's Name", 'Existing/Terminated', 'Entry Date',
       'Job', 'Department', 'Group', 'Classification', 'Degree', 'Basic Salary',
       'Social Security Number', 'Phone Number', 'Email Address',
       'Province of Residency', 'Municipality of Residency', 'Address',
@@ -368,6 +374,9 @@ export default function EmployeesList() {
     { key: 'employeeNumber', label: "Employee's Number", width: 120 },
     { key: 'lastName', label: 'Family Name', width: 130 },
     { key: 'firstName', label: 'Name', width: 120 },
+    { key: 'fatherName', label: "Father's Name", width: 130 },
+    { key: 'motherLastName', label: "Mother's Family Name", width: 160 },
+    { key: 'motherFirstName', label: "Mother's Name", width: 130 },
     { key: 'status', label: 'Existing/Terminated', width: 140 },
     { key: 'joinDate', label: 'Entry Date', width: 110 },
     { key: 'position', label: 'Job', width: 150 },

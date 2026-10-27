@@ -9,6 +9,9 @@ interface FormData {
   employeeNumber: string;
   lastName: string;
   firstName: string;
+  fatherName: string;
+  motherLastName: string;
+  motherFirstName: string;
   gender: string;
   dateOfBirth: string;
   age: string;
@@ -152,6 +155,9 @@ export default function EmployeeWizard() {
     employeeNumber: '',
     lastName: '',
     firstName: '',
+    fatherName: '',
+    motherLastName: '',
+    motherFirstName: '',
     gender: '',
     dateOfBirth: '',
     age: '',
@@ -365,7 +371,7 @@ export default function EmployeeWizard() {
   const handleInputChange = (field: keyof FormData, value: string) => {
     let processedValue = value;
     
-    if (field === 'lastName' || field === 'firstName' || field === 'emergencyContactName') {
+    if (field === 'lastName' || field === 'firstName' || field === 'fatherName' || field === 'motherLastName' || field === 'motherFirstName' || field === 'emergencyContactName') {
       processedValue = value.replace(/[^a-zA-Z\s'éèàï-]/g, '').toLowerCase();
       processedValue = processedValue.replace(/\b\w/g, l => l.toUpperCase());
     } else if (field === 'studyField' || field === 'studyInstitution') {
@@ -480,6 +486,9 @@ export default function EmployeeWizard() {
     if (step === 'personal') {
       if (!formData.lastName) newErrors.lastName = 'Required';
       if (!formData.firstName) newErrors.firstName = 'Required';
+      if (!formData.fatherName) newErrors.fatherName = 'Required';
+      if (!formData.motherLastName) newErrors.motherLastName = 'Required';
+      if (!formData.motherFirstName) newErrors.motherFirstName = 'Required';
       if (!formData.gender) newErrors.gender = 'Required';
       if (!formData.dateOfBirth) newErrors.dateOfBirth = 'Required';
       if (!formData.provinceOfBirth) newErrors.provinceOfBirth = 'Required';
@@ -644,6 +653,9 @@ export default function EmployeeWizard() {
         employeeNumber: formData.employeeNumber,
         firstName: formData.firstName,
         lastName: formData.lastName,
+        fatherName: formData.fatherName,
+        motherLastName: formData.motherLastName,
+        motherFirstName: formData.motherFirstName,
         email: formData.email,
         phone: formData.phoneNumber,
         department: formData.department,
@@ -709,6 +721,9 @@ export default function EmployeeWizard() {
       employeeNumber: String(nextNumber).padStart(4, '0'),
       lastName: '',
       firstName: '',
+      fatherName: '',
+      motherLastName: '',
+      motherFirstName: '',
       gender: '',
       dateOfBirth: '',
       age: '',
@@ -767,6 +782,9 @@ export default function EmployeeWizard() {
       employeeNumber: formData.employeeNumber,
       lastName: '',
       firstName: '',
+      fatherName: '',
+      motherLastName: '',
+      motherFirstName: '',
       gender: '',
       dateOfBirth: '',
       age: '',
@@ -856,6 +874,46 @@ export default function EmployeeWizard() {
                   }
                 }}
                 error={errors.firstName}
+              />
+            </FormField>
+          </div>
+
+          <FormField label="Father's name" required error={errors.fatherName}>
+            <Input
+              value={formData.fatherName}
+              onChange={(e) => handleInputChange('fatherName', e.target.value)}
+              onBlur={() => {
+                if (!formData.fatherName) {
+                  setErrors(prev => ({ ...prev, fatherName: 'Required' }));
+                }
+              }}
+              error={errors.fatherName}
+            />
+          </FormField>
+
+          <div className="grid grid-cols-2 gap-6">
+            <FormField label="Mother's family name" required error={errors.motherLastName}>
+              <Input
+                value={formData.motherLastName}
+                onChange={(e) => handleInputChange('motherLastName', e.target.value)}
+                onBlur={() => {
+                  if (!formData.motherLastName) {
+                    setErrors(prev => ({ ...prev, motherLastName: 'Required' }));
+                  }
+                }}
+                error={errors.motherLastName}
+              />
+            </FormField>
+            <FormField label="Mother's name" required error={errors.motherFirstName}>
+              <Input
+                value={formData.motherFirstName}
+                onChange={(e) => handleInputChange('motherFirstName', e.target.value)}
+                onBlur={() => {
+                  if (!formData.motherFirstName) {
+                    setErrors(prev => ({ ...prev, motherFirstName: 'Required' }));
+                  }
+                }}
+                error={errors.motherFirstName}
               />
             </FormField>
           </div>

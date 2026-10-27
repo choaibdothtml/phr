@@ -25,6 +25,9 @@ export interface Employee {
   employeeNumber: string;
   firstName: string;
   lastName: string;
+  fatherName?: string;
+  motherLastName?: string;
+  motherFirstName?: string;
   email: string;
   phone: string;
   department: string;

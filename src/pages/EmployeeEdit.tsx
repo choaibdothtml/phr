@@ -95,6 +95,9 @@ export default function EmployeeEdit() {
     employeeNumber: '',
     lastName: '',
     firstName: '',
+    fatherName: '',
+    motherLastName: '',
+    motherFirstName: '',
     gender: '',
     dateOfBirth: '',
     age: '',
@@ -207,6 +210,9 @@ export default function EmployeeEdit() {
       employeeNumber: employee.employeeNumber || '',
       lastName: employee.lastName || '',
       firstName: employee.firstName || '',
+      fatherName: employee.fatherName || '',
+      motherLastName: employee.motherLastName || '',
+      motherFirstName: employee.motherFirstName || '',
       gender: employee.gender || '',
       dateOfBirth: employee.dateOfBirth || '',
       age: '',
@@ -270,7 +276,7 @@ export default function EmployeeEdit() {
   const handleInputChange = (field, value) => {
     let processedValue = value;
     
-    if (field === 'lastName' || field === 'firstName' || field === 'emergencyContactName') {
+    if (field === 'lastName' || field === 'firstName' || field === 'fatherName' || field === 'motherLastName' || field === 'motherFirstName' || field === 'emergencyContactName') {
       processedValue = value.replace(/[^a-zA-Z\s'éèàï-]/g, '').toLowerCase();
       processedValue = processedValue.replace(/\b\w/g, l => l.toUpperCase());
     } else if (field === 'email') {
@@ -336,6 +342,9 @@ export default function EmployeeEdit() {
           ...empList[index],
           lastName: formData.lastName,
           firstName: formData.firstName,
+          fatherName: formData.fatherName,
+          motherLastName: formData.motherLastName,
+          motherFirstName: formData.motherFirstName,
           gender: formData.gender,
           dateOfBirth: formData.dateOfBirth,
           provinceOfBirth: formData.provinceOfBirth,
@@ -624,6 +633,31 @@ export default function EmployeeEdit() {
                             value={formData.firstName}
                             onChange={(e) => handleInputChange('firstName', e.target.value)}
                             error={errors.firstName}
+                          />
+                        </FormField>
+                      </div>
+
+                      <FormField label="Father's name" required error={errors.fatherName}>
+                        <Input
+                          value={formData.fatherName}
+                          onChange={(e) => handleInputChange('fatherName', e.target.value)}
+                          error={errors.fatherName}
+                        />
+                      </FormField>
+
+                      <div className="grid grid-cols-2 gap-6">
+                        <FormField label="Mother's family name" required error={errors.motherLastName}>
+                          <Input
+                            value={formData.motherLastName}
+                            onChange={(e) => handleInputChange('motherLastName', e.target.value)}
+                            error={errors.motherLastName}
+                          />
+                        </FormField>
+                        <FormField label="Mother's name" required error={errors.motherFirstName}>
+                          <Input
+                            value={formData.motherFirstName}
+                            onChange={(e) => handleInputChange('motherFirstName', e.target.value)}
+                            error={errors.motherFirstName}
                           />
                         </FormField>
                       </div>
