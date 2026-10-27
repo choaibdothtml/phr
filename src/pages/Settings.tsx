@@ -17,7 +17,7 @@ export default function Settings() {
     { id: 'jobTitles', label: 'Job titles', icon: Briefcase },
     { id: 'salaries', label: 'Basic salaries', icon: DollarSign },
     { id: 'banks', label: 'Banks', icon: Landmark },
-    { id: 'appearances', label: 'Appearances', icon: Palette },
+    { id: 'appearances', label: 'Preferences', icon: Palette },
     { id: 'password', label: 'Change password', icon: Key },
     { id: 'backup', label: 'Backup/Restore', icon: Database },
   ];
