@@ -1172,7 +1172,7 @@ export default function EmployeeWizard() {
             </Select>
           </FormField>
 
-          <div className="grid grid-cols-2 gap-6">
+          <div className="grid grid-cols-4 gap-4">
             <FormField label="Contract start date">
               <Input
                 value={formData.entryDate}
@@ -1181,41 +1181,36 @@ export default function EmployeeWizard() {
               />
             </FormField>
 
-            <div className="flex gap-2">
-              <div className="flex-1">
-                <FormField label="Contract duration" required error={errors.contractDuration}>
-                  <Input
-                    type="number"
-                    min="1"
-                    max="99"
-                    value={formData.contractDuration}
-                    onChange={(e) => handleInputChange('contractDuration', e.target.value)}
-                    error={errors.contractDuration}
-                  />
-                </FormField>
-              </div>
-              <div className="w-32">
-                <FormField label="Unit">
-                  <Select
-                    value={formData.contractDurationUnit}
-                    onChange={(e) => handleInputChange('contractDurationUnit', e.target.value)}
-                  >
-                    <option value="days">Days</option>
-                    <option value="months">Months</option>
-                    <option value="years">Years</option>
-                  </Select>
-                </FormField>
-              </div>
-            </div>
-          </div>
+            <FormField label="Contract duration" required error={errors.contractDuration}>
+              <Input
+                type="number"
+                min="1"
+                max="99"
+                value={formData.contractDuration}
+                onChange={(e) => handleInputChange('contractDuration', e.target.value)}
+                error={errors.contractDuration}
+              />
+            </FormField>
 
-          <FormField label="Contract end date">
-            <Input
-              value={contractEndDate}
-              readOnly
-              className="cursor-not-allowed opacity-60"
-            />
-          </FormField>
+            <FormField label="Unit">
+              <Select
+                value={formData.contractDurationUnit}
+                onChange={(e) => handleInputChange('contractDurationUnit', e.target.value)}
+              >
+                <option value="days">Days</option>
+                <option value="months">Months</option>
+                <option value="years">Years</option>
+              </Select>
+            </FormField>
+
+            <FormField label="Contract end date">
+              <Input
+                value={contractEndDate}
+                readOnly
+                className="cursor-not-allowed opacity-60"
+              />
+            </FormField>
+          </div>
 
           <div className="flex gap-2">
             <div className="flex-1">
