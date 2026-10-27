@@ -41,6 +41,7 @@ export default function Sidebar() {
   const notificationsDropdownRef = useRef<HTMLDivElement>(null);
   const employeeMenuRef = useRef<HTMLDivElement>(null);
   const employeeButtonRef = useRef<HTMLButtonElement>(null);
+  const employeeDropdownRef = useRef<HTMLDivElement>(null);
   const [menuPosition, setMenuPosition] = useState({ top: 0, left: 0 });
 
   // Load date/time format preferences
@@ -154,14 +155,20 @@ export default function Sidebar() {
         return;
       }
       
-      // Don't close if clicking inside the employee menu
+      // Don't close if clicking inside the employee menu button
       if (employeeMenuRef.current && employeeMenuRef.current.contains(target)) {
+        return;
+      }
+      
+      // Don't close if clicking inside the employee dropdown menu
+      if (employeeDropdownRef.current && employeeDropdownRef.current.contains(target)) {
         return;
       }
       
       // Check if click is outside sidebar
       if (sidebarRef.current && !sidebarRef.current.contains(target)) {
         closeDropdowns();
+        setShowEmployeeMenu(false);
       } else {
         // Close employee menu when clicking elsewhere in sidebar
         setShowEmployeeMenu(false);
@@ -270,6 +277,7 @@ export default function Sidebar() {
                 {showEmployeeMenu && createPortal(
                   <AnimatePresence>
                     <motion.div
+                      ref={employeeDropdownRef}
                       initial={{ opacity: 0, x: -10 }}
                       animate={{ opacity: 1, x: 0 }}
                       exit={{ opacity: 0, x: -10 }}
