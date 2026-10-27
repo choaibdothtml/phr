@@ -30,10 +30,52 @@ export default function Sidebar() {
   const [showNotifications, setShowNotifications] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
   const [notifications, setNotifications] = useState(mockNotifications);
+  const [currentDateTime, setCurrentDateTime] = useState(new Date());
   const unreadCount = notifications.filter(n => !n.read).length;
 
   const sidebarRef = useRef<HTMLDivElement>(null);
   const notificationsDropdownRef = useRef<HTMLDivElement>(null);
+
+  // Update time every minute
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentDateTime(new Date());
+    }, 60000); // Update every minute
+
+    return () => clearInterval(timer);
+  }, []);
+
+  // Format date and time
+  const formatDateTime = (date: Date) => {
+    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const months = ['january', 'february', 'march', 'april', 'may', 'june', 
+                    'july', 'august', 'september', 'october', 'november', 'december'];
+    
+    const dayName = days[date.getDay()];
+    const monthName = months[date.getMonth()];
+    const day = date.getDate();
+    const year = date.getFullYear();
+    
+    // Add ordinal suffix to day
+    const getOrdinalSuffix = (n: number) => {
+      const s = ['th', 'st', 'nd', 'rd'];
+      const v = n % 100;
+      return s[(v - 20) % 10] || s[v] || s[0];
+    };
+    
+    const dayWithSuffix = `${day}${getOrdinalSuffix(day)}`;
+    
+    // Format time in 12-hour format
+    let hours = date.getHours();
+    const minutes = date.getMinutes();
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    hours = hours % 12;
+    hours = hours ? hours : 12; // the hour '0' should be '12'
+    const minutesStr = minutes < 10 ? '0' + minutes : minutes;
+    const timeStr = `${hours}:${minutesStr} ${ampm}`;
+    
+    return `${dayName}, ${monthName} ${dayWithSuffix}, ${year} • ${timeStr}`;
+  };
 
   const markAllAsRead = () => {
     setNotifications(notifications.map(n => ({ ...n, read: true })));
@@ -341,11 +383,11 @@ export default function Sidebar() {
             )}
           </button>
 
-          {/* Date */}
+          {/* Date and Time */}
           {!collapsed && (
             <div className="flex items-center justify-center px-3 py-2 mt-2">
               <span className="text-[11px] font-medium" style={{ color: 'var(--text-secondary)' }}>
-                {new Date().toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' })}
+                {formatDateTime(currentDateTime)}
               </span>
             </div>
           )}
