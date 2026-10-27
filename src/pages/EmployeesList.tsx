@@ -714,7 +714,7 @@ export default function EmployeesList() {
                 className="fixed inset-0 z-50 flex items-center justify-center p-4"
               >
                 <div className="w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-2xl" style={{ background: 'var(--bg-popup)', border: '1px solid var(--border-color)' }}>
-            <div className="p-6 grid grid-cols-2 gap-8">
+                  <div className="p-6 grid grid-cols-2 gap-8">
               {/* Left side */}
               <div className="space-y-5">
                 
@@ -898,8 +898,8 @@ export default function EmployeesList() {
                 Apply Filter
               </button>
             </div>
-          </div>
-          </motion.div>
+                </div>
+              </motion.div>
         </>
           )}
         </AnimatePresence>
