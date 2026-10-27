@@ -1,7 +1,7 @@
 // @ts-nocheck
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { X, Check, AlertCircle, User, MapPin, Phone, FileText, CreditCard, Building2, ChevronsLeft, ChevronLeft, ChevronRight, ChevronsRight } from 'lucide-react';
+import { X, Check, AlertCircle, User, MapPin, Phone, FileText, CreditCard, Building2, ChevronsLeft, ChevronLeft, ChevronRight, ChevronsRight, FileX } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSettings } from '../contexts/SettingsContext';
 import { Employee } from '../services/api';
@@ -87,6 +87,8 @@ export default function EmployeeEdit() {
   const [selectorSelectedIndex, setSelectorSelectedIndex] = useState(0);
   const [hasModifications, setHasModifications] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [showCancelTerminationConfirm, setShowCancelTerminationConfirm] = useState(false);
+  const [showCancelTerminationWarning, setShowCancelTerminationWarning] = useState(false);
   const selectorListRef = useRef(null);
   
   const [formData, setFormData] = useState({
@@ -135,6 +137,8 @@ export default function EmployeeEdit() {
     socialSecurityNumber: '',
     bankName: '',
     accountNumber: '',
+    terminationDate: '',
+    terminationReason: '',
   });
 
   const [originalData, setOriginalData] = useState(formData);
@@ -237,6 +241,8 @@ export default function EmployeeEdit() {
       socialSecurityNumber: employee.socialSecurityNumber || '',
       bankName: employee.bankName || '',
       accountNumber: employee.accountNumber || '',
+      terminationDate: employee.dateOfLeavingWork || '',
+      terminationReason: employee.reasonForLeaving || '',
     };
     
     setFormData(employeeData);
@@ -349,11 +355,27 @@ export default function EmployeeEdit() {
           socialSecurityNumber: formData.socialSecurityNumber,
           bankName: formData.bankName,
           accountNumber: formData.accountNumber,
+          dateOfLeavingWork: formData.terminationDate || undefined,
+          reasonForLeaving: formData.terminationReason || undefined,
+          status: (formData.terminationDate && formData.terminationReason) ? 'terminated' : 'active',
         };
         localStorage.setItem('phoenix-hr-employees', JSON.stringify(empList));
+        setEmployees(empList);
         setOriginalData(formData);
         setHasModifications(false);
         setShowSuccessModal(true);
+        
+        // If employee was terminated, move to next active employee
+        if (empList[index].status === 'terminated') {
+          const nextActiveIndex = empList.findIndex((e, i) => i > index && e.status !== 'terminated');
+          if (nextActiveIndex !== -1) {
+            setTimeout(() => {
+              setCurrentIndex(nextActiveIndex);
+              loadEmployee(empList[nextActiveIndex]);
+              setShowSuccessModal(false);
+            }, 2000);
+          }
+        }
       }
     }
   };
@@ -364,6 +386,41 @@ export default function EmployeeEdit() {
     setErrors({});
   };
 
+  const handleCancelTermination = () => {
+    // Save to localStorage
+    const savedEmployees = localStorage.getItem('phoenix-hr-employees');
+    if (savedEmployees) {
+      const empList = JSON.parse(savedEmployees);
+      const index = empList.findIndex(e => e.employeeNumber === formData.employeeNumber);
+      if (index !== -1) {
+        empList[index] = {
+          ...empList[index],
+          dateOfLeavingWork: undefined,
+          reasonForLeaving: undefined,
+          status: 'active',
+        };
+        localStorage.setItem('phoenix-hr-employees', JSON.stringify(empList));
+        setEmployees(empList);
+        
+        // Update form data
+        setFormData(prev => ({
+          ...prev,
+          terminationDate: '',
+          terminationReason: '',
+        }));
+        setOriginalData(prev => ({
+          ...prev,
+          terminationDate: '',
+          terminationReason: '',
+        }));
+        setHasModifications(false);
+      }
+    }
+    
+    setShowCancelTerminationConfirm(false);
+    setShowCancelTerminationWarning(false);
+  };
+
   const steps = [
     { id: 'personal', label: 'Personal info', icon: User },
     { id: 'address', label: 'Address', icon: MapPin },
@@ -371,6 +428,7 @@ export default function EmployeeEdit() {
     { id: 'job', label: 'Job details', icon: FileText },
     { id: 'identification', label: 'Identification', icon: CreditCard },
     { id: 'payment', label: 'Payment', icon: Building2 },
+    { id: 'termination', label: 'Termination', icon: FileX },
   ];
 
   const filteredEmployees = editTerminated 
@@ -986,6 +1044,109 @@ export default function EmployeeEdit() {
                       </FormField>
                     </div>
                   )}
+
+                  {/* Termination Step */}
+                  {currentStep === 6 && (
+                    <div className="space-y-6">
+                      <div>
+                        <p className="text-sm mb-2" style={{ color: 'var(--text-secondary)' }}>
+                          Please enter the date of the employee's last working day.
+                        </p>
+                        <FormField label="Termination date" error={errors.terminationDate}>
+                          <Input
+                            type="text"
+                            placeholder="xx/xx/xxxx"
+                            value={formData.terminationDate}
+                            onChange={(e) => handleInputChange('terminationDate', e.target.value)}
+                            error={errors.terminationDate}
+                          />
+                        </FormField>
+                      </div>
+
+                      <div>
+                        <p className="text-sm mb-4" style={{ color: 'var(--text-secondary)' }}>
+                          Please choose a termination reason from the list below:
+                        </p>
+                        <div className="grid grid-cols-2 gap-6">
+                          <div className="space-y-3">
+                            {[
+                              { value: 'Resignation', label: 'Resignation' },
+                              { value: 'Contract expiration', label: 'Contract expiration' },
+                              { value: 'Job abandonment', label: 'Job abandonment' },
+                              { value: 'Failed probation', label: 'Failed probation' },
+                              { value: 'Relocation', label: 'Relocation' },
+                            ].map((option) => (
+                              <label key={option.value} className="flex items-center gap-3 cursor-pointer">
+                                <input
+                                  type="checkbox"
+                                  checked={formData.terminationReason === option.value}
+                                  onChange={(e) => {
+                                    if (e.target.checked) {
+                                      handleInputChange('terminationReason', option.value);
+                                    } else if (formData.terminationReason === option.value) {
+                                      handleInputChange('terminationReason', '');
+                                    }
+                                  }}
+                                  disabled={formData.terminationReason !== '' && formData.terminationReason !== option.value}
+                                  className="w-4 h-4 rounded"
+                                />
+                                <span className="text-sm" style={{ color: 'var(--text-primary)' }}>
+                                  {option.label}
+                                </span>
+                              </label>
+                            ))}
+                          </div>
+                          <div className="space-y-3">
+                            {[
+                              { value: 'Death', label: 'Death' },
+                              { value: 'Retirement', label: 'Retirement' },
+                              { value: 'Dismissal', label: 'Dismissal' },
+                              { value: 'Long-term sickness', label: 'Long-term sickness' },
+                              { value: 'Permanent disability', label: 'Permanent disability' },
+                              { value: 'Military service leave', label: 'Military service leave' },
+                            ].map((option) => (
+                              <label key={option.value} className="flex items-center gap-3 cursor-pointer">
+                                <input
+                                  type="checkbox"
+                                  checked={formData.terminationReason === option.value}
+                                  onChange={(e) => {
+                                    if (e.target.checked) {
+                                      handleInputChange('terminationReason', option.value);
+                                    } else if (formData.terminationReason === option.value) {
+                                      handleInputChange('terminationReason', '');
+                                    }
+                                  }}
+                                  disabled={formData.terminationReason !== '' && formData.terminationReason !== option.value}
+                                  className="w-4 h-4 rounded"
+                                />
+                                <span className="text-sm" style={{ color: 'var(--text-primary)' }}>
+                                  {option.label}
+                                </span>
+                              </label>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+
+                      {formData.terminationDate && formData.terminationReason && (
+                        <div className="pt-4" style={{ borderTop: '1px solid var(--border-subtle)' }}>
+                          <button
+                            onClick={() => {
+                              setShowCancelTerminationConfirm(true);
+                            }}
+                            className="px-6 py-2.5 rounded-xl text-sm font-semibold transition-all hover:scale-105"
+                            style={{
+                              background: 'rgba(239, 68, 68, 0.1)',
+                              border: '1px solid rgba(239, 68, 68, 0.3)',
+                              color: '#ef4444'
+                            }}
+                          >
+                            Cancel termination
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
               </motion.div>
             </AnimatePresence>
@@ -1199,6 +1360,109 @@ export default function EmployeeEdit() {
                   </p>
                   <button
                     onClick={() => setShowSuccessModal(false)}
+                    className="px-6 py-2.5 rounded-xl text-white text-sm font-semibold transition-all hover:scale-105"
+                    style={{ background: 'var(--gradient-primary)' }}
+                  >
+                    OK
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+
+      {/* Cancel Termination Confirmation Modal */}
+      <AnimatePresence>
+        {showCancelTerminationConfirm && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-[60]"
+              style={{ background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)' }}
+              onClick={() => setShowCancelTerminationConfirm(false)}
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="fixed inset-0 z-[70] flex items-center justify-center p-4"
+            >
+              <div className="glass-card p-8 max-w-md w-full" style={{ background: 'var(--bg-card)' }}>
+                <div className="text-center">
+                  <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4"
+                    style={{ background: 'rgba(239, 68, 68, 0.1)' }}>
+                    <AlertCircle className="w-8 h-8 text-red-500" />
+                  </div>
+                  <h3 className="text-lg font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
+                    Cancel Termination
+                  </h3>
+                  <p className="text-sm mb-6" style={{ color: 'var(--text-secondary)' }}>
+                    Do you really want to restore this employee?
+                  </p>
+                  <div className="flex gap-3 justify-center">
+                    <button
+                      onClick={() => setShowCancelTerminationConfirm(false)}
+                      className="px-6 py-2.5 rounded-xl text-sm font-semibold transition-all hover:scale-105"
+                      style={{
+                        background: 'var(--bg-tertiary)',
+                        border: '1px solid var(--border-color)',
+                        color: 'var(--text-secondary)'
+                      }}
+                    >
+                      No
+                    </button>
+                    <button
+                      onClick={() => {
+                        setShowCancelTerminationConfirm(false);
+                        setShowCancelTerminationWarning(true);
+                      }}
+                      className="px-6 py-2.5 rounded-xl text-white text-sm font-semibold transition-all hover:scale-105"
+                      style={{ background: '#ef4444' }}
+                    >
+                      Yes
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+
+      {/* Cancel Termination Warning Modal */}
+      <AnimatePresence>
+        {showCancelTerminationWarning && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-[60]"
+              style={{ background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)' }}
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="fixed inset-0 z-[70] flex items-center justify-center p-4"
+            >
+              <div className="glass-card p-8 max-w-md w-full" style={{ background: 'var(--bg-card)' }}>
+                <div className="text-center">
+                  <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4"
+                    style={{ background: 'rgba(245, 158, 11, 0.1)' }}>
+                    <AlertCircle className="w-8 h-8 text-amber-500" />
+                  </div>
+                  <h3 className="text-lg font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
+                    Important Notice
+                  </h3>
+                  <p className="text-sm mb-6" style={{ color: 'var(--text-secondary)' }}>
+                    Please delete any documents that have been prepared after employee's leaving.
+                  </p>
+                  <button
+                    onClick={handleCancelTermination}
                     className="px-6 py-2.5 rounded-xl text-white text-sm font-semibold transition-all hover:scale-105"
                     style={{ background: 'var(--gradient-primary)' }}
                   >
