@@ -831,17 +831,16 @@ export default function EmployeesList() {
       {showFilter && createPortal(
         <>
           <div
-            className="fixed inset-0 z-[60]"
-            style={{ background: 'rgba(0, 0, 0, 0.5)', backdropFilter: 'blur(4px)', WebkitBackdropFilter: 'blur(4px)' }}
+            className="fixed inset-0 z-[9998]"
+            style={{ background: 'rgba(0, 0, 0, 0.5)', backdropFilter: 'blur(4px)' }}
             onClick={cancelFilter}
           />
-          <div className="fixed inset-0 z-[70] flex items-center justify-center p-4">
+          <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
             <div 
-              className="w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-2xl"
+              className="w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-2xl shadow-2xl"
               style={{ 
                 background: 'var(--bg-popup)',
-                border: '1px solid var(--border-color)',
-                boxShadow: 'var(--shadow-lg)'
+                border: '1px solid var(--border-color)'
               }}
             >
               <div className="p-6">
