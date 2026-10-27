@@ -1212,39 +1212,36 @@ export default function EmployeeWizard() {
             </FormField>
           </div>
 
-          <div className="flex gap-2">
-            <div className="flex-1">
-              <FormField label="Probationary period" required error={errors.probationaryPeriod}>
-                <Input
-                  type="number"
-                  min="1"
-                  max="99"
-                  value={formData.probationaryPeriod}
-                  onChange={(e) => handleInputChange('probationaryPeriod', e.target.value)}
-                  error={errors.probationaryPeriod}
-                />
-              </FormField>
-            </div>
-            <div className="w-32">
-              <FormField label="Unit">
-                <Select
-                  value={formData.probationaryPeriodUnit}
-                  onChange={(e) => handleInputChange('probationaryPeriodUnit', e.target.value)}
-                >
-                  <option value="days">Days</option>
-                  <option value="months">Months</option>
-                </Select>
-              </FormField>
-            </div>
-          </div>
+          <div className="grid grid-cols-3 gap-4">
+            <FormField label="Probationary period" required error={errors.probationaryPeriod}>
+              <Input
+                type="number"
+                min="1"
+                max="99"
+                value={formData.probationaryPeriod}
+                onChange={(e) => handleInputChange('probationaryPeriod', e.target.value)}
+                error={errors.probationaryPeriod}
+              />
+            </FormField>
 
-          <FormField label="Confirmation date">
-            <Input
-              value={confirmationDate}
-              readOnly
-              className="cursor-not-allowed opacity-60"
-            />
-          </FormField>
+            <FormField label="Unit">
+              <Select
+                value={formData.probationaryPeriodUnit}
+                onChange={(e) => handleInputChange('probationaryPeriodUnit', e.target.value)}
+              >
+                <option value="days">Days</option>
+                <option value="months">Months</option>
+              </Select>
+            </FormField>
+
+            <FormField label="Confirmation date">
+              <Input
+                value={confirmationDate}
+                readOnly
+                className="cursor-not-allowed opacity-60"
+              />
+            </FormField>
+          </div>
 
           <div className="grid grid-cols-2 gap-6">
             <FormField label="Unsuccessful probation notice period (days)" required error={errors.unsuccessfulProbationNotice}>
