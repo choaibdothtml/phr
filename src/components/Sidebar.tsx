@@ -133,7 +133,7 @@ export default function Sidebar() {
       timeStr = `${hours}:${minutesStr} ${ampm}`;
     }
     
-    return `${dateStr} • ${timeStr}`;
+    return { date: dateStr, time: timeStr };
   };
 
   const markAllAsRead = () => {
@@ -577,9 +577,12 @@ export default function Sidebar() {
 
           {/* Date and Time */}
           {!collapsed && (
-            <div className="flex items-center justify-center px-3 py-2 mt-2">
+            <div className="flex flex-col items-center justify-center px-3 py-2 mt-2">
               <span className="text-[11px] font-medium" style={{ color: 'var(--text-secondary)' }}>
-                {formatDateTime(currentDateTime)}
+                {formatDateTime(currentDateTime).date}
+              </span>
+              <span className="text-[11px] font-medium" style={{ color: 'var(--text-secondary)' }}>
+                {formatDateTime(currentDateTime).time}
               </span>
             </div>
           )}
