@@ -996,9 +996,31 @@ export default function EmployeeWizard() {
             </FormField>
           </div>
 
-          <FormField label="Group">
-            <Input value={formData.group} readOnly className="cursor-not-allowed opacity-60" />
-          </FormField>
+          <div className="grid grid-cols-2 gap-6">
+            <FormField label="Group">
+              <Input value={formData.group} readOnly className="cursor-not-allowed opacity-60" />
+            </FormField>
+
+            {/* Basic Salary - Read-only field that pulls from Basic salaries table */}
+            <FormField label="Basic salary">
+              <Input
+                value={(() => {
+                  const savedSalaries = localStorage.getItem('phoenix-hr-basic-salaries');
+                  if (savedSalaries && formData.classification && formData.degree) {
+                    const salaries = JSON.parse(savedSalaries);
+                    const key = `${formData.classification}-${formData.degree}`;
+                    const salary = salaries[key];
+                    if (salary && salary !== '') {
+                      return `${salary} DA`;
+                    }
+                  }
+                  return '0 DA';
+                })()}
+                readOnly
+                className="cursor-not-allowed opacity-60"
+              />
+            </FormField>
+          </div>
 
           <FormField label="Department" required error={errors.department}>
             <Select value={formData.department} onChange={(e) => handleInputChange('department', e.target.value)} error={errors.department}>
@@ -1007,26 +1029,6 @@ export default function EmployeeWizard() {
                 <option key={dept.id} value={dept.name}>{dept.name}</option>
               ))}
             </Select>
-          </FormField>
-
-          {/* Basic Salary - Read-only field that pulls from Basic salaries table */}
-          <FormField label="Basic salary">
-            <Input
-              value={(() => {
-                const savedSalaries = localStorage.getItem('phoenix-hr-basic-salaries');
-                if (savedSalaries && formData.classification && formData.degree) {
-                  const salaries = JSON.parse(savedSalaries);
-                  const key = `${formData.classification}-${formData.degree}`;
-                  const salary = salaries[key];
-                  if (salary && salary !== '') {
-                    return `${salary} DA`;
-                  }
-                }
-                return '0 DA';
-              })()}
-              readOnly
-              className="cursor-not-allowed opacity-60"
-            />
           </FormField>
         </div>
       );
