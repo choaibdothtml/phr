@@ -392,7 +392,6 @@ export default function AppearancesTab() {
                   type="text"
                   value={percentageInput}
                   onChange={(e) => handlePercentageInput(e.target.value)}
-                  placeholder="50-99"
                   className="w-full px-3 py-2.5 rounded-xl text-sm outline-none transition-all focus:ring-2 focus:ring-orange-500/30"
                   style={{ 
                     background: 'var(--bg-tertiary)', 
