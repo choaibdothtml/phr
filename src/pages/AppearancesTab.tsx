@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Check } from 'lucide-react';
+import { Check, X } from 'lucide-react';
 
 interface ColorOption {
   id: string;
@@ -57,6 +57,9 @@ export default function AppearancesTab() {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [dateFormat, setDateFormat] = useState('full');
   const [timeFormat, setTimeFormat] = useState('12h');
+  const [hourlyPercentages, setHourlyPercentages] = useState<number[]>([]);
+  const [percentageInput, setPercentageInput] = useState('');
+  const [tempPercentages, setTempPercentages] = useState<number[]>([]);
 
   // Load saved preferences
   useEffect(() => {
@@ -64,11 +67,17 @@ export default function AppearancesTab() {
     const savedSidebar = localStorage.getItem('phoenix-hr-sidebar-color');
     const savedDateFormat = localStorage.getItem('phoenix-hr-date-format');
     const savedTimeFormat = localStorage.getItem('phoenix-hr-time-format');
+    const savedPercentages = localStorage.getItem('phoenix-hr-hourly-percentages');
     
     if (savedPrimary) setSelectedPrimary(savedPrimary);
     if (savedSidebar) setSelectedSidebar(savedSidebar);
     if (savedDateFormat) setDateFormat(savedDateFormat);
     if (savedTimeFormat) setTimeFormat(savedTimeFormat);
+    if (savedPercentages) {
+      const percentages = JSON.parse(savedPercentages);
+      setHourlyPercentages(percentages);
+      setTempPercentages(percentages);
+    }
     
     // Check if dark mode is active
     const checkDarkMode = () => {
@@ -162,6 +171,39 @@ export default function AppearancesTab() {
     document.documentElement.style.removeProperty('--bg-sidebar');
     localStorage.removeItem('phoenix-hr-primary-color');
     localStorage.removeItem('phoenix-hr-sidebar-color');
+  };
+
+  // Handle percentage input
+  const handlePercentageInput = (value: string) => {
+    // Only allow numbers, max 2 digits
+    const cleaned = value.replace(/\D/g, '').slice(0, 2);
+    setPercentageInput(cleaned);
+    
+    // If valid (50-99), add to list and clear input
+    const num = parseInt(cleaned);
+    if (cleaned.length === 2 && num >= 50 && num <= 99) {
+      if (!tempPercentages.includes(num)) {
+        setTempPercentages([...tempPercentages, num].sort((a, b) => a - b));
+      }
+      setPercentageInput('');
+    }
+  };
+
+  // Remove percentage from list
+  const handleRemovePercentage = (percentage: number) => {
+    setTempPercentages(tempPercentages.filter(p => p !== percentage));
+  };
+
+  // Save percentages
+  const handleSavePercentages = () => {
+    setHourlyPercentages(tempPercentages);
+    localStorage.setItem('phoenix-hr-hourly-percentages', JSON.stringify(tempPercentages));
+  };
+
+  // Cancel changes
+  const handleCancelPercentages = () => {
+    setTempPercentages(hourlyPercentages);
+    setPercentageInput('');
   };
 
   // Get display color for sidebar preview
@@ -269,6 +311,87 @@ export default function AppearancesTab() {
                 </button>
               );
             })}
+          </div>
+        </div>
+
+        {/* Hourly Percentages Section */}
+        <div className="glass-card p-4">
+          <h3 className="font-semibold mb-1" style={{ color: 'var(--text-primary)' }}>
+            Hourly pay percentages
+          </h3>
+          <p className="text-xs mb-4" style={{ color: 'var(--text-tertiary)' }}>
+            For employees whose pay basis is Hourly, please enter the percentages that you are willing to apply
+          </p>
+
+          <div className="space-y-4">
+            {/* Input for adding percentages */}
+            <div className="flex items-end gap-3">
+              <div className="flex-1">
+                <label className="block text-xs font-semibold mb-1.5" style={{ color: 'var(--text-secondary)' }}>
+                  Add percentage (50-99)
+                </label>
+                <input
+                  type="text"
+                  value={percentageInput}
+                  onChange={(e) => handlePercentageInput(e.target.value)}
+                  placeholder="50-99"
+                  className="w-full px-3 py-2.5 rounded-xl text-sm outline-none transition-all focus:ring-2 focus:ring-orange-500/30"
+                  style={{ 
+                    background: 'var(--bg-tertiary)', 
+                    border: '1px solid var(--border-color)', 
+                    color: 'var(--text-primary)' 
+                  }}
+                />
+              </div>
+            </div>
+
+            {/* Display added percentages */}
+            {tempPercentages.length > 0 && (
+              <div className="flex flex-wrap gap-2">
+                {tempPercentages.map(percentage => (
+                  <div
+                    key={percentage}
+                    className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium"
+                    style={{ 
+                      background: 'rgba(var(--primary-color-rgb), 0.1)',
+                      color: 'var(--text-primary)',
+                      border: '1px solid var(--border-color)'
+                    }}
+                  >
+                    <span>{percentage}%</span>
+                    <button
+                      onClick={() => handleRemovePercentage(percentage)}
+                      className="hover:opacity-70 transition-opacity"
+                      style={{ color: 'var(--text-secondary)' }}
+                    >
+                      <X className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Save and Cancel buttons */}
+            <div className="flex gap-3 pt-2">
+              <button
+                onClick={handleCancelPercentages}
+                className="px-4 py-2 rounded-xl text-sm font-medium transition-all hover:scale-105"
+                style={{ 
+                  background: 'var(--bg-tertiary)',
+                  border: '1px solid var(--border-color)',
+                  color: 'var(--text-secondary)'
+                }}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSavePercentages}
+                className="px-4 py-2 rounded-xl text-white text-sm font-semibold transition-all hover:scale-105 hover:shadow-lg"
+                style={{ background: 'var(--gradient-primary)' }}
+              >
+                Save
+              </button>
+            </div>
           </div>
         </div>
       </div>
