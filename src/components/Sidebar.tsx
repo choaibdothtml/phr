@@ -310,7 +310,7 @@ export default function Sidebar() {
                       <button
                         onClick={() => {
                           setShowEmployeeMenu(false);
-                          // Do nothing for now - will be implemented later
+                          navigate('/employees/edit');
                         }}
                         className="w-full px-4 py-3 text-left text-sm font-medium transition-colors flex items-center gap-3"
                         style={{ color: 'var(--text-primary)' }}

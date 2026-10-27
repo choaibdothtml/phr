@@ -6,6 +6,7 @@ import Layout from './components/Layout';
 import LoginPage from './pages/LoginPage';
 import Dashboard from './pages/Dashboard';
 import EmployeeWizard from './pages/EmployeeWizard';
+import EmployeeEdit from './pages/EmployeeEdit';
 import EmployeesProfiles from './pages/EmployeesProfiles';
 import EmployeesList from './pages/EmployeesList';
 import Departments from './pages/Departments';
@@ -47,6 +48,7 @@ function AppRoutes() {
       }>
         <Route index element={<Dashboard />} />
         <Route path="employees" element={<EmployeeWizard />} />
+        <Route path="employees/edit" element={<EmployeeEdit />} />
         <Route path="employees/list" element={<EmployeesList />} />
         <Route path="employees/profiles" element={<EmployeesProfiles />} />
         <Route path="departments" element={<Departments />} />
