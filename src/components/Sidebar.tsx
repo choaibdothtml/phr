@@ -194,7 +194,7 @@ export default function Sidebar() {
       <div className="flex items-center gap-3 px-5 py-6">
         <div className="relative flex-shrink-0">
           <img 
-            src="/logo.png" 
+            src="/logo.png"
             alt="Phoenix HR Logo" 
             className="w-10 h-10 rounded-xl object-cover phoenix-glow"
           />
