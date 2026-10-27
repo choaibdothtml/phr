@@ -361,7 +361,28 @@ export default function Sidebar() {
       {/* Bottom section */}
       <div className="px-3 pb-3 pt-2" style={{ borderTop: '1px solid var(--border-color)' }}>
         <div className="space-y-1.5">
-          {/* Theme toggle + Notifications on the same horizontal line */}
+          {/* Notifications button - shown first when collapsed */}
+          {collapsed && (
+            <div className="relative">
+              <button
+                onClick={() => { setShowNotifications(!showNotifications); setShowProfile(false); }}
+                className="w-full flex items-center justify-center px-3 py-2.5 rounded-xl transition-all hover:bg-[var(--bg-tertiary)] group"
+                title="Notifications"
+              >
+                <div className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center relative"
+                  style={{ background: 'var(--bg-tertiary)' }}>
+                  <Bell className="w-4 h-4" style={{ color: 'var(--text-secondary)' }} />
+                  {unreadCount > 0 && (
+                    <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-phoenix-500 text-white text-[10px] font-bold flex items-center justify-center">
+                      {unreadCount}
+                    </span>
+                  )}
+                </div>
+              </button>
+            </div>
+          )}
+
+          {/* Theme toggle + Notifications on the same horizontal line (when expanded) */}
           <div className="flex items-center gap-1.5">
             {/* Theme toggle */}
             <div className="flex-1">
@@ -381,56 +402,60 @@ export default function Sidebar() {
               </button>
             </div>
 
-            {/* Notifications */}
-            <div className="relative flex-1">
-              <button
-                onClick={() => { setShowNotifications(!showNotifications); setShowProfile(false); }}
-                className="w-full flex items-center justify-center px-3 py-2.5 rounded-xl transition-all hover:bg-[var(--bg-tertiary)] group"
-                title="Notifications"
-              >
-                <div className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center relative"
-                  style={{ background: 'var(--bg-tertiary)' }}>
-                  <Bell className="w-4 h-4" style={{ color: 'var(--text-secondary)' }} />
-                  {unreadCount > 0 && (
-                    <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-phoenix-500 text-white text-[10px] font-bold flex items-center justify-center">
-                      {unreadCount}
-                    </span>
-                  )}
-                </div>
-              </button>
+            {/* Notifications - only shown here when expanded */}
+            {!collapsed && (
+              <div className="relative flex-1">
+                <button
+                  onClick={() => { setShowNotifications(!showNotifications); setShowProfile(false); }}
+                  className="w-full flex items-center justify-center px-3 py-2.5 rounded-xl transition-all hover:bg-[var(--bg-tertiary)] group"
+                  title="Notifications"
+                >
+                  <div className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center relative"
+                    style={{ background: 'var(--bg-tertiary)' }}>
+                    <Bell className="w-4 h-4" style={{ color: 'var(--text-secondary)' }} />
+                    {unreadCount > 0 && (
+                      <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-phoenix-500 text-white text-[10px] font-bold flex items-center justify-center">
+                        {unreadCount}
+                      </span>
+                    )}
+                  </div>
+                </button>
+              </div>
+            )}
+          </div>
 
-              {/* Notifications dropdown */}
-              {createPortal(
-                <AnimatePresence>
-                  {showNotifications && (
-                    <>
-                      {/* Blur overlay */}
-                      <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 0.2 }}
-                        className="fixed inset-0 z-40"
-                        style={{ backdropFilter: 'blur(10px)', WebkitBackdropFilter: 'blur(10px)' }}
-                        onClick={() => setShowNotifications(false)}
-                      />
-                      
-                      {/* Dropdown menu */}
-                      <motion.div
-                        ref={notificationsDropdownRef}
-                        initial={{ opacity: 0, scale: 0.95 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        exit={{ opacity: 0, scale: 0.95 }}
-                        transition={{ duration: 0.2, ease: "easeOut" }}
-                        className="fixed z-50 w-80 rounded-2xl overflow-hidden"
-                        style={{ 
-                          background: 'var(--bg-popup)',
-                          border: '1px solid var(--border-color)',
-                          boxShadow: 'var(--shadow-lg)',
-                          left: collapsed ? '80px' : '268px',
-                          bottom: '180px',
-                        }}
-                      >
+          {/* Notifications dropdown - shared between collapsed and expanded states */}
+          {createPortal(
+            <AnimatePresence>
+              {showNotifications && (
+                <>
+                  {/* Blur overlay */}
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="fixed inset-0 z-40"
+                    style={{ backdropFilter: 'blur(10px)', WebkitBackdropFilter: 'blur(10px)' }}
+                    onClick={() => setShowNotifications(false)}
+                  />
+                  
+                  {/* Dropdown menu */}
+                  <motion.div
+                    ref={notificationsDropdownRef}
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    transition={{ duration: 0.2, ease: "easeOut" }}
+                    className="fixed z-50 w-80 rounded-2xl overflow-hidden"
+                    style={{ 
+                      background: 'var(--bg-popup)',
+                      border: '1px solid var(--border-color)',
+                      boxShadow: 'var(--shadow-lg)',
+                      left: collapsed ? '80px' : '268px',
+                      bottom: '180px',
+                    }}
+                  >
                         <div className="p-4 flex items-center justify-between" style={{ borderBottom: '1px solid var(--border-color)' }}>
                           <div className="flex items-center gap-2">
                             <h3 className="font-semibold text-sm" style={{ color: 'var(--text-primary)' }}>Notifications</h3>
@@ -477,8 +502,6 @@ export default function Sidebar() {
                   )}
                 </AnimatePresence>
               , document.body)}
-            </div>
-          </div>
 
           {/* User Profile - directly above logout */}
           <div className="relative">
