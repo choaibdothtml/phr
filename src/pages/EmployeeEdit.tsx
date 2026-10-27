@@ -619,10 +619,371 @@ export default function EmployeeEdit() {
                     </div>
                   )}
 
-                  {/* Other steps would be rendered here - simplified for brevity */}
-                  {currentStep > 0 && (
-                    <div className="text-center py-12">
-                      <p style={{ color: 'var(--text-tertiary)' }}>Step {currentStep + 1} content</p>
+                  {/* Address Step */}
+                  {currentStep === 1 && (
+                    <div className="space-y-6">
+                      <FormField label="Home address" required error={errors.homeAddress}>
+                        <Textarea
+                          value={formData.homeAddress}
+                          onChange={(e) => handleInputChange('homeAddress', e.target.value)}
+                          rows={3}
+                          error={errors.homeAddress}
+                        />
+                      </FormField>
+
+                      <div className="grid grid-cols-2 gap-6">
+                        <FormField label="Province of residency" required error={errors.provinceOfResidency}>
+                          <Input
+                            value={formData.provinceOfResidency}
+                            onChange={(e) => handleInputChange('provinceOfResidency', e.target.value)}
+                            error={errors.provinceOfResidency}
+                          />
+                        </FormField>
+                        <FormField label="Municipality of residency" required error={errors.municipalityOfResidency}>
+                          <Input
+                            value={formData.municipalityOfResidency}
+                            onChange={(e) => handleInputChange('municipalityOfResidency', e.target.value)}
+                            error={errors.municipalityOfResidency}
+                          />
+                        </FormField>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Emergency Step */}
+                  {currentStep === 2 && (
+                    <div className="space-y-6">
+                      <FormField label="Person to contact in case of emergency" required error={errors.emergencyContactName}>
+                        <Input
+                          value={formData.emergencyContactName}
+                          onChange={(e) => handleInputChange('emergencyContactName', e.target.value)}
+                          error={errors.emergencyContactName}
+                        />
+                      </FormField>
+
+                      <div className="grid grid-cols-2 gap-6">
+                        <FormField label="Phone number to call" required error={errors.emergencyContactPhone}>
+                          <Input
+                            value={formData.emergencyContactPhone}
+                            onChange={(e) => handleInputChange('emergencyContactPhone', e.target.value)}
+                            placeholder="xx xx xx xx xx"
+                            error={errors.emergencyContactPhone}
+                          />
+                        </FormField>
+                        <FormField label="Relationship" required error={errors.emergencyContactRelationship}>
+                          <Select value={formData.emergencyContactRelationship} onChange={(e) => handleInputChange('emergencyContactRelationship', e.target.value)} error={errors.emergencyContactRelationship}>
+                            <option value="">Select relationship</option>
+                            <option value="Father">Father</option>
+                            <option value="Mother">Mother</option>
+                            <option value="Brother">Brother</option>
+                            <option value="Sister">Sister</option>
+                            <option value="Wife">Wife</option>
+                            <option value="Son">Son</option>
+                            <option value="Daughter">Daughter</option>
+                            <option value="Other">Other</option>
+                          </Select>
+                        </FormField>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-6">
+                        <FormField label="Blood type" required error={errors.bloodType}>
+                          <Select value={formData.bloodType} onChange={(e) => handleInputChange('bloodType', e.target.value)} error={errors.bloodType}>
+                            <option value="">Select blood type</option>
+                            <option value="A+">A+</option>
+                            <option value="A-">A-</option>
+                            <option value="B+">B+</option>
+                            <option value="B-">B-</option>
+                            <option value="AB+">AB+</option>
+                            <option value="AB-">AB-</option>
+                            <option value="O+">O+</option>
+                            <option value="O-">O-</option>
+                          </Select>
+                        </FormField>
+                      </div>
+
+                      <FormField label="Chronic diseases">
+                        <Textarea
+                          value={formData.chronicDiseases}
+                          onChange={(e) => handleInputChange('chronicDiseases', e.target.value)}
+                          rows={3}
+                        />
+                      </FormField>
+                    </div>
+                  )}
+
+                  {/* Job Details Step */}
+                  {currentStep === 3 && (
+                    <div className="space-y-6">
+                      <div className="grid grid-cols-2 gap-6">
+                        <FormField label="Entry date" required error={errors.entryDate}>
+                          <Input
+                            type="text"
+                            placeholder="xx/xx/xxxx"
+                            value={formData.entryDate}
+                            onChange={(e) => handleInputChange('entryDate', e.target.value)}
+                            error={errors.entryDate}
+                          />
+                        </FormField>
+                        <FormField label="Job" required error={errors.job}>
+                          <Input
+                            value={formData.job}
+                            readOnly
+                            className="cursor-not-allowed opacity-60"
+                          />
+                        </FormField>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-6">
+                        <FormField label="Classification">
+                          <Input
+                            value={formData.classification}
+                            onChange={(e) => handleInputChange('classification', e.target.value)}
+                          />
+                        </FormField>
+                        <FormField label="Degree" required error={errors.degree}>
+                          <Input
+                            value={formData.degree}
+                            readOnly
+                            className="cursor-not-allowed opacity-60"
+                          />
+                        </FormField>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-6">
+                        <FormField label="Group">
+                          <Input value={formData.group} readOnly className="cursor-not-allowed opacity-60" />
+                        </FormField>
+                        <FormField label="Department" required error={errors.department}>
+                          <Input
+                            value={formData.department}
+                            readOnly
+                            className="cursor-not-allowed opacity-60"
+                          />
+                        </FormField>
+                      </div>
+
+                      <div className="grid grid-cols-4 gap-4">
+                        <FormField label="Contract start date">
+                          <Input
+                            value={formData.entryDate}
+                            readOnly
+                            className="cursor-not-allowed opacity-60"
+                          />
+                        </FormField>
+                        <FormField label="Contract duration" required error={errors.contractDuration}>
+                          <Input
+                            value={formData.contractDuration}
+                            readOnly
+                            className="cursor-not-allowed opacity-60"
+                          />
+                        </FormField>
+                        <FormField label="Unit">
+                          <Select
+                            value={formData.contractDurationUnit}
+                            disabled
+                          >
+                            <option value="days">Days</option>
+                            <option value="months">Months</option>
+                            <option value="years">Years</option>
+                          </Select>
+                        </FormField>
+                        <FormField label="Contract end date">
+                          <Input
+                            value=""
+                            readOnly
+                            className="cursor-not-allowed opacity-60"
+                          />
+                        </FormField>
+                      </div>
+
+                      <div className="grid grid-cols-3 gap-4">
+                        <FormField label="Probationary period" required error={errors.probationaryPeriod}>
+                          <Input
+                            type="number"
+                            min="1"
+                            max="99"
+                            value={formData.probationaryPeriod}
+                            onChange={(e) => handleInputChange('probationaryPeriod', e.target.value)}
+                            error={errors.probationaryPeriod}
+                          />
+                        </FormField>
+                        <FormField label="Unit">
+                          <Select
+                            value={formData.probationaryPeriodUnit}
+                            onChange={(e) => handleInputChange('probationaryPeriodUnit', e.target.value)}
+                          >
+                            <option value="days">Days</option>
+                            <option value="months">Months</option>
+                          </Select>
+                        </FormField>
+                        <FormField label="Confirmation date">
+                          <Input
+                            value=""
+                            readOnly
+                            className="cursor-not-allowed opacity-60"
+                          />
+                        </FormField>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-6">
+                        <FormField label="Unsuccessful probation notice period (days)" required error={errors.unsuccessfulProbationNotice}>
+                          <Input
+                            type="number"
+                            min="1"
+                            max="999"
+                            value={formData.unsuccessfulProbationNotice}
+                            onChange={(e) => handleInputChange('unsuccessfulProbationNotice', e.target.value)}
+                            error={errors.unsuccessfulProbationNotice}
+                          />
+                        </FormField>
+                        <FormField label="Resignation notice period (days)" required error={errors.resignationNotice}>
+                          <Input
+                            type="number"
+                            min="1"
+                            max="999"
+                            value={formData.resignationNotice}
+                            onChange={(e) => handleInputChange('resignationNotice', e.target.value)}
+                            error={errors.resignationNotice}
+                          />
+                        </FormField>
+                      </div>
+
+                      <FormField label="Purpose of the appointment">
+                        <Textarea
+                          value={formData.appointmentPurpose}
+                          onChange={(e) => handleInputChange('appointmentPurpose', e.target.value)}
+                          rows={3}
+                        />
+                      </FormField>
+                    </div>
+                  )}
+
+                  {/* Identification Step */}
+                  {currentStep === 4 && (
+                    <div className="space-y-6">
+                      <div className="p-4 rounded-xl" style={{ background: 'rgba(59, 130, 246, 0.05)', border: '1px solid rgba(59, 130, 246, 0.2)' }}>
+                        <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+                          You may enter either an ID card only, or a driving license only, or both together. NIN is always mandatory.
+                        </p>
+                      </div>
+
+                      <FormField label="National ID number (NIN)" required error={errors.nationalIdNumber}>
+                        <Input
+                          value={formData.nationalIdNumber}
+                          onChange={(e) => handleInputChange('nationalIdNumber', e.target.value)}
+                          placeholder="xxxxxxxxxxxxxxxxxx"
+                          maxLength={18}
+                          error={errors.nationalIdNumber}
+                        />
+                      </FormField>
+
+                      <div className="pt-6" style={{ borderTop: '1px solid var(--border-subtle)' }}>
+                        <FormField label="ID number" error={errors.idNumber}>
+                          <Input
+                            value={formData.idNumber}
+                            onChange={(e) => handleInputChange('idNumber', e.target.value)}
+                            error={errors.idNumber}
+                          />
+                        </FormField>
+
+                        <div className="grid grid-cols-3 gap-6 mt-6">
+                          <FormField label="ID issuing date" required={!!formData.idNumber} error={errors.idIssuingDate}>
+                            <Input
+                              type="text"
+                              placeholder="xx/xx/xxxx"
+                              value={formData.idIssuingDate}
+                              onChange={(e) => handleInputChange('idIssuingDate', e.target.value)}
+                              error={errors.idIssuingDate}
+                            />
+                          </FormField>
+                          <FormField label="ID issuing province" required={!!formData.idNumber} error={errors.idIssuingProvince}>
+                            <Input
+                              value={formData.idIssuingProvince}
+                              onChange={(e) => handleInputChange('idIssuingProvince', e.target.value)}
+                              error={errors.idIssuingProvince}
+                            />
+                          </FormField>
+                          <FormField label="ID issuing municipality" required={!!formData.idNumber} error={errors.idIssuingMunicipality}>
+                            <Input
+                              value={formData.idIssuingMunicipality}
+                              onChange={(e) => handleInputChange('idIssuingMunicipality', e.target.value)}
+                              error={errors.idIssuingMunicipality}
+                            />
+                          </FormField>
+                        </div>
+                      </div>
+
+                      <div className="pt-6" style={{ borderTop: '1px solid var(--border-subtle)' }}>
+                        <FormField label="Driver license number" error={errors.driverLicenseNumber}>
+                          <Input
+                            value={formData.driverLicenseNumber}
+                            onChange={(e) => handleInputChange('driverLicenseNumber', e.target.value)}
+                            error={errors.driverLicenseNumber}
+                          />
+                        </FormField>
+
+                        <div className="grid grid-cols-3 gap-6 mt-6">
+                          <FormField label="Driver license issuing date" required={!!formData.driverLicenseNumber} error={errors.driverLicenseIssuingDate}>
+                            <Input
+                              type="text"
+                              placeholder="xx/xx/xxxx"
+                              value={formData.driverLicenseIssuingDate}
+                              onChange={(e) => handleInputChange('driverLicenseIssuingDate', e.target.value)}
+                              error={errors.driverLicenseIssuingDate}
+                            />
+                          </FormField>
+                          <FormField label="Driver license issuing province" required={!!formData.driverLicenseNumber} error={errors.driverLicenseIssuingProvince}>
+                            <Input
+                              value={formData.driverLicenseIssuingProvince}
+                              onChange={(e) => handleInputChange('driverLicenseIssuingProvince', e.target.value)}
+                              error={errors.driverLicenseIssuingProvince}
+                            />
+                          </FormField>
+                          <FormField label="Driver license issuing municipality" required={!!formData.driverLicenseNumber} error={errors.driverLicenseIssuingMunicipality}>
+                            <Input
+                              value={formData.driverLicenseIssuingMunicipality}
+                              onChange={(e) => handleInputChange('driverLicenseIssuingMunicipality', e.target.value)}
+                              error={errors.driverLicenseIssuingMunicipality}
+                            />
+                          </FormField>
+                        </div>
+                      </div>
+
+                      <div className="pt-6" style={{ borderTop: '1px solid var(--border-subtle)' }}>
+                        <FormField label="Social security number" error={errors.socialSecurityNumber}>
+                          <Input
+                            value={formData.socialSecurityNumber}
+                            onChange={(e) => handleInputChange('socialSecurityNumber', e.target.value)}
+                            placeholder="xx xxxx xxxx xx"
+                            maxLength={15}
+                            error={errors.socialSecurityNumber}
+                          />
+                        </FormField>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Payment Step */}
+                  {currentStep === 5 && (
+                    <div className="space-y-6">
+                      <FormField label="Bank name" required error={errors.bankName}>
+                        <Select value={formData.bankName} onChange={(e) => handleInputChange('bankName', e.target.value)} error={errors.bankName}>
+                          <option value="">Select bank</option>
+                          {banks.map((bank) => (
+                            <option key={bank.id} value={bank.name}>{bank.name}</option>
+                          ))}
+                        </Select>
+                      </FormField>
+
+                      <FormField label="Account number" required error={errors.accountNumber}>
+                        <Input
+                          value={formData.accountNumber}
+                          onChange={(e) => handleInputChange('accountNumber', e.target.value)}
+                          placeholder="xxx xxxxx xxxxxxxxxxxx"
+                          maxLength={23}
+                          error={errors.accountNumber}
+                        />
+                      </FormField>
                     </div>
                   )}
                 </div>
