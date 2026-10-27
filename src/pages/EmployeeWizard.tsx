@@ -391,6 +391,26 @@ export default function EmployeeWizard() {
       if (!hasNumbers && hasLetters) return 'Driver license must contain at least some numbers';
     }
     
+    if ((field === 'idIssuingDate' || field === 'driverLicenseIssuingDate') && value) {
+      // Parse dd/mm/yyyy format
+      const dateParts = value.split('/');
+      if (dateParts.length === 3) {
+        const day = parseInt(dateParts[0], 10);
+        const month = parseInt(dateParts[1], 10) - 1;
+        const year = parseInt(dateParts[2], 10);
+        
+        if (!isNaN(day) && !isNaN(month) && !isNaN(year)) {
+          const inputDate = new Date(year, month, day);
+          const today = new Date();
+          today.setHours(0, 0, 0, 0);
+          
+          if (inputDate > today) {
+            return 'Date cannot be in the future';
+          }
+        }
+      }
+    }
+    
     return '';
   };
 
@@ -988,6 +1008,26 @@ export default function EmployeeWizard() {
               ))}
             </Select>
           </FormField>
+
+          {/* Basic Salary - Read-only field that pulls from Basic salaries table */}
+          <FormField label="Basic salary">
+            <Input
+              value={(() => {
+                const savedSalaries = localStorage.getItem('phoenix-hr-basic-salaries');
+                if (savedSalaries && formData.classification && formData.degree) {
+                  const salaries = JSON.parse(savedSalaries);
+                  const key = `${formData.classification}-${formData.degree}`;
+                  const salary = salaries[key];
+                  if (salary && salary !== '') {
+                    return `${salary} DA`;
+                  }
+                }
+                return '0 DA';
+              })()}
+              readOnly
+              className="cursor-not-allowed opacity-60"
+            />
+          </FormField>
         </div>
       );
     }
@@ -1029,6 +1069,7 @@ export default function EmployeeWizard() {
                     placeholder="xx/xx/xxxx"
                     value={formData.idIssuingDate}
                     onChange={(e) => handleInputChange('idIssuingDate', e.target.value)}
+                    onBlur={() => handleBlur('idIssuingDate')}
                     error={errors.idIssuingDate}
                   />
                 </FormField>
@@ -1074,6 +1115,7 @@ export default function EmployeeWizard() {
                     placeholder="xx/xx/xxxx"
                     value={formData.driverLicenseIssuingDate}
                     onChange={(e) => handleInputChange('driverLicenseIssuingDate', e.target.value)}
+                    onBlur={() => handleBlur('driverLicenseIssuingDate')}
                     error={errors.driverLicenseIssuingDate}
                   />
                 </FormField>
