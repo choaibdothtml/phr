@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Download, Filter, X, ArrowUpDown, ArrowUp, ArrowDown, Printer, ChevronDown } from 'lucide-react';
+import { Download, Filter, X, ArrowUpDown, ArrowUp, ArrowDown, Printer, ChevronDown, Trash2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { api, Employee } from '../services/api';
 import { useSettings } from '../contexts/SettingsContext';
@@ -79,6 +79,7 @@ export default function EmployeesList() {
   const [showProfileConfirm, setShowProfileConfirm] = useState(false);
   const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
   const [showExportDropdown, setShowExportDropdown] = useState(false);
+  const [showClearConfirm, setShowClearConfirm] = useState(false);
   const tableRef = useRef<HTMLDivElement>(null);
   const exportDropdownRef = useRef<HTMLDivElement>(null);
   const [stickyColumnPositions, setStickyColumnPositions] = useState<number[]>([0, 0, 0]);
@@ -392,6 +393,16 @@ export default function EmployeesList() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  // Clear all employees
+  const handleClearAllEmployees = () => {
+    localStorage.removeItem('phoenix-hr-employees');
+    setEmployees([]);
+    setFilteredEmployees([]);
+    setAppliedFilter(null);
+    setSort({ column: 'employeeNumber', direction: 'asc' });
+    setShowClearConfirm(false);
+  };
+
   const columns: { key: keyof Employee; label: string; width: number }[] = [
     { key: 'employeeNumber', label: "Employee's Number", width: 120 },
     { key: 'lastName', label: 'Family Name', width: 130 },
@@ -488,6 +499,18 @@ export default function EmployeesList() {
         >
           <Filter className="w-4 h-4" />
           Filter
+        </button>
+        <button
+          onClick={() => setShowClearConfirm(true)}
+          className="flex items-center gap-2 px-4 py-2.5 rounded-xl font-semibold text-sm transition-all hover:scale-105"
+          style={{ 
+            background: 'rgba(239, 68, 68, 0.1)', 
+            border: '1px solid rgba(239, 68, 68, 0.3)',
+            color: '#ef4444'
+          }}
+        >
+          <Trash2 className="w-4 h-4" />
+          Clear All
         </button>
         <div className="relative" ref={exportDropdownRef}>
           <button
@@ -921,6 +944,74 @@ export default function EmployeesList() {
           </>
         )}
       </AnimatePresence>
+      , document.body)}
+
+      {/* Clear All Confirmation Modal */}
+      {createPortal(
+        <AnimatePresence>
+          {showClearConfirm && (
+            <>
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
+                className="fixed inset-0 z-[60]"
+                style={{ background: 'rgba(0, 0, 0, 0.5)', backdropFilter: 'blur(4px)', WebkitBackdropFilter: 'blur(4px)' }}
+                onClick={() => setShowClearConfirm(false)}
+              />
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                transition={{ duration: 0.2, ease: "easeOut" }}
+                className="fixed inset-0 z-[70] flex items-center justify-center p-4 pointer-events-none"
+              >
+                <div 
+                  className="w-full max-w-md rounded-2xl p-6 pointer-events-auto"
+                  style={{ 
+                    background: 'var(--bg-popup)',
+                    border: '1px solid var(--border-color)',
+                    boxShadow: 'var(--shadow-lg)'
+                  }}
+                >
+                  <div className="text-center mb-6">
+                    <div className="w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center"
+                      style={{ background: 'rgba(239, 68, 68, 0.1)' }}>
+                      <Trash2 className="w-8 h-8 text-red-500" />
+                    </div>
+                    <h3 className="text-lg font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
+                      Clear All Employees
+                    </h3>
+                    <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+                      Are you sure you want to delete all employees? This action cannot be undone.
+                    </p>
+                  </div>
+                  <div className="flex gap-3">
+                    <button
+                      onClick={() => setShowClearConfirm(false)}
+                      className="flex-1 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all hover:scale-105"
+                      style={{ 
+                        background: 'var(--bg-tertiary)',
+                        border: '1px solid var(--border-color)',
+                        color: 'var(--text-secondary)'
+                      }}
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={handleClearAllEmployees}
+                      className="flex-1 px-4 py-2.5 rounded-xl text-white text-sm font-semibold transition-all hover:scale-105 hover:shadow-lg"
+                      style={{ background: '#ef4444' }}
+                    >
+                      Delete All
+                    </button>
+                  </div>
+                </div>
+              </motion.div>
+            </>
+          )}
+        </AnimatePresence>
       , document.body)}
     </div>
   );
