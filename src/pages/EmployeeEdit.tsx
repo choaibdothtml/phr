@@ -456,6 +456,35 @@ export default function EmployeeEdit() {
     setShowCancelTerminationWarning(false);
   };
 
+  const handleDeleteEmployee = () => {
+    const savedEmployees = localStorage.getItem('phoenix-hr-employees');
+    if (savedEmployees) {
+      const empList = JSON.parse(savedEmployees);
+      const updatedList = empList.filter(e => e.employeeNumber !== formData.employeeNumber);
+      localStorage.setItem('phoenix-hr-employees', JSON.stringify(updatedList));
+      setEmployees(updatedList);
+      
+      // Navigate to previous employee or show message
+      if (updatedList.length > 0) {
+        const prevIndex = Math.max(0, currentIndex - 1);
+        setCurrentIndex(prevIndex);
+        loadEmployee(updatedList[prevIndex]);
+      } else {
+        // No employees left, navigate back to list
+        navigate('/employees/list');
+      }
+    }
+  };
+
+  // Check if current employee is the last one (highest employee number)
+  const isLastEmployee = () => {
+    if (employees.length === 0) return false;
+    const sortedEmployees = [...employees].sort((a, b) => 
+      parseInt(b.employeeNumber) - parseInt(a.employeeNumber)
+    );
+    return sortedEmployees[0]?.employeeNumber === formData.employeeNumber;
+  };
+
   const steps = [
     { id: 'personal', label: 'Personal info', icon: User },
     { id: 'address', label: 'Address', icon: MapPin },
@@ -1376,14 +1405,24 @@ export default function EmployeeEdit() {
                     Next
                   </button>
                 ) : (
-                  <button
-                    onClick={handleSave}
-                    disabled={!hasModifications}
-                    className="px-6 py-3 rounded-xl text-white text-sm font-semibold transition-all hover:scale-105 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
-                    style={{ background: 'var(--gradient-primary)' }}
-                  >
-                    Save modifications
-                  </button>
+                  <div className="flex gap-3">
+                    <button
+                      onClick={handleSave}
+                      disabled={!hasModifications}
+                      className="px-6 py-3 rounded-xl text-white text-sm font-semibold transition-all hover:scale-105 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                      style={{ background: 'var(--gradient-primary)' }}
+                    >
+                      Save modifications
+                    </button>
+                    <button
+                      onClick={handleDeleteEmployee}
+                      disabled={!isLastEmployee()}
+                      className="px-6 py-3 rounded-xl text-white text-sm font-semibold transition-all hover:scale-105 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                      style={{ background: '#ef4444' }}
+                    >
+                      Delete employee
+                    </button>
+                  </div>
                 )}
               </div>
             </div>
