@@ -1,53 +1,13 @@
 import { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Download, Filter, X, ArrowUpDown, ArrowUp, ArrowDown, Printer, ChevronDown, Trash2 } from 'lucide-react';
+import { Download, X, ArrowUpDown, ArrowUp, ArrowDown, Printer, ChevronDown, Trash2 } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { api, Employee } from '../services/api';
 import { useSettings } from '../contexts/SettingsContext';
 import * as XLSX from 'xlsx';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
-
-interface FilterState {
-  situation: string;
-  entryDateFrom: string;
-  entryDateTo: string;
-  dateOfBirthFrom: string;
-  dateOfBirthTo: string;
-  ageFrom: string;
-  ageTo: string;
-  contractStartFrom: string;
-  contractStartTo: string;
-  contractEndFrom: string;
-  contractEndTo: string;
-  leavingDateFrom: string;
-  leavingDateTo: string;
-  job: string;
-  department: string;
-  group: string;
-  classification: string;
-}
-
-const defaultFilter: FilterState = {
-  situation: '',
-  entryDateFrom: '',
-  entryDateTo: '',
-  dateOfBirthFrom: '',
-  dateOfBirthTo: '',
-  ageFrom: '',
-  ageTo: '',
-  contractStartFrom: '',
-  contractStartTo: '',
-  contractEndFrom: '',
-  contractEndTo: '',
-  leavingDateFrom: '',
-  leavingDateTo: '',
-  job: '',
-  department: '',
-  group: '',
-  classification: '',
-};
 
 type SortDirection = 'asc' | 'desc' | null;
 
@@ -86,9 +46,7 @@ export default function EmployeesList() {
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [filteredEmployees, setFilteredEmployees] = useState<Employee[]>([]);
   const [loading, setLoading] = useState(true);
-  const [showFilter, setShowFilter] = useState(false);
-  const [filter, setFilter] = useState<FilterState>(defaultFilter);
-  const [appliedFilter, setAppliedFilter] = useState<FilterState | null>(null);
+
   const [sort, setSort] = useState<SortState>({ column: 'employeeNumber', direction: 'asc' });
   const [showProfileConfirm, setShowProfileConfirm] = useState(false);
   const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
@@ -188,91 +146,6 @@ export default function EmployeesList() {
 
       return sort.direction === 'asc' ? comparison : -comparison;
     });
-  };
-
-  const applyFilter = () => {
-    let result = [...employees];
-
-    if (filter.situation) {
-      result = result.filter(emp => {
-        if (filter.situation === 'existing') return emp.status !== 'terminated';
-        if (filter.situation === 'terminated') return emp.status === 'terminated';
-        return true;
-      });
-    }
-
-    if (filter.entryDateFrom) {
-      result = result.filter(emp => emp.joinDate >= filter.entryDateFrom);
-    }
-    if (filter.entryDateTo) {
-      result = result.filter(emp => emp.joinDate <= filter.entryDateTo);
-    }
-
-    if (filter.dateOfBirthFrom) {
-      result = result.filter(emp => emp.dateOfBirth && emp.dateOfBirth >= filter.dateOfBirthFrom);
-    }
-    if (filter.dateOfBirthTo) {
-      result = result.filter(emp => emp.dateOfBirth && emp.dateOfBirth <= filter.dateOfBirthTo);
-    }
-
-    if (filter.ageFrom) {
-      const minAge = parseInt(filter.ageFrom);
-      result = result.filter(emp => emp.dateOfBirth && calculateAge(emp.dateOfBirth) >= minAge);
-    }
-    if (filter.ageTo) {
-      const maxAge = parseInt(filter.ageTo);
-      result = result.filter(emp => emp.dateOfBirth && calculateAge(emp.dateOfBirth) <= maxAge);
-    }
-
-    if (filter.contractStartFrom) {
-      result = result.filter(emp => emp.currentContractStartDate && emp.currentContractStartDate >= filter.contractStartFrom);
-    }
-    if (filter.contractStartTo) {
-      result = result.filter(emp => emp.currentContractStartDate && emp.currentContractStartDate <= filter.contractStartTo);
-    }
-
-    if (filter.contractEndFrom) {
-      result = result.filter(emp => emp.currentContractEndDate && emp.currentContractEndDate >= filter.contractEndFrom);
-    }
-    if (filter.contractEndTo) {
-      result = result.filter(emp => emp.currentContractEndDate && emp.currentContractEndDate <= filter.contractEndTo);
-    }
-
-    if (filter.leavingDateFrom) {
-      result = result.filter(emp => emp.dateOfLeavingWork && emp.dateOfLeavingWork >= filter.leavingDateFrom);
-    }
-    if (filter.leavingDateTo) {
-      result = result.filter(emp => emp.dateOfLeavingWork && emp.dateOfLeavingWork <= filter.leavingDateTo);
-    }
-
-    if (filter.job) {
-      result = result.filter(emp => emp.position === filter.job);
-    }
-    if (filter.department) {
-      result = result.filter(emp => emp.department === filter.department);
-    }
-    if (filter.group) {
-      result = result.filter(emp => emp.group === filter.group);
-    }
-    if (filter.classification) {
-      result = result.filter(emp => emp.classification === filter.classification);
-    }
-
-    setFilteredEmployees(result);
-    setAppliedFilter({ ...filter });
-    setShowFilter(false);
-  };
-
-  const resetFilter = () => {
-    setFilter(defaultFilter);
-    setFilteredEmployees(employees);
-    setAppliedFilter(null);
-    setShowFilter(false);
-  };
-
-  const cancelFilter = () => {
-    setFilter(appliedFilter || defaultFilter);
-    setShowFilter(false);
   };
 
   const exportToExcel = () => {
@@ -396,8 +269,7 @@ export default function EmployeesList() {
 
   const handleConfirmProfile = () => {
     if (selectedEmployee) {
-      // Save current filters and sort to localStorage
-      localStorage.setItem('employeesListFilters', JSON.stringify(appliedFilter));
+      // Save current sort to localStorage
       localStorage.setItem('employeesListSort', JSON.stringify(sort));
       localStorage.setItem('employeesListFrom', 'list');
       
@@ -427,7 +299,6 @@ export default function EmployeesList() {
     localStorage.removeItem('phoenix-hr-employees');
     setEmployees([]);
     setFilteredEmployees([]);
-    setAppliedFilter(null);
     setSort({ column: 'employeeNumber', direction: 'asc' });
     setShowClearConfirm(false);
   };
@@ -492,43 +363,11 @@ export default function EmployeesList() {
   }
 
   const sortedEmployees = getSortedEmployees();
-  const isFiltered = appliedFilter !== null;
 
   return (
     <div className="px-6 pt-6 pb-0 h-full flex flex-col animate-fade-in-up">
       {/* Action Buttons - right aligned */}
       <div className="flex items-center justify-end gap-3 mb-4">
-        {isFiltered && (
-          <span className="text-xs font-medium px-3 py-1.5 rounded-lg mr-auto" style={{ background: 'var(--bg-tertiary)', color: 'var(--text-secondary)' }}>
-            Showing {filteredEmployees.length} of {employees.length} employees
-          </span>
-        )}
-        {isFiltered && (
-          <button
-            onClick={resetFilter}
-            className="flex items-center gap-2 px-4 py-2.5 rounded-xl font-semibold text-sm transition-all hover:scale-105"
-            style={{ 
-              background: 'rgba(239, 68, 68, 0.1)', 
-              border: '1px solid rgba(239, 68, 68, 0.3)',
-              color: '#ef4444'
-            }}
-          >
-            <X className="w-4 h-4" />
-            Reset Filter
-          </button>
-        )}
-        <button
-          onClick={() => setShowFilter(true)}
-          className="flex items-center gap-2 px-4 py-2.5 rounded-xl font-semibold text-sm transition-all hover:scale-105"
-          style={{ 
-            background: 'var(--bg-tertiary)', 
-            border: '1px solid var(--border-color)',
-            color: 'var(--text-primary)'
-          }}
-        >
-          <Filter className="w-4 h-4" />
-          Filter
-        </button>
         <button
           onClick={() => setShowClearConfirm(true)}
           className="flex items-center gap-2 px-4 py-2.5 rounded-xl font-semibold text-sm transition-all hover:scale-105"
@@ -689,213 +528,6 @@ export default function EmployeesList() {
           </table>
         </div>
       </div>
-
-      {/* Filter Modal */}
-      {showFilter && createPortal(
-        <>
-          {/* Blur overlay */}
-          <div
-            className="fixed inset-0 z-40"
-            style={{ backdropFilter: 'blur(10px)', WebkitBackdropFilter: 'blur(10px)', background: 'rgba(0,0,0,0.3)' }}
-            onClick={cancelFilter}
-          />
-          
-          {/* Modal content */}
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none">
-            <div 
-              className="w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-2xl pointer-events-auto"
-              style={{ background: 'var(--bg-popup)', border: '1px solid var(--border-color)', boxShadow: 'var(--shadow-lg)' }}
-            >
-              <div className="p-6">
-                <div className="grid grid-cols-2 gap-8">
-              {/* Left side */}
-              <div className="space-y-5">
-                
-                {/* Situation */}
-                <div>
-                  <label className="block text-xs font-semibold mb-1.5" style={{ color: 'var(--text-secondary)' }}>Situation</label>
-                  <select
-                    value={filter.situation}
-                    onChange={(e) => setFilter({ ...filter, situation: e.target.value })}
-                    className="w-full px-3 py-2.5 rounded-xl text-sm outline-none cursor-pointer"
-                    style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-primary)' }}
-                  >
-                    <option value="">All</option>
-                    <option value="existing">Existing employees</option>
-                    <option value="terminated">Terminated employees</option>
-                  </select>
-                </div>
-
-                {/* Entry Date */}
-                <div>
-                  <label className="block text-xs font-semibold mb-1.5" style={{ color: 'var(--text-secondary)' }}>Entry Date</label>
-                  <div className="flex items-center gap-2">
-                    <input type="date" value={filter.entryDateFrom} onChange={(e) => setFilter({ ...filter, entryDateFrom: e.target.value })}
-                      className="flex-1 px-3 py-2 rounded-lg text-xs outline-none" style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-primary)' }} />
-                    <span className="text-xs" style={{ color: 'var(--text-tertiary)' }}>to</span>
-                    <input type="date" value={filter.entryDateTo} onChange={(e) => setFilter({ ...filter, entryDateTo: e.target.value })}
-                      min={filter.entryDateFrom}
-                      className="flex-1 px-3 py-2 rounded-lg text-xs outline-none" style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-primary)' }} />
-                  </div>
-                </div>
-
-                {/* Date of Birth */}
-                <div>
-                  <label className="block text-xs font-semibold mb-1.5" style={{ color: 'var(--text-secondary)' }}>Date of Birth</label>
-                  <div className="flex items-center gap-2">
-                    <input type="date" value={filter.dateOfBirthFrom} onChange={(e) => setFilter({ ...filter, dateOfBirthFrom: e.target.value })}
-                      className="flex-1 px-3 py-2 rounded-lg text-xs outline-none" style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-primary)' }} />
-                    <span className="text-xs" style={{ color: 'var(--text-tertiary)' }}>to</span>
-                    <input type="date" value={filter.dateOfBirthTo} onChange={(e) => setFilter({ ...filter, dateOfBirthTo: e.target.value })}
-                      min={filter.dateOfBirthFrom}
-                      className="flex-1 px-3 py-2 rounded-lg text-xs outline-none" style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-primary)' }} />
-                  </div>
-                </div>
-
-                {/* Age */}
-                <div>
-                  <label className="block text-xs font-semibold mb-1.5" style={{ color: 'var(--text-secondary)' }}>Age</label>
-                  <div className="flex items-center gap-2">
-                    <input type="number" min="18" max="99" value={filter.ageFrom} onChange={(e) => setFilter({ ...filter, ageFrom: e.target.value })}
-                      placeholder="18" className="flex-1 px-3 py-2 rounded-lg text-xs outline-none" style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-primary)' }} />
-                    <span className="text-xs" style={{ color: 'var(--text-tertiary)' }}>to</span>
-                    <input type="number" min="19" max="99" value={filter.ageTo} onChange={(e) => setFilter({ ...filter, ageTo: e.target.value })}
-                      placeholder="99" className="flex-1 px-3 py-2 rounded-lg text-xs outline-none" style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-primary)' }} />
-                  </div>
-                </div>
-
-                {/* Contract Start Date */}
-                <div>
-                  <label className="block text-xs font-semibold mb-1.5" style={{ color: 'var(--text-secondary)' }}>Contract Start Date</label>
-                  <div className="flex items-center gap-2">
-                    <input type="date" value={filter.contractStartFrom} onChange={(e) => setFilter({ ...filter, contractStartFrom: e.target.value })}
-                      className="flex-1 px-3 py-2 rounded-lg text-xs outline-none" style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-primary)' }} />
-                    <span className="text-xs" style={{ color: 'var(--text-tertiary)' }}>to</span>
-                    <input type="date" value={filter.contractStartTo} onChange={(e) => setFilter({ ...filter, contractStartTo: e.target.value })}
-                      min={filter.contractStartFrom}
-                      className="flex-1 px-3 py-2 rounded-lg text-xs outline-none" style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-primary)' }} />
-                  </div>
-                </div>
-
-                {/* Contract End Date */}
-                <div>
-                  <label className="block text-xs font-semibold mb-1.5" style={{ color: 'var(--text-secondary)' }}>Contract End Date</label>
-                  <div className="flex items-center gap-2">
-                    <input type="date" value={filter.contractEndFrom} onChange={(e) => setFilter({ ...filter, contractEndFrom: e.target.value })}
-                      className="flex-1 px-3 py-2 rounded-lg text-xs outline-none" style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-primary)' }} />
-                    <span className="text-xs" style={{ color: 'var(--text-tertiary)' }}>to</span>
-                    <input type="date" value={filter.contractEndTo} onChange={(e) => setFilter({ ...filter, contractEndTo: e.target.value })}
-                      min={filter.contractEndFrom}
-                      className="flex-1 px-3 py-2 rounded-lg text-xs outline-none" style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-primary)' }} />
-                  </div>
-                </div>
-
-                {/* Date of Leaving Work */}
-                <div>
-                  <label className="block text-xs font-semibold mb-1.5" style={{ color: 'var(--text-secondary)' }}>Date of Leaving Work</label>
-                  <div className="flex items-center gap-2">
-                    <input type="date" value={filter.leavingDateFrom} onChange={(e) => setFilter({ ...filter, leavingDateFrom: e.target.value })}
-                      className="flex-1 px-3 py-2 rounded-lg text-xs outline-none" style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-primary)' }} />
-                    <span className="text-xs" style={{ color: 'var(--text-tertiary)' }}>to</span>
-                    <input type="date" value={filter.leavingDateTo} onChange={(e) => setFilter({ ...filter, leavingDateTo: e.target.value })}
-                      min={filter.leavingDateFrom}
-                      className="flex-1 px-3 py-2 rounded-lg text-xs outline-none" style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-primary)' }} />
-                  </div>
-                </div>
-              </div>
-
-              {/* Right side */}
-              <div className="space-y-5">
-                {/* Job */}
-                <div>
-                  <label className="block text-xs font-semibold mb-1.5" style={{ color: 'var(--text-secondary)' }}>Job</label>
-                  <select
-                    value={filter.job}
-                    onChange={(e) => setFilter({ ...filter, job: e.target.value })}
-                    className="w-full px-3 py-2.5 rounded-xl text-sm outline-none cursor-pointer"
-                    style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-primary)' }}
-                  >
-                    <option value="">All Jobs</option>
-                    {jobTitles.map(j => <option key={j} value={j}>{j}</option>)}
-                  </select>
-                </div>
-
-                {/* Department */}
-                <div>
-                  <label className="block text-xs font-semibold mb-1.5" style={{ color: 'var(--text-secondary)' }}>Department</label>
-                  <select
-                    value={filter.department}
-                    onChange={(e) => setFilter({ ...filter, department: e.target.value })}
-                    className="w-full px-3 py-2.5 rounded-xl text-sm outline-none cursor-pointer"
-                    style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-primary)' }}
-                  >
-                    <option value="">All Departments</option>
-                    {departments.map(d => <option key={d.id} value={d.name}>{d.name}</option>)}
-                  </select>
-                </div>
-
-                {/* Group */}
-                <div>
-                  <label className="block text-xs font-semibold mb-1.5" style={{ color: 'var(--text-secondary)' }}>Group</label>
-                  <select
-                    value={filter.group}
-                    onChange={(e) => setFilter({ ...filter, group: e.target.value })}
-                    className="w-full px-3 py-2.5 rounded-xl text-sm outline-none cursor-pointer"
-                    style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-primary)' }}
-                  >
-                    <option value="">All Groups</option>
-                    {groups.map(g => <option key={g} value={g}>{g}</option>)}
-                  </select>
-                </div>
-
-                {/* Classification */}
-                <div>
-                  <label className="block text-xs font-semibold mb-1.5" style={{ color: 'var(--text-secondary)' }}>
-                    Classification (1 - {maxClassification})
-                  </label>
-                  <input
-                    type="number"
-                    min="1"
-                    max={maxClassification}
-                    value={filter.classification}
-                    onChange={(e) => setFilter({ ...filter, classification: e.target.value })}
-                    placeholder={`1 to ${maxClassification}`}
-                    className="w-full px-3 py-2.5 rounded-xl text-sm outline-none"
-                    style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-primary)' }}
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* Footer buttons */}
-            <div className="p-6 flex justify-center gap-3">
-              <button
-                onClick={cancelFilter}
-                className="px-5 py-2.5 rounded-xl text-sm font-semibold transition-all hover:scale-105"
-                style={{ background: 'var(--bg-tertiary)', color: 'var(--text-secondary)' }}
-              >
-                Cancel
-              </button>
-              <button
-                onClick={resetFilter}
-                className="px-5 py-2.5 rounded-xl text-sm font-semibold transition-all hover:scale-105"
-                style={{ background: 'rgba(239, 68, 68, 0.1)', color: '#ef4444', border: '1px solid rgba(239, 68, 68, 0.3)' }}
-              >
-                Reset Filter
-              </button>
-              <button
-                onClick={applyFilter}
-                className="px-5 py-2.5 rounded-xl text-white text-sm font-semibold transition-all hover:scale-105 hover:shadow-lg"
-                style={{ background: 'var(--gradient-primary)' }}
-              >
-                Apply Filter
-              </button>
-            </div>
-                </div>
-              </div>
-            </div>
-          </>
-      , document.body)}
 
       {/* Profile Confirmation Modal */}
       {createPortal(
