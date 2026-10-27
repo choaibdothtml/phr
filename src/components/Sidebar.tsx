@@ -40,6 +40,8 @@ export default function Sidebar() {
   const sidebarRef = useRef<HTMLDivElement>(null);
   const notificationsDropdownRef = useRef<HTMLDivElement>(null);
   const employeeMenuRef = useRef<HTMLDivElement>(null);
+  const employeeButtonRef = useRef<HTMLButtonElement>(null);
+  const [menuPosition, setMenuPosition] = useState({ top: 0, left: 0 });
 
   // Load date/time format preferences
   useEffect(() => {
@@ -229,8 +231,16 @@ export default function Sidebar() {
             return (
               <div key={item.path} className="relative" ref={employeeMenuRef}>
                 <button
+                  ref={employeeButtonRef}
                   onClick={(e) => {
                     e.stopPropagation();
+                    if (!showEmployeeMenu) {
+                      const rect = e.currentTarget.getBoundingClientRect();
+                      setMenuPosition({
+                        top: rect.top,
+                        left: rect.right + 8
+                      });
+                    }
                     setShowEmployeeMenu(!showEmployeeMenu);
                   }}
                   className={`sidebar-indicator w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group ${
@@ -257,18 +267,20 @@ export default function Sidebar() {
                 </button>
                 
                 {/* Employee Action Dropdown */}
-                <AnimatePresence>
-                  {showEmployeeMenu && !collapsed && (
+                {showEmployeeMenu && !collapsed && createPortal(
+                  <AnimatePresence>
                     <motion.div
                       initial={{ opacity: 0, x: -10 }}
                       animate={{ opacity: 1, x: 0 }}
                       exit={{ opacity: 0, x: -10 }}
                       transition={{ duration: 0.2 }}
-                      className="absolute left-full top-0 ml-2 w-56 rounded-xl overflow-hidden z-50"
+                      className="fixed w-56 rounded-xl overflow-hidden z-[9999]"
                       style={{ 
                         background: 'var(--bg-card)',
                         border: '1px solid var(--border-color)',
-                        boxShadow: 'var(--shadow-lg)'
+                        boxShadow: 'var(--shadow-lg)',
+                        left: `${menuPosition.left}px`,
+                        top: `${menuPosition.top}px`
                       }}
                     >
                       <button
@@ -301,8 +313,8 @@ export default function Sidebar() {
                         Edit an existing employee
                       </button>
                     </motion.div>
-                  )}
-                </AnimatePresence>
+                  </AnimatePresence>
+                , document.body)}
               </div>
             );
           }
