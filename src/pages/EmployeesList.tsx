@@ -828,215 +828,201 @@ export default function EmployeesList() {
       , document.body)}
 
       {/* Filter Modal */}
-      {createPortal(
-        <AnimatePresence>
-          {showFilter && (
-            <>
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.2 }}
-                className="fixed inset-0 z-[60]"
-                style={{ background: 'rgba(0, 0, 0, 0.5)', backdropFilter: 'blur(4px)', WebkitBackdropFilter: 'blur(4px)' }}
-                onClick={cancelFilter}
-              />
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                transition={{ duration: 0.2, ease: "easeOut" }}
-                className="fixed inset-0 z-[70] flex items-center justify-center p-4 pointer-events-none"
-              >
-                <div 
-                  className="w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-2xl pointer-events-auto"
-                  style={{ 
-                    background: 'var(--bg-popup)',
-                    border: '1px solid var(--border-color)',
-                    boxShadow: 'var(--shadow-lg)'
-                  }}
-                >
-                  <div className="p-6">
-                    <div className="grid grid-cols-2 gap-8">
-                      {/* Left side */}
-                      <div className="space-y-5">
-                        <div>
-                          <label className="block text-xs font-semibold mb-1.5" style={{ color: 'var(--text-secondary)' }}>Situation</label>
-                          <select
-                            value={filter.situation}
-                            onChange={(e) => setFilter({ ...filter, situation: e.target.value })}
-                            className="w-full px-3 py-2.5 rounded-xl text-sm outline-none cursor-pointer"
-                            style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-primary)' }}
-                          >
-                            <option value="">All</option>
-                            <option value="existing">Existing employees</option>
-                            <option value="terminated">Terminated employees</option>
-                          </select>
-                        </div>
+      {showFilter && createPortal(
+        <>
+          <div
+            className="fixed inset-0 z-[60]"
+            style={{ background: 'rgba(0, 0, 0, 0.5)', backdropFilter: 'blur(4px)', WebkitBackdropFilter: 'blur(4px)' }}
+            onClick={cancelFilter}
+          />
+          <div className="fixed inset-0 z-[70] flex items-center justify-center p-4">
+            <div 
+              className="w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-2xl"
+              style={{ 
+                background: 'var(--bg-popup)',
+                border: '1px solid var(--border-color)',
+                boxShadow: 'var(--shadow-lg)'
+              }}
+            >
+              <div className="p-6">
+                <div className="grid grid-cols-2 gap-8">
+                  {/* Left side */}
+                  <div className="space-y-5">
+                    <div>
+                      <label className="block text-xs font-semibold mb-1.5" style={{ color: 'var(--text-secondary)' }}>Situation</label>
+                      <select
+                        value={filter.situation}
+                        onChange={(e) => setFilter({ ...filter, situation: e.target.value })}
+                        className="w-full px-3 py-2.5 rounded-xl text-sm outline-none cursor-pointer"
+                        style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-primary)' }}
+                      >
+                        <option value="">All</option>
+                        <option value="existing">Existing employees</option>
+                        <option value="terminated">Terminated employees</option>
+                      </select>
+                    </div>
 
-                        <div>
-                          <label className="block text-xs font-semibold mb-1.5" style={{ color: 'var(--text-secondary)' }}>Entry Date</label>
-                          <div className="flex items-center gap-2">
-                            <input type="date" value={filter.entryDateFrom} onChange={(e) => setFilter({ ...filter, entryDateFrom: e.target.value })}
-                              className="flex-1 px-3 py-2 rounded-lg text-xs outline-none" style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-primary)' }} />
-                            <span className="text-xs" style={{ color: 'var(--text-tertiary)' }}>to</span>
-                            <input type="date" value={filter.entryDateTo} onChange={(e) => setFilter({ ...filter, entryDateTo: e.target.value })}
-                              min={filter.entryDateFrom}
-                              className="flex-1 px-3 py-2 rounded-lg text-xs outline-none" style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-primary)' }} />
-                          </div>
-                        </div>
-
-                        <div>
-                          <label className="block text-xs font-semibold mb-1.5" style={{ color: 'var(--text-secondary)' }}>Date of Birth</label>
-                          <div className="flex items-center gap-2">
-                            <input type="date" value={filter.dateOfBirthFrom} onChange={(e) => setFilter({ ...filter, dateOfBirthFrom: e.target.value })}
-                              className="flex-1 px-3 py-2 rounded-lg text-xs outline-none" style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-primary)' }} />
-                            <span className="text-xs" style={{ color: 'var(--text-tertiary)' }}>to</span>
-                            <input type="date" value={filter.dateOfBirthTo} onChange={(e) => setFilter({ ...filter, dateOfBirthTo: e.target.value })}
-                              min={filter.dateOfBirthFrom}
-                              className="flex-1 px-3 py-2 rounded-lg text-xs outline-none" style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-primary)' }} />
-                          </div>
-                        </div>
-
-                        <div>
-                          <label className="block text-xs font-semibold mb-1.5" style={{ color: 'var(--text-secondary)' }}>Age</label>
-                          <div className="flex items-center gap-2">
-                            <input type="number" min="18" max="99" value={filter.ageFrom} onChange={(e) => setFilter({ ...filter, ageFrom: e.target.value })}
-                              placeholder="18" className="flex-1 px-3 py-2 rounded-lg text-xs outline-none" style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-primary)' }} />
-                            <span className="text-xs" style={{ color: 'var(--text-tertiary)' }}>to</span>
-                            <input type="number" min="19" max="99" value={filter.ageTo} onChange={(e) => setFilter({ ...filter, ageTo: e.target.value })}
-                              placeholder="99" className="flex-1 px-3 py-2 rounded-lg text-xs outline-none" style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-primary)' }} />
-                          </div>
-                        </div>
-
-                        <div>
-                          <label className="block text-xs font-semibold mb-1.5" style={{ color: 'var(--text-secondary)' }}>Current Contract Start Date</label>
-                          <div className="flex items-center gap-2">
-                            <input type="date" value={filter.contractStartFrom} onChange={(e) => setFilter({ ...filter, contractStartFrom: e.target.value })}
-                              className="flex-1 px-3 py-2 rounded-lg text-xs outline-none" style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-primary)' }} />
-                            <span className="text-xs" style={{ color: 'var(--text-tertiary)' }}>to</span>
-                            <input type="date" value={filter.contractStartTo} onChange={(e) => setFilter({ ...filter, contractStartTo: e.target.value })}
-                              min={filter.contractStartFrom}
-                              className="flex-1 px-3 py-2 rounded-lg text-xs outline-none" style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-primary)' }} />
-                          </div>
-                        </div>
-
-                        <div>
-                          <label className="block text-xs font-semibold mb-1.5" style={{ color: 'var(--text-secondary)' }}>Current Contract End Date</label>
-                          <div className="flex items-center gap-2">
-                            <input type="date" value={filter.contractEndFrom} onChange={(e) => setFilter({ ...filter, contractEndFrom: e.target.value })}
-                              className="flex-1 px-3 py-2 rounded-lg text-xs outline-none" style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-primary)' }} />
-                            <span className="text-xs" style={{ color: 'var(--text-tertiary)' }}>to</span>
-                            <input type="date" value={filter.contractEndTo} onChange={(e) => setFilter({ ...filter, contractEndTo: e.target.value })}
-                              min={filter.contractEndFrom}
-                              className="flex-1 px-3 py-2 rounded-lg text-xs outline-none" style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-primary)' }} />
-                          </div>
-                        </div>
-
-                        <div>
-                          <label className="block text-xs font-semibold mb-1.5" style={{ color: 'var(--text-secondary)' }}>Date of Leaving Work</label>
-                          <div className="flex items-center gap-2">
-                            <input type="date" value={filter.leavingDateFrom} onChange={(e) => setFilter({ ...filter, leavingDateFrom: e.target.value })}
-                              className="flex-1 px-3 py-2 rounded-lg text-xs outline-none" style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-primary)' }} />
-                            <span className="text-xs" style={{ color: 'var(--text-tertiary)' }}>to</span>
-                            <input type="date" value={filter.leavingDateTo} onChange={(e) => setFilter({ ...filter, leavingDateTo: e.target.value })}
-                              min={filter.leavingDateFrom}
-                              className="flex-1 px-3 py-2 rounded-lg text-xs outline-none" style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-primary)' }} />
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Right side */}
-                      <div className="space-y-5">
-                        <div>
-                          <label className="block text-xs font-semibold mb-1.5" style={{ color: 'var(--text-secondary)' }}>Job</label>
-                          <select
-                            value={filter.job}
-                            onChange={(e) => setFilter({ ...filter, job: e.target.value })}
-                            className="w-full px-3 py-2.5 rounded-xl text-sm outline-none cursor-pointer"
-                            style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-primary)' }}
-                          >
-                            <option value="">All Jobs</option>
-                            {jobTitles.map(j => <option key={j} value={j}>{j}</option>)}
-                          </select>
-                        </div>
-
-                        <div>
-                          <label className="block text-xs font-semibold mb-1.5" style={{ color: 'var(--text-secondary)' }}>Department</label>
-                          <select
-                            value={filter.department}
-                            onChange={(e) => setFilter({ ...filter, department: e.target.value })}
-                            className="w-full px-3 py-2.5 rounded-xl text-sm outline-none cursor-pointer"
-                            style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-primary)' }}
-                          >
-                            <option value="">All Departments</option>
-                            {departments.map(d => <option key={d.id} value={d.name}>{d.name}</option>)}
-                          </select>
-                        </div>
-
-                        <div>
-                          <label className="block text-xs font-semibold mb-1.5" style={{ color: 'var(--text-secondary)' }}>Group</label>
-                          <select
-                            value={filter.group}
-                            onChange={(e) => setFilter({ ...filter, group: e.target.value })}
-                            className="w-full px-3 py-2.5 rounded-xl text-sm outline-none cursor-pointer"
-                            style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-primary)' }}
-                          >
-                            <option value="">All Groups</option>
-                            {groups.map(g => <option key={g} value={g}>{g}</option>)}
-                          </select>
-                        </div>
-
-                        <div>
-                          <label className="block text-xs font-semibold mb-1.5" style={{ color: 'var(--text-secondary)' }}>
-                            Classification (1 - {maxClassification})
-                          </label>
-                          <input
-                            type="number"
-                            min="1"
-                            max={maxClassification}
-                            value={filter.classification}
-                            onChange={(e) => setFilter({ ...filter, classification: e.target.value })}
-                            placeholder={`1 to ${maxClassification}`}
-                            className="w-full px-3 py-2.5 rounded-xl text-sm outline-none"
-                            style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-primary)' }}
-                          />
-                        </div>
+                    <div>
+                      <label className="block text-xs font-semibold mb-1.5" style={{ color: 'var(--text-secondary)' }}>Entry Date</label>
+                      <div className="flex items-center gap-2">
+                        <input type="date" value={filter.entryDateFrom} onChange={(e) => setFilter({ ...filter, entryDateFrom: e.target.value })}
+                          className="flex-1 px-3 py-2 rounded-lg text-xs outline-none" style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-primary)' }} />
+                        <span className="text-xs" style={{ color: 'var(--text-tertiary)' }}>to</span>
+                        <input type="date" value={filter.entryDateTo} onChange={(e) => setFilter({ ...filter, entryDateTo: e.target.value })}
+                          min={filter.entryDateFrom}
+                          className="flex-1 px-3 py-2 rounded-lg text-xs outline-none" style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-primary)' }} />
                       </div>
                     </div>
 
-                    {/* Footer buttons */}
-                    <div className="p-6 flex justify-center gap-3">
-                      <button
-                        onClick={cancelFilter}
-                        className="px-5 py-2.5 rounded-xl text-sm font-semibold transition-all hover:scale-105"
-                        style={{ background: 'var(--bg-tertiary)', color: 'var(--text-secondary)' }}
+                    <div>
+                      <label className="block text-xs font-semibold mb-1.5" style={{ color: 'var(--text-secondary)' }}>Date of Birth</label>
+                      <div className="flex items-center gap-2">
+                        <input type="date" value={filter.dateOfBirthFrom} onChange={(e) => setFilter({ ...filter, dateOfBirthFrom: e.target.value })}
+                          className="flex-1 px-3 py-2 rounded-lg text-xs outline-none" style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-primary)' }} />
+                        <span className="text-xs" style={{ color: 'var(--text-tertiary)' }}>to</span>
+                        <input type="date" value={filter.dateOfBirthTo} onChange={(e) => setFilter({ ...filter, dateOfBirthTo: e.target.value })}
+                          min={filter.dateOfBirthFrom}
+                          className="flex-1 px-3 py-2 rounded-lg text-xs outline-none" style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-primary)' }} />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-semibold mb-1.5" style={{ color: 'var(--text-secondary)' }}>Age</label>
+                      <div className="flex items-center gap-2">
+                        <input type="number" min="18" max="99" value={filter.ageFrom} onChange={(e) => setFilter({ ...filter, ageFrom: e.target.value })}
+                          placeholder="18" className="flex-1 px-3 py-2 rounded-lg text-xs outline-none" style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-primary)' }} />
+                        <span className="text-xs" style={{ color: 'var(--text-tertiary)' }}>to</span>
+                        <input type="number" min="19" max="99" value={filter.ageTo} onChange={(e) => setFilter({ ...filter, ageTo: e.target.value })}
+                          placeholder="99" className="flex-1 px-3 py-2 rounded-lg text-xs outline-none" style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-primary)' }} />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-semibold mb-1.5" style={{ color: 'var(--text-secondary)' }}>Current Contract Start Date</label>
+                      <div className="flex items-center gap-2">
+                        <input type="date" value={filter.contractStartFrom} onChange={(e) => setFilter({ ...filter, contractStartFrom: e.target.value })}
+                          className="flex-1 px-3 py-2 rounded-lg text-xs outline-none" style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-primary)' }} />
+                        <span className="text-xs" style={{ color: 'var(--text-tertiary)' }}>to</span>
+                        <input type="date" value={filter.contractStartTo} onChange={(e) => setFilter({ ...filter, contractStartTo: e.target.value })}
+                          min={filter.contractStartFrom}
+                          className="flex-1 px-3 py-2 rounded-lg text-xs outline-none" style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-primary)' }} />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-semibold mb-1.5" style={{ color: 'var(--text-secondary)' }}>Current Contract End Date</label>
+                      <div className="flex items-center gap-2">
+                        <input type="date" value={filter.contractEndFrom} onChange={(e) => setFilter({ ...filter, contractEndFrom: e.target.value })}
+                          className="flex-1 px-3 py-2 rounded-lg text-xs outline-none" style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-primary)' }} />
+                        <span className="text-xs" style={{ color: 'var(--text-tertiary)' }}>to</span>
+                        <input type="date" value={filter.contractEndTo} onChange={(e) => setFilter({ ...filter, contractEndTo: e.target.value })}
+                          min={filter.contractEndFrom}
+                          className="flex-1 px-3 py-2 rounded-lg text-xs outline-none" style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-primary)' }} />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-semibold mb-1.5" style={{ color: 'var(--text-secondary)' }}>Date of Leaving Work</label>
+                      <div className="flex items-center gap-2">
+                        <input type="date" value={filter.leavingDateFrom} onChange={(e) => setFilter({ ...filter, leavingDateFrom: e.target.value })}
+                          className="flex-1 px-3 py-2 rounded-lg text-xs outline-none" style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-primary)' }} />
+                        <span className="text-xs" style={{ color: 'var(--text-tertiary)' }}>to</span>
+                        <input type="date" value={filter.leavingDateTo} onChange={(e) => setFilter({ ...filter, leavingDateTo: e.target.value })}
+                          min={filter.leavingDateFrom}
+                          className="flex-1 px-3 py-2 rounded-lg text-xs outline-none" style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-primary)' }} />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Right side */}
+                  <div className="space-y-5">
+                    <div>
+                      <label className="block text-xs font-semibold mb-1.5" style={{ color: 'var(--text-secondary)' }}>Job</label>
+                      <select
+                        value={filter.job}
+                        onChange={(e) => setFilter({ ...filter, job: e.target.value })}
+                        className="w-full px-3 py-2.5 rounded-xl text-sm outline-none cursor-pointer"
+                        style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-primary)' }}
                       >
-                        Cancel
-                      </button>
-                      <button
-                        onClick={() => {
-                          setFilter(defaultFilter);
-                        }}
-                        className="px-5 py-2.5 rounded-xl text-sm font-semibold transition-all hover:scale-105"
-                        style={{ background: 'rgba(239, 68, 68, 0.1)', color: '#ef4444', border: '1px solid rgba(239, 68, 68, 0.3)' }}
+                        <option value="">All Jobs</option>
+                        {jobTitles.map(j => <option key={j} value={j}>{j}</option>)}
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-semibold mb-1.5" style={{ color: 'var(--text-secondary)' }}>Department</label>
+                      <select
+                        value={filter.department}
+                        onChange={(e) => setFilter({ ...filter, department: e.target.value })}
+                        className="w-full px-3 py-2.5 rounded-xl text-sm outline-none cursor-pointer"
+                        style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-primary)' }}
                       >
-                        Reset Filter
-                      </button>
-                      <button
-                        onClick={applyFilter}
-                        className="px-5 py-2.5 rounded-xl text-white text-sm font-semibold transition-all hover:scale-105 hover:shadow-lg"
-                        style={{ background: 'var(--gradient-primary)' }}
+                        <option value="">All Departments</option>
+                        {departments.map(d => <option key={d.id} value={d.name}>{d.name}</option>)}
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-semibold mb-1.5" style={{ color: 'var(--text-secondary)' }}>Group</label>
+                      <select
+                        value={filter.group}
+                        onChange={(e) => setFilter({ ...filter, group: e.target.value })}
+                        className="w-full px-3 py-2.5 rounded-xl text-sm outline-none cursor-pointer"
+                        style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-primary)' }}
                       >
-                        Apply Filter
-                      </button>
+                        <option value="">All Groups</option>
+                        {groups.map(g => <option key={g} value={g}>{g}</option>)}
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-semibold mb-1.5" style={{ color: 'var(--text-secondary)' }}>
+                        Classification (1 - {maxClassification})
+                      </label>
+                      <input
+                        type="number"
+                        min="1"
+                        max={maxClassification}
+                        value={filter.classification}
+                        onChange={(e) => setFilter({ ...filter, classification: e.target.value })}
+                        placeholder={`1 to ${maxClassification}`}
+                        className="w-full px-3 py-2.5 rounded-xl text-sm outline-none"
+                        style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-primary)' }}
+                      />
                     </div>
                   </div>
                 </div>
-              </motion.div>
-            </>
-          )}
-        </AnimatePresence>
+
+                {/* Footer buttons */}
+                <div className="pt-6 flex justify-center gap-3">
+                  <button
+                    onClick={cancelFilter}
+                    className="px-5 py-2.5 rounded-xl text-sm font-semibold transition-all hover:scale-105"
+                    style={{ background: 'var(--bg-tertiary)', color: 'var(--text-secondary)' }}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={() => {
+                      setFilter(defaultFilter);
+                    }}
+                    className="px-5 py-2.5 rounded-xl text-sm font-semibold transition-all hover:scale-105"
+                    style={{ background: 'rgba(239, 68, 68, 0.1)', color: '#ef4444', border: '1px solid rgba(239, 68, 68, 0.3)' }}
+                  >
+                    Reset Filter
+                  </button>
+                  <button
+                    onClick={applyFilter}
+                    className="px-5 py-2.5 rounded-xl text-white text-sm font-semibold transition-all hover:scale-105 hover:shadow-lg"
+                    style={{ background: 'var(--gradient-primary)' }}
+                  >
+                    Apply Filter
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </>
       , document.body)}
     </div>
   );
