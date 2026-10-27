@@ -427,7 +427,7 @@ export default function Sidebar() {
                           background: 'var(--bg-popup)',
                           border: '1px solid var(--border-color)',
                           boxShadow: 'var(--shadow-lg)',
-                          left: '280px',
+                          left: collapsed ? '80px' : '268px',
                           bottom: '180px',
                         }}
                       >
