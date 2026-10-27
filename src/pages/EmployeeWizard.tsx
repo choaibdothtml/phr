@@ -878,20 +878,19 @@ export default function EmployeeWizard() {
             </FormField>
           </div>
 
-          <FormField label="Father's name" required error={errors.fatherName}>
-            <Input
-              value={formData.fatherName}
-              onChange={(e) => handleInputChange('fatherName', e.target.value)}
-              onBlur={() => {
-                if (!formData.fatherName) {
-                  setErrors(prev => ({ ...prev, fatherName: 'Required' }));
-                }
-              }}
-              error={errors.fatherName}
-            />
-          </FormField>
-
-          <div className="grid grid-cols-2 gap-6">
+          <div className="grid grid-cols-3 gap-6">
+            <FormField label="Father's name" required error={errors.fatherName}>
+              <Input
+                value={formData.fatherName}
+                onChange={(e) => handleInputChange('fatherName', e.target.value)}
+                onBlur={() => {
+                  if (!formData.fatherName) {
+                    setErrors(prev => ({ ...prev, fatherName: 'Required' }));
+                  }
+                }}
+                error={errors.fatherName}
+              />
+            </FormField>
             <FormField label="Mother's family name" required error={errors.motherLastName}>
               <Input
                 value={formData.motherLastName}
