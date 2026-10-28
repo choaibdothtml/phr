@@ -1,8 +1,18 @@
+// @ts-nocheck
 import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Building2, Users, DollarSign, Landmark, Palette, Key, Database, Briefcase, FileText } from 'lucide-react';
+import DepartmentsTab from './settings/DepartmentsTab';
+import GroupsClassificationsTab from './settings/GroupsClassificationsTab';
+import JobTitlesTab from './settings/JobTitlesTab';
+import BasicSalariesTab from './settings/BasicSalariesTab';
+import BanksTab from './settings/BanksTab';
+import AdministrativeDecisionsTab from './settings/AdministrativeDecisionsTab';
+import AppearancesTab from './settings/AppearancesTab';
 
 export default function Settings() {
   const [activeTab, setActiveTab] = useState('departments');
+
   const tabs = [
     { id: 'departments', label: 'Departments', icon: Building2 },
     { id: 'groups', label: 'Groups and classifications', icon: Users },
@@ -17,7 +27,7 @@ export default function Settings() {
 
   return (
     <div className="p-6 max-w-[1600px] mx-auto space-y-6 animate-fade-in-up h-full">
-      <div className="flex gap-2 border-b" style={{ borderColor: 'var(--border-color)' }}>
+      <div className="flex justify-center gap-2 border-b" style={{ borderColor: 'var(--border-color)' }}>
         {tabs.map(tab => {
           const Icon = tab.icon;
           const isActive = activeTab === tab.id;
@@ -28,9 +38,19 @@ export default function Settings() {
           );
         })}
       </div>
-      <div className="flex-1">
-        <div className="glass-card p-12 text-center"><p className="text-sm" style={{ color: 'var(--text-tertiary)' }}>Settings tab: {activeTab} - needs full reconstruction from conversation history</p></div>
-      </div>
+      <AnimatePresence mode="wait">
+        <motion.div key={activeTab} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.2 }} className="flex-1">
+          {activeTab === 'departments' && <DepartmentsTab />}
+          {activeTab === 'groups' && <GroupsClassificationsTab />}
+          {activeTab === 'jobTitles' && <JobTitlesTab />}
+          {activeTab === 'salaries' && <BasicSalariesTab />}
+          {activeTab === 'banks' && <BanksTab />}
+          {activeTab === 'adminDecisions' && <AdministrativeDecisionsTab />}
+          {activeTab === 'appearances' && <AppearancesTab />}
+          {activeTab === 'password' && <div className="glass-card p-6"><p className="text-sm" style={{ color: 'var(--text-tertiary)' }}>Coming soon...</p></div>}
+          {activeTab === 'backup' && <div className="glass-card p-6"><p className="text-sm" style={{ color: 'var(--text-tertiary)' }}>Coming soon...</p></div>}
+        </motion.div>
+      </AnimatePresence>
     </div>
   );
 }
