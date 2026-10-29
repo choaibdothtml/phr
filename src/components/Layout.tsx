@@ -24,6 +24,7 @@ export default function Layout() {
     <div className="flex h-screen overflow-hidden" style={{ background: 'var(--bg-primary)' }}>
       {isProfilesPage ? (
         <>
+          <Sidebar defaultCollapsed={true} />
           <ProfileSidebar 
             onShowMainSidebar={() => setShowMainSidebar(true)}
             employeeNumber={employeeNumber}
