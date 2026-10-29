@@ -22,12 +22,12 @@ const mockNotifications = [
   { id: '2', title: 'Birthday Reminder', message: "Robert Kim's birthday is tomorrow", type: 'info', read: false, createdAt: '' },
 ];
 
-export default function Sidebar({ defaultCollapsed = false }: { defaultCollapsed?: boolean }) {
+export default function Sidebar() {
   const location = useLocation();
   const navigate = useNavigate();
   const { logout, user } = useAuth();
   const { theme, toggleTheme } = useTheme();
-  const [collapsed, setCollapsed] = useState(defaultCollapsed);
+  const [collapsed, setCollapsed] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
   const [showEmployeeMenu, setShowEmployeeMenu] = useState(false);
