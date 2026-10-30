@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Flame, Menu, ChevronDown, ChevronRight, Lock, FileText, ClipboardList, RefreshCw, FileSignature, UserCheck, FileCheck2, Briefcase } from 'lucide-react';
 import { Contract, OnboardingReport, PersonnelRecord, EmploymentStatusChange, contractStorage, onboardingReportStorage, personnelRecordStorage, employmentStatusStorage } from '../utils/storage';
 
@@ -86,22 +87,32 @@ export default function ProfileSidebar({ onShowMainSidebar, employeeNumber, onCo
               <span className="flex-1 text-left text-sm font-semibold text-[var(--text-primary)]">Contracts</span>
               <ChevronDown className={`w-4 h-4 text-[var(--text-tertiary)] transition-transform ${expandedItem === 'contracts' ? 'rotate-0' : '-rotate-90'}`} />
             </button>
-            {expandedItem === 'contracts' && (
-              <div className="px-3 pb-3 pt-1 border-t border-[var(--border-color)] bg-[var(--bg-secondary)]">
-                {sortedContracts.length === 0 ? (
-                  <p className="text-xs text-[var(--text-tertiary)] italic px-3 py-3 text-center">(No documents have been prepared yet)</p>
-                ) : (
-                  <div className="space-y-1.5 mt-2">
-                    {sortedContracts.map(c => (
-                      <button key={c.id} onClick={() => handleContractClick(c)} className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg transition-all text-left ${selectedContractId === c.id ? 'bg-[rgba(var(--primary-color-rgb),0.15)] shadow-sm' : 'hover:bg-[var(--bg-tertiary)]'}`}>
-                        {c.isExpired && <Lock className="w-3 h-3 text-[var(--text-tertiary)] flex-shrink-0" />}
-                        <span className="text-xs font-medium text-[var(--text-primary)]">{c.startDate}</span>
-                      </button>
-                    ))}
+            <AnimatePresence>
+              {expandedItem === 'contracts' && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: 'auto', opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.2, ease: 'easeInOut' }}
+                  className="overflow-hidden"
+                >
+                  <div className="px-3 pb-3 pt-1 border-t border-[var(--border-color)] bg-[var(--bg-secondary)]">
+                    {sortedContracts.length === 0 ? (
+                      <p className="text-xs text-[var(--text-tertiary)] italic px-3 py-3 text-center">(No documents have been prepared yet)</p>
+                    ) : (
+                      <div className="space-y-1.5 mt-2">
+                        {sortedContracts.map(c => (
+                          <button key={c.id} onClick={() => handleContractClick(c)} className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg transition-all text-left ${selectedContractId === c.id ? 'bg-[rgba(var(--primary-color-rgb),0.15)] shadow-sm' : 'hover:bg-[var(--bg-tertiary)]'}`}>
+                            {c.isExpired && <Lock className="w-3 h-3 text-[var(--text-tertiary)] flex-shrink-0" />}
+                            <span className="text-xs font-medium text-[var(--text-primary)]">{c.startDate}</span>
+                          </button>
+                        ))}
+                      </div>
+                    )}
                   </div>
-                )}
-              </div>
-            )}
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
 
           {/* Employee onboarding report */}
@@ -113,20 +124,30 @@ export default function ProfileSidebar({ onShowMainSidebar, employeeNumber, onCo
               <span className="flex-1 text-left text-sm font-semibold text-[var(--text-primary)]">Onboarding report</span>
               <ChevronDown className={`w-4 h-4 text-[var(--text-tertiary)] transition-transform ${expandedItem === 'onboarding' ? 'rotate-0' : '-rotate-90'}`} />
             </button>
-            {expandedItem === 'onboarding' && (
-              <div className="px-3 pb-3 pt-1 border-t border-[var(--border-color)] bg-[var(--bg-secondary)]">
-                {onboardingReport ? (
-                  <div className="space-y-1.5 mt-2">
-                    <button onClick={() => handleOnboardingReportClick(onboardingReport)} className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg transition-all text-left ${selectedReportId === onboardingReport.id ? 'bg-[rgba(var(--primary-color-rgb),0.15)] shadow-sm' : 'hover:bg-[var(--bg-tertiary)]'}`}>
-                      <FileText className="w-3 h-3 text-[var(--text-secondary)] flex-shrink-0" />
-                      <span className="text-xs font-medium text-[var(--text-primary)]">{onboardingReport.entryDate}</span>
-                    </button>
+            <AnimatePresence>
+              {expandedItem === 'onboarding' && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: 'auto', opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.2, ease: 'easeInOut' }}
+                  className="overflow-hidden"
+                >
+                  <div className="px-3 pb-3 pt-1 border-t border-[var(--border-color)] bg-[var(--bg-secondary)]">
+                    {onboardingReport ? (
+                      <div className="space-y-1.5 mt-2">
+                        <button onClick={() => handleOnboardingReportClick(onboardingReport)} className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg transition-all text-left ${selectedReportId === onboardingReport.id ? 'bg-[rgba(var(--primary-color-rgb),0.15)] shadow-sm' : 'hover:bg-[var(--bg-tertiary)]'}`}>
+                          <FileText className="w-3 h-3 text-[var(--text-secondary)] flex-shrink-0" />
+                          <span className="text-xs font-medium text-[var(--text-primary)]">{onboardingReport.entryDate}</span>
+                        </button>
+                      </div>
+                    ) : (
+                      <p className="text-xs text-[var(--text-tertiary)] italic px-3 py-3 text-center">(No documents have been prepared yet)</p>
+                    )}
                   </div>
-                ) : (
-                  <p className="text-xs text-[var(--text-tertiary)] italic px-3 py-3 text-center">(No documents have been prepared yet)</p>
-                )}
-              </div>
-            )}
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
 
           {/* Personnel record */}
@@ -138,20 +159,30 @@ export default function ProfileSidebar({ onShowMainSidebar, employeeNumber, onCo
               <span className="flex-1 text-left text-sm font-semibold text-[var(--text-primary)]">Personnel record</span>
               <ChevronDown className={`w-4 h-4 text-[var(--text-tertiary)] transition-transform ${expandedItem === 'personnel' ? 'rotate-0' : '-rotate-90'}`} />
             </button>
-            {expandedItem === 'personnel' && (
-              <div className="px-3 pb-3 pt-1 border-t border-[var(--border-color)] bg-[var(--bg-secondary)]">
-                {personnelRecord ? (
-                  <div className="space-y-1.5 mt-2">
-                    <button onClick={() => handlePersonnelRecordClick(personnelRecord)} className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg transition-all text-left ${selectedPersonnelRecordId === personnelRecord.id ? 'bg-[rgba(var(--primary-color-rgb),0.15)] shadow-sm' : 'hover:bg-[var(--bg-tertiary)]'}`}>
-                      <FileCheck2 className="w-3 h-3 text-[var(--text-secondary)] flex-shrink-0" />
-                      <span className="text-xs font-medium text-[var(--text-primary)]">{personnelRecord.contractStartDate}</span>
-                    </button>
+            <AnimatePresence>
+              {expandedItem === 'personnel' && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: 'auto', opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.2, ease: 'easeInOut' }}
+                  className="overflow-hidden"
+                >
+                  <div className="px-3 pb-3 pt-1 border-t border-[var(--border-color)] bg-[var(--bg-secondary)]">
+                    {personnelRecord ? (
+                      <div className="space-y-1.5 mt-2">
+                        <button onClick={() => handlePersonnelRecordClick(personnelRecord)} className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg transition-all text-left ${selectedPersonnelRecordId === personnelRecord.id ? 'bg-[rgba(var(--primary-color-rgb),0.15)] shadow-sm' : 'hover:bg-[var(--bg-tertiary)]'}`}>
+                          <FileCheck2 className="w-3 h-3 text-[var(--text-secondary)] flex-shrink-0" />
+                          <span className="text-xs font-medium text-[var(--text-primary)]">{personnelRecord.contractStartDate}</span>
+                        </button>
+                      </div>
+                    ) : (
+                      <p className="text-xs text-[var(--text-tertiary)] italic px-3 py-3 text-center">(No documents have been prepared yet)</p>
+                    )}
                   </div>
-                ) : (
-                  <p className="text-xs text-[var(--text-tertiary)] italic px-3 py-3 text-center">(No documents have been prepared yet)</p>
-                )}
-              </div>
-            )}
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
 
           {/* Change employment status */}
@@ -163,22 +194,32 @@ export default function ProfileSidebar({ onShowMainSidebar, employeeNumber, onCo
               <span className="flex-1 text-left text-sm font-semibold text-[var(--text-primary)]">Employment status</span>
               <ChevronDown className={`w-4 h-4 text-[var(--text-tertiary)] transition-transform ${expandedItem === 'employmentStatus' ? 'rotate-0' : '-rotate-90'}`} />
             </button>
-            {expandedItem === 'employmentStatus' && (
-              <div className="px-3 pb-3 pt-1 border-t border-[var(--border-color)] bg-[var(--bg-secondary)]">
-                {sortedStatusChanges.length === 0 ? (
-                  <p className="text-xs text-[var(--text-tertiary)] italic px-3 py-3 text-center">(No documents have been prepared yet)</p>
-                ) : (
-                  <div className="space-y-1.5 mt-2">
-                    {sortedStatusChanges.map(c => (
-                      <button key={c.id} onClick={() => handleEmploymentStatusChangeClick(c)} className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg transition-all text-left ${selectedStatusChangeId === c.id ? 'bg-[rgba(var(--primary-color-rgb),0.15)] shadow-sm' : 'hover:bg-[var(--bg-tertiary)]'}`}>
-                        <RefreshCw className="w-3 h-3 text-[var(--text-secondary)] flex-shrink-0" />
-                        <span className="text-xs font-medium text-[var(--text-primary)]">{c.dateOfIssue}</span>
-                      </button>
-                    ))}
+            <AnimatePresence>
+              {expandedItem === 'employmentStatus' && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: 'auto', opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.2, ease: 'easeInOut' }}
+                  className="overflow-hidden"
+                >
+                  <div className="px-3 pb-3 pt-1 border-t border-[var(--border-color)] bg-[var(--bg-secondary)]">
+                    {sortedStatusChanges.length === 0 ? (
+                      <p className="text-xs text-[var(--text-tertiary)] italic px-3 py-3 text-center">(No documents have been prepared yet)</p>
+                    ) : (
+                      <div className="space-y-1.5 mt-2">
+                        {sortedStatusChanges.map(c => (
+                          <button key={c.id} onClick={() => handleEmploymentStatusChangeClick(c)} className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg transition-all text-left ${selectedStatusChangeId === c.id ? 'bg-[rgba(var(--primary-color-rgb),0.15)] shadow-sm' : 'hover:bg-[var(--bg-tertiary)]'}`}>
+                            <RefreshCw className="w-3 h-3 text-[var(--text-secondary)] flex-shrink-0" />
+                            <span className="text-xs font-medium text-[var(--text-primary)]">{c.dateOfIssue}</span>
+                          </button>
+                        ))}
+                      </div>
+                    )}
                   </div>
-                )}
-              </div>
-            )}
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </div>
       </div>
