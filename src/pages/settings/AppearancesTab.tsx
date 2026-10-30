@@ -157,13 +157,25 @@ export default function AppearancesTab() {
   };
 
   const handlePercentageInput = (value) => {
+    // Only allow digits, max 2 characters
     const cleaned = value.replace(/\D/g, '').slice(0, 2);
-    setPercentageInput(cleaned);
-    const num = parseInt(cleaned);
-    if (cleaned.length === 2 && num >= 50 && num <= 99) {
-      if (!tempPercentages.includes(num)) setTempPercentages([...tempPercentages, num].sort((a, b) => a - b));
-      setPercentageInput('');
+    
+    // If we have exactly 2 digits and it's in the valid range
+    if (cleaned.length === 2) {
+      const num = parseInt(cleaned);
+      if (num >= 50 && num <= 99) {
+        // Add to list if not already present
+        if (!tempPercentages.includes(num)) {
+          setTempPercentages(prev => [...prev, num].sort((a, b) => a - b));
+        }
+        // Clear input immediately
+        setPercentageInput('');
+        return;
+      }
     }
+    
+    // Otherwise, just update the input with the cleaned value
+    setPercentageInput(cleaned);
   };
 
   const handleRemovePercentage = (percentage) => {
