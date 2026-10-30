@@ -418,27 +418,94 @@ export default function AppearancesTab() {
         </div>
       </div>
 
-      {/* Additional Hours Categories */}
-      <div className="glass-card p-4">
-        <h3 className="font-semibold mb-1" style={{ color: 'var(--text-primary)' }}>Additional hours categories</h3>
-        <p className="text-xs mb-4" style={{ color: 'var(--text-tertiary)' }}>Select the additional hours' categories you want to apply</p>
-        <div className="space-y-3">
-          <label className="flex items-center gap-3 cursor-pointer">
-            <input type="checkbox" checked={tempCategories.cat1} onChange={() => handleCategoryChange('cat1')} className="w-4 h-4 rounded" style={{ accentColor: 'var(--phoenix-500)' }} />
-            <span className="text-sm" style={{ color: 'var(--text-primary)' }}>Category 1: +50% of the hourly income</span>
-          </label>
-          <label className="flex items-center gap-3 cursor-pointer">
-            <input type="checkbox" checked={tempCategories.cat2} onChange={() => handleCategoryChange('cat2')} className="w-4 h-4 rounded" style={{ accentColor: 'var(--phoenix-500)' }} />
-            <span className="text-sm" style={{ color: 'var(--text-primary)' }}>Category 2: +75% of the hourly income</span>
-          </label>
-          <label className="flex items-center gap-3 cursor-pointer">
-            <input type="checkbox" checked={tempCategories.cat3} onChange={() => handleCategoryChange('cat3')} className="w-4 h-4 rounded" style={{ accentColor: 'var(--phoenix-500)' }} />
-            <span className="text-sm" style={{ color: 'var(--text-primary)' }}>Category 3: +100% of the hourly income</span>
-          </label>
-          <div className="flex gap-3 pt-2">
-            <button onClick={handleRestoreCategories} className="px-4 py-2 rounded-xl text-sm font-medium transition-all hover:scale-105" style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-secondary)' }}>Restore</button>
-            <button onClick={handleSaveCategories} className="px-4 py-2 rounded-xl text-white text-sm font-semibold transition-all hover:scale-105 hover:shadow-lg" style={{ background: 'var(--gradient-primary)' }}>Save</button>
-            {categoriesSaved && <span className="flex items-center gap-1.5 text-emerald-600 text-sm font-medium"><Check className="w-4 h-4" />Saved successfully</span>}
+      {/* Additional Hours Categories and Annual Leave - Side by Side */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="glass-card p-4">
+          <h3 className="font-semibold mb-1" style={{ color: 'var(--text-primary)' }}>Additional hours categories</h3>
+          <p className="text-xs mb-4" style={{ color: 'var(--text-tertiary)' }}>Select the additional hours' categories you want to apply</p>
+          <div className="space-y-3">
+            <label className="flex items-center gap-3 cursor-pointer">
+              <input type="checkbox" checked={tempCategories.cat1} onChange={() => handleCategoryChange('cat1')} className="w-4 h-4 rounded" style={{ accentColor: 'var(--phoenix-500)' }} />
+              <span className="text-sm" style={{ color: 'var(--text-primary)' }}>Category 1: +50% of the hourly income</span>
+            </label>
+            <label className="flex items-center gap-3 cursor-pointer">
+              <input type="checkbox" checked={tempCategories.cat2} onChange={() => handleCategoryChange('cat2')} className="w-4 h-4 rounded" style={{ accentColor: 'var(--phoenix-500)' }} />
+              <span className="text-sm" style={{ color: 'var(--text-primary)' }}>Category 2: +75% of the hourly income</span>
+            </label>
+            <label className="flex items-center gap-3 cursor-pointer">
+              <input type="checkbox" checked={tempCategories.cat3} onChange={() => handleCategoryChange('cat3')} className="w-4 h-4 rounded" style={{ accentColor: 'var(--phoenix-500)' }} />
+              <span className="text-sm" style={{ color: 'var(--text-primary)' }}>Category 3: +100% of the hourly income</span>
+            </label>
+            <div className="flex gap-3 pt-2">
+              <button onClick={handleRestoreCategories} className="px-4 py-2 rounded-xl text-sm font-medium transition-all hover:scale-105" style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-secondary)' }}>Restore</button>
+              <button onClick={handleSaveCategories} className="px-4 py-2 rounded-xl text-white text-sm font-semibold transition-all hover:scale-105 hover:shadow-lg" style={{ background: 'var(--gradient-primary)' }}>Save</button>
+              {categoriesSaved && <span className="flex items-center gap-1.5 text-emerald-600 text-sm font-medium"><Check className="w-4 h-4" />Saved successfully</span>}
+            </div>
+          </div>
+        </div>
+
+        {/* Annual Leave Settings */}
+        <div className="glass-card p-4">
+          <h3 className="font-semibold mb-1" style={{ color: 'var(--text-primary)' }}>Annual leave</h3>
+          <p className="text-xs mb-4" style={{ color: 'var(--text-tertiary)' }}>Configure annual leave policies for your company</p>
+          <div className="space-y-4">
+            <div>
+              <label className="block text-xs font-semibold mb-1.5" style={{ color: 'var(--text-secondary)' }}>Is your company operating in the south of Algeria?</label>
+              <select value={location} onChange={(e) => handleLocationChange(e.target.value)} className="w-full px-3 py-2.5 rounded-xl text-sm outline-none cursor-pointer transition-all focus:ring-2 focus:ring-orange-500/30" style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-primary)' }}>
+                <option value="No">No</option>
+                <option value="Yes">Yes</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-xs font-semibold mb-1.5" style={{ color: 'var(--text-secondary)' }}>How many additional annual leave days employees get in your company?</label>
+              <input 
+                type="text" 
+                value={additionalDays} 
+                onChange={(e) => handleAdditionalDaysChange(e.target.value)} 
+                disabled={location === 'No'}
+                min="10"
+                max="99"
+                className="w-full px-3 py-2.5 rounded-xl text-sm outline-none transition-all focus:ring-2 focus:ring-orange-500/30 disabled:opacity-60 disabled:cursor-not-allowed" 
+                style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-primary)' }} 
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-semibold mb-3" style={{ color: 'var(--text-secondary)' }}>How is annual leave calculated for an employee who has not completed a full month of service?</label>
+              <div className="space-y-3">
+                <label className="flex items-start gap-3 cursor-pointer p-3 rounded-xl transition-all hover:bg-[var(--bg-tertiary)]" style={{ border: annualLeaveCalcType === 'type1' ? '2px solid var(--phoenix-500)' : '1px solid var(--border-color)' }}>
+                  <input 
+                    type="radio" 
+                    name="annualLeaveCalcType"
+                    checked={annualLeaveCalcType === 'type1'} 
+                    onChange={() => handleAnnualLeaveCalcTypeChange('type1')} 
+                    className="w-4 h-4 mt-0.5" 
+                    style={{ accentColor: 'var(--phoenix-500)' }} 
+                  />
+                  <div className="flex-1">
+                    <span className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>15-days rule</span>
+                    <p className="text-xs mt-1" style={{ color: 'var(--text-tertiary)' }}>Employees who work 15 or more days in a calendar month will accrue their full monthly annual leave allowance of 2.5 days</p>
+                  </div>
+                </label>
+                <label className="flex items-start gap-3 cursor-pointer p-3 rounded-xl transition-all hover:bg-[var(--bg-tertiary)]" style={{ border: annualLeaveCalcType === 'type2' ? '2px solid var(--phoenix-500)' : '1px solid var(--border-color)' }}>
+                  <input 
+                    type="radio" 
+                    name="annualLeaveCalcType"
+                    checked={annualLeaveCalcType === 'type2'} 
+                    onChange={() => handleAnnualLeaveCalcTypeChange('type2')} 
+                    className="w-4 h-4 mt-0.5" 
+                    style={{ accentColor: 'var(--phoenix-500)' }} 
+                  />
+                  <div className="flex-1">
+                    <span className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>Prata temporis</span>
+                    <p className="text-xs mt-1" style={{ color: 'var(--text-tertiary)' }}>Employees will be entitled to annual leave proportionate to the number of days worked</p>
+                  </div>
+                </label>
+              </div>
+            </div>
+            <div className="flex gap-3 pt-2 items-center">
+              <button onClick={handleSaveAnnualLeave} className="px-4 py-2 rounded-xl text-white text-sm font-semibold transition-all hover:scale-105 hover:shadow-lg" style={{ background: 'var(--gradient-primary)' }}>Save</button>
+              {annualLeaveSaved && <span className="flex items-center gap-1.5 text-emerald-600 text-sm font-medium"><Check className="w-4 h-4" />Saved successfully</span>}
+            </div>
           </div>
         </div>
       </div>
@@ -492,73 +559,6 @@ export default function AppearancesTab() {
             </>
           )}
           {abbreviationsSaved && !abbreviationsEditMode && <span className="flex items-center gap-1.5 text-emerald-600 text-sm font-medium"><Check className="w-4 h-4" />Saved successfully</span>}
-        </div>
-      </div>
-
-      {/* Annual Leave Settings */}
-      <div className="glass-card p-4">
-        <h3 className="font-semibold mb-1" style={{ color: 'var(--text-primary)' }}>Annual leave</h3>
-        <p className="text-xs mb-4" style={{ color: 'var(--text-tertiary)' }}>Configure annual leave policies for your company</p>
-        <div className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-xs font-semibold mb-1.5" style={{ color: 'var(--text-secondary)' }}>Is your company operating in the south of Algeria?</label>
-              <select value={location} onChange={(e) => handleLocationChange(e.target.value)} className="w-full px-3 py-2.5 rounded-xl text-sm outline-none cursor-pointer transition-all focus:ring-2 focus:ring-orange-500/30" style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-primary)' }}>
-                <option value="No">No</option>
-                <option value="Yes">Yes</option>
-              </select>
-            </div>
-            <div>
-              <label className="block text-xs font-semibold mb-1.5" style={{ color: 'var(--text-secondary)' }}>How many additional annual leave days employees get in your company?</label>
-              <input 
-                type="text" 
-                value={additionalDays} 
-                onChange={(e) => handleAdditionalDaysChange(e.target.value)} 
-                disabled={location === 'No'}
-                min="10"
-                max="99"
-                className="w-full px-3 py-2.5 rounded-xl text-sm outline-none transition-all focus:ring-2 focus:ring-orange-500/30 disabled:opacity-60 disabled:cursor-not-allowed" 
-                style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-primary)' }} 
-              />
-            </div>
-          </div>
-          <div>
-            <label className="block text-xs font-semibold mb-3" style={{ color: 'var(--text-secondary)' }}>How is annual leave calculated for an employee who has not completed a full month of service?</label>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              <label className="flex items-start gap-3 cursor-pointer p-3 rounded-xl transition-all hover:bg-[var(--bg-tertiary)]" style={{ border: annualLeaveCalcType === 'type1' ? '2px solid var(--phoenix-500)' : '1px solid var(--border-color)' }}>
-                <input 
-                  type="radio" 
-                  name="annualLeaveCalcType"
-                  checked={annualLeaveCalcType === 'type1'} 
-                  onChange={() => handleAnnualLeaveCalcTypeChange('type1')} 
-                  className="w-4 h-4 mt-0.5" 
-                  style={{ accentColor: 'var(--phoenix-500)' }} 
-                />
-                <div className="flex-1">
-                  <span className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>15-days rule</span>
-                  <p className="text-xs mt-1" style={{ color: 'var(--text-tertiary)' }}>Employees who work 15 or more days in a calendar month will accrue their full monthly annual leave allowance of 2.5 days</p>
-                </div>
-              </label>
-              <label className="flex items-start gap-3 cursor-pointer p-3 rounded-xl transition-all hover:bg-[var(--bg-tertiary)]" style={{ border: annualLeaveCalcType === 'type2' ? '2px solid var(--phoenix-500)' : '1px solid var(--border-color)' }}>
-                <input 
-                  type="radio" 
-                  name="annualLeaveCalcType"
-                  checked={annualLeaveCalcType === 'type2'} 
-                  onChange={() => handleAnnualLeaveCalcTypeChange('type2')} 
-                  className="w-4 h-4 mt-0.5" 
-                  style={{ accentColor: 'var(--phoenix-500)' }} 
-                />
-                <div className="flex-1">
-                  <span className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>Prata temporis</span>
-                  <p className="text-xs mt-1" style={{ color: 'var(--text-tertiary)' }}>Employees will be entitled to annual leave proportionate to the number of days worked</p>
-                </div>
-              </label>
-            </div>
-          </div>
-          <div className="flex gap-3 pt-2 items-center">
-            <button onClick={handleSaveAnnualLeave} className="px-4 py-2 rounded-xl text-white text-sm font-semibold transition-all hover:scale-105 hover:shadow-lg" style={{ background: 'var(--gradient-primary)' }}>Save</button>
-            {annualLeaveSaved && <span className="flex items-center gap-1.5 text-emerald-600 text-sm font-medium"><Check className="w-4 h-4" />Saved successfully</span>}
-          </div>
         </div>
       </div>
     </div>
