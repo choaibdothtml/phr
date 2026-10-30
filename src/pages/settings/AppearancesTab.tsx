@@ -42,6 +42,7 @@ export default function AppearancesTab() {
   const [hourlyPercentages, setHourlyPercentages] = useState([]);
   const [percentageInput, setPercentageInput] = useState('');
   const [tempPercentages, setTempPercentages] = useState([]);
+  const [percentagesSaved, setPercentagesSaved] = useState(false);
   
   // New settings
   const [firstDayOfWeek, setFirstDayOfWeek] = useState('Sunday');
@@ -172,6 +173,8 @@ export default function AppearancesTab() {
   const handleSavePercentages = () => {
     setHourlyPercentages(tempPercentages);
     localStorage.setItem('phoenix-hr-hourly-percentages', JSON.stringify(tempPercentages));
+    setPercentagesSaved(true);
+    setTimeout(() => setPercentagesSaved(false), 3000);
   };
 
   const handleCancelPercentages = () => {
@@ -255,11 +258,39 @@ export default function AppearancesTab() {
         </div>
         <div className="glass-card p-4">
           <h3 className="font-semibold mb-1" style={{ color: 'var(--text-primary)' }}>Hourly pay percentages</h3>
-          <p className="text-xs mb-4" style={{ color: 'var(--text-tertiary)' }}>For employees whose pay basis is Hourly, please enter the percentages that you are willing to apply</p>
+          <p className="text-xs mb-4" style={{ color: 'var(--text-tertiary)' }}>For employees whose pay basis is Hourly, please enter the percentages that you are willing to apply (50-99)</p>
           <div className="space-y-4">
-            <div className="flex items-end gap-3"><div className="flex-1"><label className="block text-xs font-semibold mb-1.5" style={{ color: 'var(--text-secondary)' }}>Add percentage (50-99)</label><input type="text" value={percentageInput} onChange={(e) => handlePercentageInput(e.target.value)} className="w-full px-3 py-2.5 rounded-xl text-sm outline-none transition-all focus:ring-2 focus:ring-orange-500/30" style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-primary)' }} /></div></div>
-            {tempPercentages.length > 0 && (<div className="flex flex-wrap gap-2">{tempPercentages.map(percentage => (<div key={percentage} className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium" style={{ background: 'rgba(var(--primary-color-rgb), 0.1)', color: 'var(--text-primary)', border: '1px solid var(--border-color)' }}><span>{percentage}%</span><button onClick={() => handleRemovePercentage(percentage)} className="hover:opacity-70 transition-opacity" style={{ color: 'var(--text-secondary)' }}><X className="w-3.5 h-3.5" /></button></div>))}</div>)}
-            <div className="flex gap-3 pt-2"><button onClick={handleCancelPercentages} className="px-4 py-2 rounded-xl text-sm font-medium transition-all hover:scale-105" style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-secondary)' }}>Cancel</button><button onClick={handleSavePercentages} className="px-4 py-2 rounded-xl text-white text-sm font-semibold transition-all hover:scale-105 hover:shadow-lg" style={{ background: 'var(--gradient-primary)' }}>Save</button></div>
+            <div className="flex items-end gap-3">
+              <div className="flex-1">
+                <label className="block text-xs font-semibold mb-1.5" style={{ color: 'var(--text-secondary)' }}>Add percentage (50-99)</label>
+                <input 
+                  type="text" 
+                  value={percentageInput} 
+                  onChange={(e) => handlePercentageInput(e.target.value)} 
+                  placeholder="Enter 2-digit number (50-99)"
+                  maxLength={2}
+                  className="w-full px-3 py-2.5 rounded-xl text-sm outline-none transition-all focus:ring-2 focus:ring-orange-500/30" 
+                  style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-primary)' }} 
+                />
+              </div>
+            </div>
+            {tempPercentages.length > 0 && (
+              <div className="flex flex-wrap gap-2">
+                {tempPercentages.map(percentage => (
+                  <div key={percentage} className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium" style={{ background: 'rgba(var(--primary-color-rgb), 0.1)', color: 'var(--text-primary)', border: '1px solid var(--border-color)' }}>
+                    <span>{percentage}%</span>
+                    <button onClick={() => handleRemovePercentage(percentage)} className="hover:opacity-70 transition-opacity" style={{ color: 'var(--text-secondary)' }}>
+                      <X className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+            <div className="flex gap-3 pt-2 items-center">
+              <button onClick={handleCancelPercentages} className="px-4 py-2 rounded-xl text-sm font-medium transition-all hover:scale-105" style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-secondary)' }}>Cancel</button>
+              <button onClick={handleSavePercentages} className="px-4 py-2 rounded-xl text-white text-sm font-semibold transition-all hover:scale-105 hover:shadow-lg" style={{ background: 'var(--gradient-primary)' }}>Save</button>
+              {percentagesSaved && <span className="flex items-center gap-1.5 text-emerald-600 text-sm font-medium"><Check className="w-4 h-4" />Saved successfully</span>}
+            </div>
           </div>
         </div>
       </div>
