@@ -18,7 +18,7 @@ export default function ProfileSidebar({ onShowMainSidebar, employeeNumber, onCo
   const [onboardingReport, setOnboardingReport] = useState<OnboardingReport | null>(null);
   const [personnelRecord, setPersonnelRecord] = useState<PersonnelRecord | null>(null);
   const [employmentStatusChanges, setEmploymentStatusChanges] = useState<EmploymentStatusChange[]>([]);
-  const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set());
+  const [expandedItem, setExpandedItem] = useState<string | null>(null);
   const [selectedContractId, setSelectedContractId] = useState<string | null>(null);
   const [selectedReportId, setSelectedReportId] = useState<string | null>(null);
   const [selectedPersonnelRecordId, setSelectedPersonnelRecordId] = useState<string | null>(null);
@@ -31,7 +31,7 @@ export default function ProfileSidebar({ onShowMainSidebar, employeeNumber, onCo
     setPersonnelRecord(personnelRecordStorage.getRecord(employeeNumber));
     setEmploymentStatusChanges(employmentStatusStorage.getStatusChanges(employeeNumber));
     setSelectedContractId(null); setSelectedReportId(null); setSelectedPersonnelRecordId(null); setSelectedStatusChangeId(null);
-    setExpandedItems(new Set());
+    setExpandedItem(null);
     onContractSelect(null); onOnboardingReportSelect(null); onPersonnelRecordSelect(null); onEmploymentStatusChangeSelect(null);
     onExpandedItemChange(false);
   }, [employeeNumber]);
@@ -39,10 +39,15 @@ export default function ProfileSidebar({ onShowMainSidebar, employeeNumber, onCo
   useEffect(() => { const i = setInterval(() => { contractStorage.updateExpiredStatus(); setContracts(contractStorage.getContracts(employeeNumber)); }, 60000); return () => clearInterval(i); }, [employeeNumber]);
 
   const handleExpandCollapse = (itemId: string) => {
-    const newExpanded = new Set(expandedItems);
-    if (newExpanded.has(itemId)) { newExpanded.delete(itemId); if (newExpanded.size === 0) onSectionExpand(null); }
-    else { newExpanded.add(itemId); onSectionExpand(itemId); }
-    setExpandedItems(newExpanded); onExpandedItemChange(newExpanded.size > 0);
+    if (expandedItem === itemId) {
+      setExpandedItem(null);
+      onSectionExpand(null);
+      onExpandedItemChange(false);
+    } else {
+      setExpandedItem(itemId);
+      onSectionExpand(itemId);
+      onExpandedItemChange(true);
+    }
   };
 
   const handleContractClick = (c: Contract) => { setSelectedContractId(c.id); setSelectedReportId(null); setSelectedPersonnelRecordId(null); setSelectedStatusChangeId(null); onContractSelect(c); onOnboardingReportSelect(null); onPersonnelRecordSelect(null); onEmploymentStatusChangeSelect(null); };
@@ -79,9 +84,9 @@ export default function ProfileSidebar({ onShowMainSidebar, employeeNumber, onCo
                 <FileSignature className="w-4 h-4" style={{ color: 'var(--phoenix-500)' }} />
               </div>
               <span className="flex-1 text-left text-sm font-semibold text-[var(--text-primary)]">Contracts</span>
-              <ChevronDown className={`w-4 h-4 text-[var(--text-tertiary)] transition-transform ${expandedItems.has('contracts') ? 'rotate-0' : '-rotate-90'}`} />
+              <ChevronDown className={`w-4 h-4 text-[var(--text-tertiary)] transition-transform ${expandedItem === 'contracts' ? 'rotate-0' : '-rotate-90'}`} />
             </button>
-            {expandedItems.has('contracts') && (
+            {expandedItem === 'contracts' && (
               <div className="px-3 pb-3 pt-1 border-t border-[var(--border-color)] bg-[var(--bg-secondary)]">
                 {sortedContracts.length === 0 ? (
                   <p className="text-xs text-[var(--text-tertiary)] italic px-3 py-3 text-center">(No documents have been prepared yet)</p>
@@ -106,9 +111,9 @@ export default function ProfileSidebar({ onShowMainSidebar, employeeNumber, onCo
                 <UserCheck className="w-4 h-4" style={{ color: 'var(--phoenix-500)' }} />
               </div>
               <span className="flex-1 text-left text-sm font-semibold text-[var(--text-primary)]">Onboarding report</span>
-              <ChevronDown className={`w-4 h-4 text-[var(--text-tertiary)] transition-transform ${expandedItems.has('onboarding') ? 'rotate-0' : '-rotate-90'}`} />
+              <ChevronDown className={`w-4 h-4 text-[var(--text-tertiary)] transition-transform ${expandedItem === 'onboarding' ? 'rotate-0' : '-rotate-90'}`} />
             </button>
-            {expandedItems.has('onboarding') && (
+            {expandedItem === 'onboarding' && (
               <div className="px-3 pb-3 pt-1 border-t border-[var(--border-color)] bg-[var(--bg-secondary)]">
                 {onboardingReport ? (
                   <div className="space-y-1.5 mt-2">
@@ -131,9 +136,9 @@ export default function ProfileSidebar({ onShowMainSidebar, employeeNumber, onCo
                 <ClipboardList className="w-4 h-4" style={{ color: 'var(--phoenix-500)' }} />
               </div>
               <span className="flex-1 text-left text-sm font-semibold text-[var(--text-primary)]">Personnel record</span>
-              <ChevronDown className={`w-4 h-4 text-[var(--text-tertiary)] transition-transform ${expandedItems.has('personnel') ? 'rotate-0' : '-rotate-90'}`} />
+              <ChevronDown className={`w-4 h-4 text-[var(--text-tertiary)] transition-transform ${expandedItem === 'personnel' ? 'rotate-0' : '-rotate-90'}`} />
             </button>
-            {expandedItems.has('personnel') && (
+            {expandedItem === 'personnel' && (
               <div className="px-3 pb-3 pt-1 border-t border-[var(--border-color)] bg-[var(--bg-secondary)]">
                 {personnelRecord ? (
                   <div className="space-y-1.5 mt-2">
@@ -156,9 +161,9 @@ export default function ProfileSidebar({ onShowMainSidebar, employeeNumber, onCo
                 <Briefcase className="w-4 h-4" style={{ color: 'var(--phoenix-500)' }} />
               </div>
               <span className="flex-1 text-left text-sm font-semibold text-[var(--text-primary)]">Employment status</span>
-              <ChevronDown className={`w-4 h-4 text-[var(--text-tertiary)] transition-transform ${expandedItems.has('employmentStatus') ? 'rotate-0' : '-rotate-90'}`} />
+              <ChevronDown className={`w-4 h-4 text-[var(--text-tertiary)] transition-transform ${expandedItem === 'employmentStatus' ? 'rotate-0' : '-rotate-90'}`} />
             </button>
-            {expandedItems.has('employmentStatus') && (
+            {expandedItem === 'employmentStatus' && (
               <div className="px-3 pb-3 pt-1 border-t border-[var(--border-color)] bg-[var(--bg-secondary)]">
                 {sortedStatusChanges.length === 0 ? (
                   <p className="text-xs text-[var(--text-tertiary)] italic px-3 py-3 text-center">(No documents have been prepared yet)</p>
