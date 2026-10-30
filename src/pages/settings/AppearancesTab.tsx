@@ -500,29 +500,31 @@ export default function AppearancesTab() {
         <h3 className="font-semibold mb-1" style={{ color: 'var(--text-primary)' }}>Annual leave</h3>
         <p className="text-xs mb-4" style={{ color: 'var(--text-tertiary)' }}>Configure annual leave policies for your company</p>
         <div className="space-y-4">
-          <div>
-            <label className="block text-xs font-semibold mb-1.5" style={{ color: 'var(--text-secondary)' }}>Is your company operating in the south of Algeria?</label>
-            <select value={location} onChange={(e) => handleLocationChange(e.target.value)} className="w-full px-3 py-2.5 rounded-xl text-sm outline-none cursor-pointer transition-all focus:ring-2 focus:ring-orange-500/30" style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-primary)' }}>
-              <option value="No">No</option>
-              <option value="Yes">Yes</option>
-            </select>
-          </div>
-          <div>
-            <label className="block text-xs font-semibold mb-1.5" style={{ color: 'var(--text-secondary)' }}>How many additional annual leave days employees get in your company?</label>
-            <input 
-              type="text" 
-              value={additionalDays} 
-              onChange={(e) => handleAdditionalDaysChange(e.target.value)} 
-              disabled={location === 'No'}
-              min="10"
-              max="99"
-              className="w-32 px-3 py-2.5 rounded-xl text-sm outline-none transition-all focus:ring-2 focus:ring-orange-500/30 disabled:opacity-60 disabled:cursor-not-allowed" 
-              style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-primary)' }} 
-            />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-xs font-semibold mb-1.5" style={{ color: 'var(--text-secondary)' }}>Is your company operating in the south of Algeria?</label>
+              <select value={location} onChange={(e) => handleLocationChange(e.target.value)} className="w-full px-3 py-2.5 rounded-xl text-sm outline-none cursor-pointer transition-all focus:ring-2 focus:ring-orange-500/30" style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-primary)' }}>
+                <option value="No">No</option>
+                <option value="Yes">Yes</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-xs font-semibold mb-1.5" style={{ color: 'var(--text-secondary)' }}>How many additional annual leave days employees get in your company?</label>
+              <input 
+                type="text" 
+                value={additionalDays} 
+                onChange={(e) => handleAdditionalDaysChange(e.target.value)} 
+                disabled={location === 'No'}
+                min="10"
+                max="99"
+                className="w-full px-3 py-2.5 rounded-xl text-sm outline-none transition-all focus:ring-2 focus:ring-orange-500/30 disabled:opacity-60 disabled:cursor-not-allowed" 
+                style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-primary)' }} 
+              />
+            </div>
           </div>
           <div>
             <label className="block text-xs font-semibold mb-3" style={{ color: 'var(--text-secondary)' }}>How is annual leave calculated for an employee who has not completed a full month of service?</label>
-            <div className="space-y-3">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               <label className="flex items-start gap-3 cursor-pointer p-3 rounded-xl transition-all hover:bg-[var(--bg-tertiary)]" style={{ border: annualLeaveCalcType === 'type1' ? '2px solid var(--phoenix-500)' : '1px solid var(--border-color)' }}>
                 <input 
                   type="radio" 
