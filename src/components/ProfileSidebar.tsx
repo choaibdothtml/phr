@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Flame, Menu, ChevronDown, ChevronRight, Lock, FileText, ClipboardList, RefreshCw } from 'lucide-react';
+import { Flame, Menu, ChevronDown, ChevronRight, Lock, FileText, ClipboardList, RefreshCw, FileSignature, UserCheck, FileCheck2, Briefcase } from 'lucide-react';
 import { Contract, OnboardingReport, PersonnelRecord, EmploymentStatusChange, contractStorage, onboardingReportStorage, personnelRecordStorage, employmentStatusStorage } from '../utils/storage';
 
 interface ProfileSidebarProps {
@@ -54,48 +54,127 @@ export default function ProfileSidebar({ onShowMainSidebar, employeeNumber, onCo
   const sortedStatusChanges = [...employmentStatusChanges].sort((a, b) => new Date(a.dateOfIssue.split('/').reverse().join('-')).getTime() - new Date(b.dateOfIssue.split('/').reverse().join('-')).getTime());
 
   return (
-    <div className="w-64 bg-[var(--bg-sidebar)] border-r border-[var(--border-color)] h-full overflow-y-auto">
-      <div className="p-4">
-        <div className="flex items-center gap-3 mb-6">
-          <div className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: 'var(--gradient-primary)' }}><Flame className="w-5 h-5 text-white" /></div>
-          <div className="flex-1"><h1 className="text-lg font-bold text-[var(--text-primary)]">Phoenix HR</h1><p className="text-xs text-[var(--text-tertiary)]">Management Suite</p></div>
-          <button onClick={onShowMainSidebar} className="flex items-center justify-center w-8 h-8 rounded-lg hover:bg-[var(--bg-tertiary)] transition-colors flex-shrink-0" title="Show Navigation"><Menu className="w-5 h-5 text-[var(--text-secondary)]" /></button>
+    <div className="w-72 bg-[var(--bg-sidebar)] border-r border-[var(--border-color)] h-full overflow-y-auto">
+      <div className="p-5">
+        {/* Header */}
+        <div className="flex items-center gap-3 mb-8 pb-5 border-b border-[var(--border-color)]">
+          <div className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0 shadow-md" style={{ background: 'var(--gradient-primary)' }}>
+            <Flame className="w-6 h-6 text-white" />
+          </div>
+          <div className="flex-1">
+            <h1 className="text-xl font-bold text-[var(--text-primary)]">Phoenix HR</h1>
+            <p className="text-xs text-[var(--text-tertiary)] font-medium">Employee Profile</p>
+          </div>
+          <button onClick={onShowMainSidebar} className="flex items-center justify-center w-9 h-9 rounded-lg hover:bg-[var(--bg-tertiary)] transition-all hover:scale-105 flex-shrink-0" title="Show Navigation">
+            <Menu className="w-5 h-5 text-[var(--text-secondary)]" />
+          </button>
         </div>
 
-        {/* Contracts */}
-        <div className="mb-4">
-          <button onClick={() => handleExpandCollapse('contracts')} className="w-full flex items-center justify-between p-3 rounded-lg hover:bg-[var(--bg-tertiary)] transition-colors">
-            <span className="font-semibold text-[var(--text-primary)]">Contracts</span>
-            {expandedItems.has('contracts') ? <ChevronDown className="w-4 h-4 text-[var(--text-secondary)]" /> : <ChevronRight className="w-4 h-4 text-[var(--text-secondary)]" />}
-          </button>
-          {expandedItems.has('contracts') && (<div className="ml-4 mt-2 space-y-2">{sortedContracts.length === 0 ? <p className="text-sm text-[var(--text-tertiary)] italic px-3 py-2">(No documents have been prepared yet)</p> : sortedContracts.map(c => (<button key={c.id} onClick={() => handleContractClick(c)} className={`w-full flex items-center gap-2 p-2 rounded-lg transition-colors ${selectedContractId === c.id ? 'bg-[rgba(var(--primary-color-rgb),0.15)]' : 'hover:bg-[var(--bg-tertiary)]'}`}>{c.isExpired && <Lock className="w-3 h-3 text-[var(--text-tertiary)]" />}<span className="text-sm text-[var(--text-primary)]">{c.startDate}</span></button>))}</div>)}
-        </div>
+        {/* Documents Section */}
+        <div className="space-y-3">
+          {/* Contracts */}
+          <div className="rounded-xl overflow-hidden border border-[var(--border-color)] bg-[var(--bg-card)]">
+            <button onClick={() => handleExpandCollapse('contracts')} className="w-full flex items-center gap-3 p-3.5 hover:bg-[var(--bg-tertiary)] transition-all group">
+              <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: 'rgba(var(--primary-color-rgb), 0.1)' }}>
+                <FileSignature className="w-4 h-4" style={{ color: 'var(--phoenix-500)' }} />
+              </div>
+              <span className="flex-1 text-left text-sm font-semibold text-[var(--text-primary)]">Contracts</span>
+              <ChevronDown className={`w-4 h-4 text-[var(--text-tertiary)] transition-transform ${expandedItems.has('contracts') ? 'rotate-0' : '-rotate-90'}`} />
+            </button>
+            {expandedItems.has('contracts') && (
+              <div className="px-3 pb-3 pt-1 border-t border-[var(--border-color)] bg-[var(--bg-secondary)]">
+                {sortedContracts.length === 0 ? (
+                  <p className="text-xs text-[var(--text-tertiary)] italic px-3 py-3 text-center">(No documents have been prepared yet)</p>
+                ) : (
+                  <div className="space-y-1.5 mt-2">
+                    {sortedContracts.map(c => (
+                      <button key={c.id} onClick={() => handleContractClick(c)} className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg transition-all text-left ${selectedContractId === c.id ? 'bg-[rgba(var(--primary-color-rgb),0.15)] shadow-sm' : 'hover:bg-[var(--bg-tertiary)]'}`}>
+                        {c.isExpired && <Lock className="w-3 h-3 text-[var(--text-tertiary)] flex-shrink-0" />}
+                        <span className="text-xs font-medium text-[var(--text-primary)]">{c.startDate}</span>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
 
-        {/* Employee onboarding report */}
-        <div className="mb-4">
-          <button onClick={() => handleExpandCollapse('onboarding')} className="w-full flex items-center justify-between p-3 rounded-lg hover:bg-[var(--bg-tertiary)] transition-colors">
-            <span className="font-semibold text-[var(--text-primary)]">Employee onboarding report</span>
-            {expandedItems.has('onboarding') ? <ChevronDown className="w-4 h-4 text-[var(--text-secondary)]" /> : <ChevronRight className="w-4 h-4 text-[var(--text-secondary)]" />}
-          </button>
-          {expandedItems.has('onboarding') && (<div className="ml-4 mt-2 space-y-2">{onboardingReport ? <button onClick={() => handleOnboardingReportClick(onboardingReport)} className={`w-full flex items-center gap-2 p-2 rounded-lg transition-colors ${selectedReportId === onboardingReport.id ? 'bg-[rgba(var(--primary-color-rgb),0.15)]' : 'hover:bg-[var(--bg-tertiary)]'}`}><FileText className="w-3 h-3 text-[var(--text-secondary)]" /><span className="text-sm text-[var(--text-primary)]">{onboardingReport.entryDate}</span></button> : <p className="text-sm text-[var(--text-tertiary)] italic px-3 py-2">(No documents have been prepared yet)</p>}</div>)}
-        </div>
+          {/* Employee onboarding report */}
+          <div className="rounded-xl overflow-hidden border border-[var(--border-color)] bg-[var(--bg-card)]">
+            <button onClick={() => handleExpandCollapse('onboarding')} className="w-full flex items-center gap-3 p-3.5 hover:bg-[var(--bg-tertiary)] transition-all group">
+              <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: 'rgba(var(--primary-color-rgb), 0.1)' }}>
+                <UserCheck className="w-4 h-4" style={{ color: 'var(--phoenix-500)' }} />
+              </div>
+              <span className="flex-1 text-left text-sm font-semibold text-[var(--text-primary)]">Onboarding report</span>
+              <ChevronDown className={`w-4 h-4 text-[var(--text-tertiary)] transition-transform ${expandedItems.has('onboarding') ? 'rotate-0' : '-rotate-90'}`} />
+            </button>
+            {expandedItems.has('onboarding') && (
+              <div className="px-3 pb-3 pt-1 border-t border-[var(--border-color)] bg-[var(--bg-secondary)]">
+                {onboardingReport ? (
+                  <div className="space-y-1.5 mt-2">
+                    <button onClick={() => handleOnboardingReportClick(onboardingReport)} className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg transition-all text-left ${selectedReportId === onboardingReport.id ? 'bg-[rgba(var(--primary-color-rgb),0.15)] shadow-sm' : 'hover:bg-[var(--bg-tertiary)]'}`}>
+                      <FileText className="w-3 h-3 text-[var(--text-secondary)] flex-shrink-0" />
+                      <span className="text-xs font-medium text-[var(--text-primary)]">{onboardingReport.entryDate}</span>
+                    </button>
+                  </div>
+                ) : (
+                  <p className="text-xs text-[var(--text-tertiary)] italic px-3 py-3 text-center">(No documents have been prepared yet)</p>
+                )}
+              </div>
+            )}
+          </div>
 
-        {/* Personnel record */}
-        <div className="mb-4">
-          <button onClick={() => handleExpandCollapse('personnel')} className="w-full flex items-center justify-between p-3 rounded-lg hover:bg-[var(--bg-tertiary)] transition-colors">
-            <span className="font-semibold text-[var(--text-primary)]">Personnel record</span>
-            {expandedItems.has('personnel') ? <ChevronDown className="w-4 h-4 text-[var(--text-secondary)]" /> : <ChevronRight className="w-4 h-4 text-[var(--text-secondary)]" />}
-          </button>
-          {expandedItems.has('personnel') && (<div className="ml-4 mt-2 space-y-2">{personnelRecord ? <button onClick={() => handlePersonnelRecordClick(personnelRecord)} className={`w-full flex items-center gap-2 p-2 rounded-lg transition-colors ${selectedPersonnelRecordId === personnelRecord.id ? 'bg-[rgba(var(--primary-color-rgb),0.15)]' : 'hover:bg-[var(--bg-tertiary)]'}`}><ClipboardList className="w-3 h-3 text-[var(--text-secondary)]" /><span className="text-sm text-[var(--text-primary)]">{personnelRecord.contractStartDate}</span></button> : <p className="text-sm text-[var(--text-tertiary)] italic px-3 py-2">(No documents have been prepared yet)</p>}</div>)}
-        </div>
+          {/* Personnel record */}
+          <div className="rounded-xl overflow-hidden border border-[var(--border-color)] bg-[var(--bg-card)]">
+            <button onClick={() => handleExpandCollapse('personnel')} className="w-full flex items-center gap-3 p-3.5 hover:bg-[var(--bg-tertiary)] transition-all group">
+              <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: 'rgba(var(--primary-color-rgb), 0.1)' }}>
+                <ClipboardList className="w-4 h-4" style={{ color: 'var(--phoenix-500)' }} />
+              </div>
+              <span className="flex-1 text-left text-sm font-semibold text-[var(--text-primary)]">Personnel record</span>
+              <ChevronDown className={`w-4 h-4 text-[var(--text-tertiary)] transition-transform ${expandedItems.has('personnel') ? 'rotate-0' : '-rotate-90'}`} />
+            </button>
+            {expandedItems.has('personnel') && (
+              <div className="px-3 pb-3 pt-1 border-t border-[var(--border-color)] bg-[var(--bg-secondary)]">
+                {personnelRecord ? (
+                  <div className="space-y-1.5 mt-2">
+                    <button onClick={() => handlePersonnelRecordClick(personnelRecord)} className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg transition-all text-left ${selectedPersonnelRecordId === personnelRecord.id ? 'bg-[rgba(var(--primary-color-rgb),0.15)] shadow-sm' : 'hover:bg-[var(--bg-tertiary)]'}`}>
+                      <FileCheck2 className="w-3 h-3 text-[var(--text-secondary)] flex-shrink-0" />
+                      <span className="text-xs font-medium text-[var(--text-primary)]">{personnelRecord.contractStartDate}</span>
+                    </button>
+                  </div>
+                ) : (
+                  <p className="text-xs text-[var(--text-tertiary)] italic px-3 py-3 text-center">(No documents have been prepared yet)</p>
+                )}
+              </div>
+            )}
+          </div>
 
-        {/* Change employment status */}
-        <div className="mb-4">
-          <button onClick={() => handleExpandCollapse('employmentStatus')} className="w-full flex items-center justify-between p-3 rounded-lg hover:bg-[var(--bg-tertiary)] transition-colors">
-            <span className="font-semibold text-[var(--text-primary)]">Change employment status</span>
-            {expandedItems.has('employmentStatus') ? <ChevronDown className="w-4 h-4 text-[var(--text-secondary)]" /> : <ChevronRight className="w-4 h-4 text-[var(--text-secondary)]" />}
-          </button>
-          {expandedItems.has('employmentStatus') && (<div className="ml-4 mt-2 space-y-2">{sortedStatusChanges.length === 0 ? <p className="text-sm text-[var(--text-tertiary)] italic px-3 py-2">(No documents have been prepared yet)</p> : sortedStatusChanges.map(c => (<button key={c.id} onClick={() => handleEmploymentStatusChangeClick(c)} className={`w-full flex items-center gap-2 p-2 rounded-lg transition-colors ${selectedStatusChangeId === c.id ? 'bg-[rgba(var(--primary-color-rgb),0.15)]' : 'hover:bg-[var(--bg-tertiary)]'}`}><RefreshCw className="w-3 h-3 text-[var(--text-secondary)]" /><span className="text-sm text-[var(--text-primary)]">{c.dateOfIssue}</span></button>))}</div>)}
+          {/* Change employment status */}
+          <div className="rounded-xl overflow-hidden border border-[var(--border-color)] bg-[var(--bg-card)]">
+            <button onClick={() => handleExpandCollapse('employmentStatus')} className="w-full flex items-center gap-3 p-3.5 hover:bg-[var(--bg-tertiary)] transition-all group">
+              <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: 'rgba(var(--primary-color-rgb), 0.1)' }}>
+                <Briefcase className="w-4 h-4" style={{ color: 'var(--phoenix-500)' }} />
+              </div>
+              <span className="flex-1 text-left text-sm font-semibold text-[var(--text-primary)]">Employment status</span>
+              <ChevronDown className={`w-4 h-4 text-[var(--text-tertiary)] transition-transform ${expandedItems.has('employmentStatus') ? 'rotate-0' : '-rotate-90'}`} />
+            </button>
+            {expandedItems.has('employmentStatus') && (
+              <div className="px-3 pb-3 pt-1 border-t border-[var(--border-color)] bg-[var(--bg-secondary)]">
+                {sortedStatusChanges.length === 0 ? (
+                  <p className="text-xs text-[var(--text-tertiary)] italic px-3 py-3 text-center">(No documents have been prepared yet)</p>
+                ) : (
+                  <div className="space-y-1.5 mt-2">
+                    {sortedStatusChanges.map(c => (
+                      <button key={c.id} onClick={() => handleEmploymentStatusChangeClick(c)} className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg transition-all text-left ${selectedStatusChangeId === c.id ? 'bg-[rgba(var(--primary-color-rgb),0.15)] shadow-sm' : 'hover:bg-[var(--bg-tertiary)]'}`}>
+                        <RefreshCw className="w-3 h-3 text-[var(--text-secondary)] flex-shrink-0" />
+                        <span className="text-xs font-medium text-[var(--text-primary)]">{c.dateOfIssue}</span>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>
