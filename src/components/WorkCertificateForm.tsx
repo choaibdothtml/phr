@@ -168,50 +168,51 @@ export default function WorkCertificateForm({ employee, certificate, onClose, on
               </div>
 
               <div className="space-y-4">
-                {/* Reference Code */}
-                <div>
-                  <label className="block text-sm font-medium mb-1.5" style={{ color: 'var(--text-primary)' }}>
-                    Reference code <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.referenceCode}
-                    onChange={(e) => handleReferenceCodeChange(e.target.value)}
-                    disabled={!!certificate}
-                    className="w-full px-3 py-2.5 rounded-xl text-sm outline-none transition-all focus:ring-2 focus:ring-orange-500/30 disabled:opacity-60 disabled:cursor-not-allowed"
-                    style={{ 
-                      background: 'var(--bg-tertiary)', 
-                      border: errors.referenceCode ? '1px solid #ef4444' : '1px solid var(--border-color)', 
-                      color: 'var(--text-primary)' 
-                    }}
-                    placeholder="Enter reference code"
-                  />
-                  {errors.referenceCode && (
-                    <p className="text-xs text-red-500 mt-1">{errors.referenceCode}</p>
-                  )}
-                </div>
+                {/* Reference Code and Date of Issue - Side by Side */}
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium mb-1.5" style={{ color: 'var(--text-primary)' }}>
+                      Reference code <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.referenceCode}
+                      onChange={(e) => handleReferenceCodeChange(e.target.value)}
+                      disabled={!!certificate}
+                      className="w-full px-3 py-2.5 rounded-xl text-sm outline-none transition-all focus:ring-2 focus:ring-orange-500/30 disabled:opacity-60 disabled:cursor-not-allowed"
+                      style={{ 
+                        background: 'var(--bg-tertiary)', 
+                        border: errors.referenceCode ? '1px solid #ef4444' : '1px solid var(--border-color)', 
+                        color: 'var(--text-primary)' 
+                      }}
+                      placeholder="Enter reference code"
+                    />
+                    {errors.referenceCode && (
+                      <p className="text-xs text-red-500 mt-1">{errors.referenceCode}</p>
+                    )}
+                  </div>
 
-                {/* Date of Issue */}
-                <div>
-                  <label className="block text-sm font-medium mb-1.5" style={{ color: 'var(--text-primary)' }}>
-                    Date of issue <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.dateOfIssue}
-                    onChange={(e) => handleDateOfIssueChange(e.target.value)}
-                    disabled={!!certificate}
-                    className="w-full px-3 py-2.5 rounded-xl text-sm outline-none transition-all focus:ring-2 focus:ring-orange-500/30 disabled:opacity-60 disabled:cursor-not-allowed"
-                    style={{ 
-                      background: 'var(--bg-tertiary)', 
-                      border: errors.dateOfIssue ? '1px solid #ef4444' : '1px solid var(--border-color)', 
-                      color: 'var(--text-primary)' 
-                    }}
-                    placeholder="xx/xx/xxxx"
-                  />
-                  {errors.dateOfIssue && (
-                    <p className="text-xs text-red-500 mt-1">{errors.dateOfIssue}</p>
-                  )}
+                  <div>
+                    <label className="block text-sm font-medium mb-1.5" style={{ color: 'var(--text-primary)' }}>
+                      Date of issue <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.dateOfIssue}
+                      onChange={(e) => handleDateOfIssueChange(e.target.value)}
+                      disabled={!!certificate}
+                      className="w-full px-3 py-2.5 rounded-xl text-sm outline-none transition-all focus:ring-2 focus:ring-orange-500/30 disabled:opacity-60 disabled:cursor-not-allowed"
+                      style={{ 
+                        background: 'var(--bg-tertiary)', 
+                        border: errors.dateOfIssue ? '1px solid #ef4444' : '1px solid var(--border-color)', 
+                        color: 'var(--text-primary)' 
+                      }}
+                      placeholder="xx/xx/xxxx"
+                    />
+                    {errors.dateOfIssue && (
+                      <p className="text-xs text-red-500 mt-1">{errors.dateOfIssue}</p>
+                    )}
+                  </div>
                 </div>
 
                 {/* Used For */}
