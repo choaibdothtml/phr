@@ -8,6 +8,7 @@ import { OnboardingReport } from '../utils/storage';
 import { PersonnelRecord } from '../utils/storage';
 import { EmploymentStatusChange } from '../utils/storage';
 import { WorkCertificate } from '../utils/storage';
+import { TerminationCertificate } from '../utils/storage';
 
 export default function Layout() {
   const location = useLocation();
@@ -18,6 +19,7 @@ export default function Layout() {
   const [selectedPersonnelRecord, setSelectedPersonnelRecord] = useState<PersonnelRecord | null>(null);
   const [selectedEmploymentStatusChange, setSelectedEmploymentStatusChange] = useState<EmploymentStatusChange | null>(null);
   const [selectedWorkCertificate, setSelectedWorkCertificate] = useState<WorkCertificate | null>(null);
+  const [selectedTerminationCertificate, setSelectedTerminationCertificate] = useState<TerminationCertificate | null>(null);
   const [employeeNumber, setEmployeeNumber] = useState<string>('');
   const [hasExpandedItem, setHasExpandedItem] = useState(false);
   const [expandedSection, setExpandedSection] = useState<string | null>(null);
@@ -35,6 +37,7 @@ export default function Layout() {
             onPersonnelRecordSelect={setSelectedPersonnelRecord}
             onEmploymentStatusChangeSelect={setSelectedEmploymentStatusChange}
             onWorkCertificateSelect={setSelectedWorkCertificate}
+            onTerminationCertificateSelect={setSelectedTerminationCertificate}
             onSectionExpand={setExpandedSection}
           />
           <AnimatePresence>
@@ -48,7 +51,7 @@ export default function Layout() {
         </>
       ) : (<Sidebar />)}
       <main className="flex-1 overflow-y-auto mesh-bg">
-        <Outlet context={{ selectedContract, selectedOnboardingReport, selectedPersonnelRecord, selectedEmploymentStatusChange, selectedWorkCertificate, employeeNumber, setEmployeeNumber, hasExpandedItem, expandedSection }} />
+        <Outlet context={{ selectedContract, selectedOnboardingReport, selectedPersonnelRecord, selectedEmploymentStatusChange, selectedWorkCertificate, selectedTerminationCertificate, employeeNumber, setEmployeeNumber, hasExpandedItem, expandedSection }} />
       </main>
     </div>
   );
