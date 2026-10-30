@@ -538,26 +538,28 @@ export default function AppearancesTab() {
       </div>
 
       {/* Additional Hours Categories */}
-      <div className="glass-card p-4">
-        <h3 className="font-semibold mb-1" style={{ color: 'var(--text-primary)' }}>Additional hours categories</h3>
-        <p className="text-xs mb-4" style={{ color: 'var(--text-tertiary)' }}>Select the additional hours' categories you want to apply</p>
-        <div className="space-y-3">
-          <label className="flex items-center gap-3 cursor-pointer">
-            <input type="checkbox" checked={tempCategories.cat1} onChange={() => handleCategoryChange('cat1')} className="w-4 h-4 rounded" style={{ accentColor: 'var(--phoenix-500)' }} />
-            <span className="text-sm" style={{ color: 'var(--text-primary)' }}>Category 1: +50% of the hourly income</span>
-          </label>
-          <label className="flex items-center gap-3 cursor-pointer">
-            <input type="checkbox" checked={tempCategories.cat2} onChange={() => handleCategoryChange('cat2')} className="w-4 h-4 rounded" style={{ accentColor: 'var(--phoenix-500)' }} />
-            <span className="text-sm" style={{ color: 'var(--text-primary)' }}>Category 2: +75% of the hourly income</span>
-          </label>
-          <label className="flex items-center gap-3 cursor-pointer">
-            <input type="checkbox" checked={tempCategories.cat3} onChange={() => handleCategoryChange('cat3')} className="w-4 h-4 rounded" style={{ accentColor: 'var(--phoenix-500)' }} />
-            <span className="text-sm" style={{ color: 'var(--text-primary)' }}>Category 3: +100% of the hourly income</span>
-          </label>
-          <div className="flex gap-3 pt-2">
-            <button onClick={handleRestoreCategories} className="px-4 py-2 rounded-xl text-sm font-medium transition-all hover:scale-105" style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-secondary)' }}>Restore</button>
-            <button onClick={handleSaveCategories} className="px-4 py-2 rounded-xl text-white text-sm font-semibold transition-all hover:scale-105 hover:shadow-lg" style={{ background: 'var(--gradient-primary)' }}>Save</button>
-            {categoriesSaved && <span className="flex items-center gap-1.5 text-emerald-600 text-sm font-medium"><Check className="w-4 h-4" />Saved successfully</span>}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="glass-card p-4">
+          <h3 className="font-semibold mb-1" style={{ color: 'var(--text-primary)' }}>Additional hours categories</h3>
+          <p className="text-xs mb-4" style={{ color: 'var(--text-tertiary)' }}>Select the additional hours' categories you want to apply</p>
+          <div className="space-y-3">
+            <label className="flex items-center gap-3 cursor-pointer">
+              <input type="checkbox" checked={tempCategories.cat1} onChange={() => handleCategoryChange('cat1')} className="w-4 h-4 rounded" style={{ accentColor: 'var(--phoenix-500)' }} />
+              <span className="text-sm" style={{ color: 'var(--text-primary)' }}>Category 1: +50% of the hourly income</span>
+            </label>
+            <label className="flex items-center gap-3 cursor-pointer">
+              <input type="checkbox" checked={tempCategories.cat2} onChange={() => handleCategoryChange('cat2')} className="w-4 h-4 rounded" style={{ accentColor: 'var(--phoenix-500)' }} />
+              <span className="text-sm" style={{ color: 'var(--text-primary)' }}>Category 2: +75% of the hourly income</span>
+            </label>
+            <label className="flex items-center gap-3 cursor-pointer">
+              <input type="checkbox" checked={tempCategories.cat3} onChange={() => handleCategoryChange('cat3')} className="w-4 h-4 rounded" style={{ accentColor: 'var(--phoenix-500)' }} />
+              <span className="text-sm" style={{ color: 'var(--text-primary)' }}>Category 3: +100% of the hourly income</span>
+            </label>
+            <div className="flex gap-3 pt-2">
+              <button onClick={handleRestoreCategories} className="px-4 py-2 rounded-xl text-sm font-medium transition-all hover:scale-105" style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-secondary)' }}>Restore</button>
+              <button onClick={handleSaveCategories} className="px-4 py-2 rounded-xl text-white text-sm font-semibold transition-all hover:scale-105 hover:shadow-lg" style={{ background: 'var(--gradient-primary)' }}>Save</button>
+              {categoriesSaved && <span className="flex items-center gap-1.5 text-emerald-600 text-sm font-medium"><Check className="w-4 h-4" />Saved successfully</span>}
+            </div>
           </div>
         </div>
       </div>
