@@ -7,9 +7,10 @@ import { api, Employee } from '../services/api';
 import { Contract, contractStorage } from '../utils/storage';
 import { OnboardingReport, onboardingReportStorage } from '../utils/storage';
 import { PersonnelRecord } from '../utils/storage';
-import { EmploymentStatusChange } from '../utils/storage';
+import { EmploymentStatusChange, employmentStatusStorage } from '../utils/storage';
 import ContractForm from '../components/ContractForm';
 import OnboardingReportForm from '../components/OnboardingReportForm';
+import EmploymentStatusForm from '../components/EmploymentStatusForm';
 
 interface ProfileData {
   employeeNumber: string; lastName: string; firstName: string; fatherName: string; motherLastName: string; motherFirstName: string;
@@ -38,6 +39,7 @@ export default function EmployeesProfiles() {
   const [hasLoadedProfile, setHasLoadedProfile] = useState(false);
   const [showContractForm, setShowContractForm] = useState(false);
   const [showOnboardingReportForm, setShowOnboardingReportForm] = useState(false);
+  const [showEmploymentStatusForm, setShowEmploymentStatusForm] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [deleteConfirmType, setDeleteConfirmType] = useState<'contract' | 'onboarding' | null>(null);
   const [showTerminatedError, setShowTerminatedError] = useState(false);
@@ -167,6 +169,8 @@ export default function EmployeesProfiles() {
       setShowOnboardingReportForm(true);
     } else if (expandedSection === 'contracts') {
       setShowContractForm(true);
+    } else if (expandedSection === 'employmentStatus') {
+      setShowEmploymentStatusForm(true);
     }
   };
 
@@ -193,6 +197,37 @@ export default function EmployeesProfiles() {
       }
     }
     setShowContractForm(false);
+  };
+
+  const handleEmploymentStatusSave = (statusChange: EmploymentStatusChange) => {
+    if (statusChange.id) {
+      employmentStatusStorage.updateStatusChange(statusChange.id, statusChange);
+    } else {
+      employmentStatusStorage.saveStatusChange(statusChange);
+    }
+    
+    // Update employee data with new status
+    const savedEmployees = localStorage.getItem('phoenix-hr-employees');
+    if (savedEmployees) {
+      const empList = JSON.parse(savedEmployees);
+      const index = empList.findIndex((e: Employee) => e.employeeNumber === statusChange.employeeNumber);
+      if (index !== -1) {
+        empList[index].position = statusChange.newJob;
+        empList[index].department = statusChange.newDepartment;
+        empList[index].classification = statusChange.newClassification;
+        empList[index].degree = statusChange.newDegree;
+        empList[index].group = statusChange.newGroup;
+        empList[index].basicSalary = statusChange.newBasicSalary;
+        empList[index].contractualStatus = statusChange.newContractualStatus;
+        localStorage.setItem('phoenix-hr-employees', JSON.stringify(empList));
+        setEmployees(empList);
+        
+        // Update current employee
+        setCurrentEmployee(empList[index]);
+      }
+    }
+    
+    setShowEmploymentStatusForm(false);
   };
 
   const handleDelete = () => {
@@ -296,6 +331,7 @@ export default function EmployeesProfiles() {
       </AnimatePresence>
       {showContractForm && currentEmployee && (<ContractForm employee={currentEmployee} onClose={() => setShowContractForm(false)} onSave={handleContractSave} />)}
       {showOnboardingReportForm && currentEmployee && (<OnboardingReportForm employee={currentEmployee} onClose={() => setShowOnboardingReportForm(false)} onSave={handleOnboardingReportSave} />)}
+      {showEmploymentStatusForm && currentEmployee && (<EmploymentStatusForm employee={currentEmployee} onClose={() => setShowEmploymentStatusForm(false)} onSave={handleEmploymentStatusSave} />)}
       <AnimatePresence>
         {showTerminatedError && (<><motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }} className="fixed inset-0 z-50" style={{ background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)' }} onClick={() => setShowTerminatedError(false)} /><motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} transition={{ duration: 0.2, ease: "easeOut" }} className="fixed inset-0 z-50 flex items-center justify-center p-4"><div className="glass-card p-8 text-center max-w-sm w-full" style={{ background: 'var(--bg-card)' }}><div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ background: '#ef4444' }}><X className="w-8 h-8 text-white" strokeWidth={3} /></div><h3 className="font-semibold text-lg mb-2" style={{ color: 'var(--text-primary)' }}>Unable to add contract</h3><p className="text-sm mb-6" style={{ color: 'var(--text-secondary)' }}>Unable to add a new contract for a terminated employee.</p><button onClick={() => setShowTerminatedError(false)} className="px-6 py-2.5 rounded-xl text-white font-semibold text-sm transition-all hover:scale-105" style={{ background: 'var(--gradient-primary)' }}>Ok</button></div></motion.div></>)}
       </AnimatePresence>
