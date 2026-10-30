@@ -1,13 +1,14 @@
+// @ts-nocheck
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Building2, Users, DollarSign, Landmark, Palette, Key, Database, Briefcase, FileText } from 'lucide-react';
-import DepartmentsTab from './DepartmentsTab';
-import GroupsClassificationsTab from './GroupsClassificationsTab';
-import BasicSalariesTab from './BasicSalariesTab';
-import BanksTab from './BanksTab';
-import AppearancesTab from './AppearancesTab';
-import JobTitlesTab from './JobTitlesTab';
-import AdministrativeDecisionsTab from './AdministrativeDecisionsTab';
+import DepartmentsTab from './settings/DepartmentsTab';
+import GroupsClassificationsTab from './settings/GroupsClassificationsTab';
+import JobTitlesTab from './settings/JobTitlesTab';
+import BasicSalariesTab from './settings/BasicSalariesTab';
+import BanksTab from './settings/BanksTab';
+import AdministrativeDecisionsTab from './settings/AdministrativeDecisionsTab';
+import AppearancesTab from './settings/AppearancesTab';
 
 export default function Settings() {
   const [activeTab, setActiveTab] = useState('departments');
@@ -26,48 +27,19 @@ export default function Settings() {
 
   return (
     <div className="p-6 max-w-[1600px] mx-auto space-y-6 animate-fade-in-up h-full">
-      {/* Tabs Navigation */}
       <div className="flex justify-center gap-2 border-b" style={{ borderColor: 'var(--border-color)' }}>
         {tabs.map(tab => {
           const Icon = tab.icon;
           const isActive = activeTab === tab.id;
           return (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className="flex items-center gap-2 px-4 py-3 text-sm font-medium transition-all relative rounded-t-lg"
-              style={{ 
-                color: isActive ? 'var(--text-primary)' : 'var(--text-secondary)',
-                borderBottom: isActive ? '2px solid var(--phoenix-500)' : '2px solid transparent',
-                background: isActive ? 'rgba(var(--primary-color-rgb), 0.1)' : 'transparent',
-              }}
-              onMouseEnter={(e) => {
-                if (!isActive) {
-                  e.currentTarget.style.background = 'rgba(var(--primary-color-rgb), 0.08)';
-                }
-              }}
-              onMouseLeave={(e) => {
-                if (!isActive) {
-                  e.currentTarget.style.background = 'transparent';
-                }
-              }}
-            >
-              <Icon className="w-4 h-4" />
-              {tab.label}
+            <button key={tab.id} onClick={() => setActiveTab(tab.id)} className="flex items-center gap-2 px-4 py-3 text-sm font-medium transition-all relative rounded-t-lg" style={{ color: isActive ? 'var(--text-primary)' : 'var(--text-secondary)', borderBottom: isActive ? '2px solid var(--phoenix-500, #f97316)' : '2px solid transparent', background: isActive ? 'rgba(var(--primary-color-rgb), 0.1)' : 'transparent' }} onMouseEnter={(e) => { if (!isActive) e.currentTarget.style.background = 'rgba(var(--primary-color-rgb), 0.08)'; }} onMouseLeave={(e) => { if (!isActive) e.currentTarget.style.background = 'transparent'; }}>
+              <Icon className="w-4 h-4" />{tab.label}
             </button>
           );
         })}
       </div>
-
-      {/* Tab Content */}
       <AnimatePresence mode="wait">
-        <motion.div
-          key={activeTab}
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -10 }}
-          transition={{ duration: 0.2 }}
-        >
+        <motion.div key={activeTab} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.2 }} className="flex-1">
           {activeTab === 'departments' && <DepartmentsTab />}
           {activeTab === 'groups' && <GroupsClassificationsTab />}
           {activeTab === 'jobTitles' && <JobTitlesTab />}

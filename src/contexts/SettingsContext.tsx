@@ -1,119 +1,30 @@
 import { createContext, useContext, useState, ReactNode } from 'react';
-
-interface Department {
-  id: string;
-  name: string;
-  managerName: string;
-  managerEmployeeNumber: string;
-}
-
+interface Department { id: string; name: string; managerName: string; managerEmployeeNumber: string; }
 interface SettingsContextType {
-  jobTitles: string[];
-  departments: Department[];
-  groups: string[];
-  maxClassification: number;
-  addJobTitle: (title: string) => void;
-  removeJobTitle: (title: string) => void;
-  addDepartment: (dept: Department) => void;
-  updateDepartment: (id: string, dept: Department) => void;
-  removeDepartment: (id: string) => void;
-  addGroup: (group: string) => void;
-  removeGroup: (group: string) => void;
-  setMaxClassification: (max: number) => void;
+  jobTitles: string[]; departments: Department[]; groups: string[]; maxClassification: number;
+  addJobTitle: (t: string) => void; removeJobTitle: (t: string) => void;
+  addDepartment: (d: Department) => void; removeDepartment: (id: string) => void;
+  addGroup: (g: string) => void; removeGroup: (g: string) => void;
+  setMaxClassification: (m: number) => void;
 }
-
 const SettingsContext = createContext<SettingsContextType | undefined>(undefined);
-
 export function SettingsProvider({ children }: { children: ReactNode }) {
-  const [jobTitles, setJobTitles] = useState<string[]>(() => {
-    const stored = localStorage.getItem('phoenix-hr-job-titles');
-    return stored ? JSON.parse(stored) : [];
+  const [jobTitles, setJobTitles] = useState<string[]>(() => JSON.parse(localStorage.getItem('phoenix-hr-job-titles') || '[]'));
+  const [departments, setDepartments] = useState<Department[]>(() => JSON.parse(localStorage.getItem('phoenix-hr-departments-custom') || '[]'));
+  const [groups, setGroups] = useState<string[]>(() => JSON.parse(localStorage.getItem('phoenix-hr-groups-custom') || '[]'));
+  const [maxClassification, setMaxClass] = useState<number>(() => {
+    const s = localStorage.getItem('phoenix-hr-classification-settings');
+    return s ? JSON.parse(s).highestClassification || 0 : 0;
   });
-
-  const [departments, setDepartments] = useState<Department[]>(() => {
-    const stored = localStorage.getItem('phoenix-hr-departments');
-    return stored ? JSON.parse(stored) : [];
-  });
-
-  const [groups, setGroups] = useState<string[]>(() => {
-    const stored = localStorage.getItem('phoenix-hr-groups');
-    return stored ? JSON.parse(stored) : [];
-  });
-
-  const [maxClassification, setMaxClassificationState] = useState<number>(() => {
-    const stored = localStorage.getItem('phoenix-hr-max-classification');
-    return stored ? parseInt(stored) : 5;
-  });
-
-  const addJobTitle = (title: string) => {
-    const updated = [...jobTitles, title];
-    setJobTitles(updated);
-    localStorage.setItem('phoenix-hr-job-titles', JSON.stringify(updated));
-  };
-
-  const removeJobTitle = (title: string) => {
-    const updated = jobTitles.filter(t => t !== title);
-    setJobTitles(updated);
-    localStorage.setItem('phoenix-hr-job-titles', JSON.stringify(updated));
-  };
-
-  const addDepartment = (dept: Department) => {
-    const updated = [...departments, dept];
-    setDepartments(updated);
-    localStorage.setItem('phoenix-hr-departments', JSON.stringify(updated));
-  };
-
-  const updateDepartment = (id: string, dept: Department) => {
-    const updated = departments.map(d => d.id === id ? dept : d);
-    setDepartments(updated);
-    localStorage.setItem('phoenix-hr-departments', JSON.stringify(updated));
-  };
-
-  const removeDepartment = (id: string) => {
-    const updated = departments.filter(d => d.id !== id);
-    setDepartments(updated);
-    localStorage.setItem('phoenix-hr-departments', JSON.stringify(updated));
-  };
-
-  const addGroup = (group: string) => {
-    const updated = [...groups, group];
-    setGroups(updated);
-    localStorage.setItem('phoenix-hr-groups', JSON.stringify(updated));
-  };
-
-  const removeGroup = (group: string) => {
-    const updated = groups.filter(g => g !== group);
-    setGroups(updated);
-    localStorage.setItem('phoenix-hr-groups', JSON.stringify(updated));
-  };
-
-  const setMaxClassification = (max: number) => {
-    setMaxClassificationState(max);
-    localStorage.setItem('phoenix-hr-max-classification', max.toString());
-  };
-
-  return (
-    <SettingsContext.Provider value={{
-      jobTitles,
-      departments,
-      groups,
-      maxClassification,
-      addJobTitle,
-      removeJobTitle,
-      addDepartment,
-      updateDepartment,
-      removeDepartment,
-      addGroup,
-      removeGroup,
-      setMaxClassification,
-    }}>
-      {children}
-    </SettingsContext.Provider>
-  );
+  const addJobTitle = (t: string) => { const u = [...jobTitles, t]; setJobTitles(u); localStorage.setItem('phoenix-hr-job-titles', JSON.stringify(u)); };
+  const removeJobTitle = (t: string) => { const u = jobTitles.filter(x => x !== t); setJobTitles(u); localStorage.setItem('phoenix-hr-job-titles', JSON.stringify(u)); };
+  const addDepartment = (d: Department) => { const u = [...departments, d]; setDepartments(u); localStorage.setItem('phoenix-hr-departments-custom', JSON.stringify(u)); };
+  const removeDepartment = (id: string) => { const u = departments.filter(d => d.id !== id); setDepartments(u); localStorage.setItem('phoenix-hr-departments-custom', JSON.stringify(u)); };
+  const addGroup = (g: string) => { const u = [...groups, g]; setGroups(u); localStorage.setItem('phoenix-hr-groups-custom', JSON.stringify(u)); };
+  const removeGroup = (g: string) => { const u = groups.filter(x => x !== g); setGroups(u); localStorage.setItem('phoenix-hr-groups-custom', JSON.stringify(u)); };
+  const setMaxClassification = (m: number) => { setMaxClass(m); const s = JSON.parse(localStorage.getItem('phoenix-hr-classification-settings') || '{}'); s.highestClassification = m; localStorage.setItem('phoenix-hr-classification-settings', JSON.stringify(s)); };
+  return <SettingsContext.Provider value={{ jobTitles, departments, groups, maxClassification, addJobTitle, removeJobTitle, addDepartment, removeDepartment, addGroup, removeGroup, setMaxClassification }}>{children}</SettingsContext.Provider>;
 }
-
 export function useSettings() {
-  const context = useContext(SettingsContext);
-  if (!context) throw new Error('useSettings must be used within SettingsProvider');
-  return context;
+  const c = useContext(SettingsContext); if (!c) throw new Error('useSettings must be used within SettingsProvider'); return c;
 }
