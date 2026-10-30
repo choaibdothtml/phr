@@ -58,3 +58,20 @@ export const employmentStatusStorage = {
   updateStatusChange: (id: string, c: EmploymentStatusChange) => { const all = JSON.parse(localStorage.getItem(EMP_STATUS_KEY) || '{}'); const emp = all[c.employeeNumber] || []; const idx = emp.findIndex((x: EmploymentStatusChange) => x.id === id); if (idx !== -1) { emp[idx] = c; localStorage.setItem(EMP_STATUS_KEY, JSON.stringify(all)); } },
   deleteStatusChange: (empNum: string, id: string) => { const all = JSON.parse(localStorage.getItem(EMP_STATUS_KEY) || '{}'); all[empNum] = (all[empNum] || []).filter((c: EmploymentStatusChange) => c.id !== id); localStorage.setItem(EMP_STATUS_KEY, JSON.stringify(all)); },
 };
+
+// Work Certificate Storage
+export interface WorkCertificate {
+  id: string;
+  employeeNumber: string;
+  referenceCode: string;
+  dateOfIssue: string;
+  usedFor: 'Administrative documents' | 'Passport' | 'Bank account';
+}
+
+const WORK_CERT_KEY = 'phoenix-hr-work-certificates';
+export const workCertificateStorage = {
+  getCertificates: (empNum: string): WorkCertificate[] => JSON.parse(localStorage.getItem(WORK_CERT_KEY) || '{}')[empNum] || [],
+  saveCertificate: (c: WorkCertificate) => { const all = JSON.parse(localStorage.getItem(WORK_CERT_KEY) || '{}'); if (!all[c.employeeNumber]) all[c.employeeNumber] = []; all[c.employeeNumber].push(c); localStorage.setItem(WORK_CERT_KEY, JSON.stringify(all)); },
+  updateCertificate: (id: string, c: WorkCertificate) => { const all = JSON.parse(localStorage.getItem(WORK_CERT_KEY) || '{}'); const emp = all[c.employeeNumber] || []; const idx = emp.findIndex((x: WorkCertificate) => x.id === id); if (idx !== -1) { emp[idx] = c; localStorage.setItem(WORK_CERT_KEY, JSON.stringify(all)); } },
+  deleteCertificate: (empNum: string, id: string) => { const all = JSON.parse(localStorage.getItem(WORK_CERT_KEY) || '{}'); all[empNum] = (all[empNum] || []).filter((c: WorkCertificate) => c.id !== id); localStorage.setItem(WORK_CERT_KEY, JSON.stringify(all)); },
+};

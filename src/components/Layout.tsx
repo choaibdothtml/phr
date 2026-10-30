@@ -7,6 +7,7 @@ import { Contract } from '../utils/storage';
 import { OnboardingReport } from '../utils/storage';
 import { PersonnelRecord } from '../utils/storage';
 import { EmploymentStatusChange } from '../utils/storage';
+import { WorkCertificate } from '../utils/storage';
 
 export default function Layout() {
   const location = useLocation();
@@ -16,6 +17,7 @@ export default function Layout() {
   const [selectedOnboardingReport, setSelectedOnboardingReport] = useState<OnboardingReport | null>(null);
   const [selectedPersonnelRecord, setSelectedPersonnelRecord] = useState<PersonnelRecord | null>(null);
   const [selectedEmploymentStatusChange, setSelectedEmploymentStatusChange] = useState<EmploymentStatusChange | null>(null);
+  const [selectedWorkCertificate, setSelectedWorkCertificate] = useState<WorkCertificate | null>(null);
   const [employeeNumber, setEmployeeNumber] = useState<string>('');
   const [hasExpandedItem, setHasExpandedItem] = useState(false);
   const [expandedSection, setExpandedSection] = useState<string | null>(null);
@@ -32,6 +34,7 @@ export default function Layout() {
             onOnboardingReportSelect={setSelectedOnboardingReport}
             onPersonnelRecordSelect={setSelectedPersonnelRecord}
             onEmploymentStatusChangeSelect={setSelectedEmploymentStatusChange}
+            onWorkCertificateSelect={setSelectedWorkCertificate}
             onSectionExpand={setExpandedSection}
           />
           <AnimatePresence>
@@ -45,7 +48,7 @@ export default function Layout() {
         </>
       ) : (<Sidebar />)}
       <main className="flex-1 overflow-y-auto mesh-bg">
-        <Outlet context={{ selectedContract, selectedOnboardingReport, selectedPersonnelRecord, selectedEmploymentStatusChange, employeeNumber, setEmployeeNumber, hasExpandedItem, expandedSection }} />
+        <Outlet context={{ selectedContract, selectedOnboardingReport, selectedPersonnelRecord, selectedEmploymentStatusChange, selectedWorkCertificate, employeeNumber, setEmployeeNumber, hasExpandedItem, expandedSection }} />
       </main>
     </div>
   );

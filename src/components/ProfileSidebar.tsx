@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Flame, Menu, ChevronDown, ChevronRight, Lock, FileText, ClipboardList, RefreshCw, FileSignature, UserCheck, FileCheck2, Briefcase } from 'lucide-react';
-import { Contract, OnboardingReport, PersonnelRecord, EmploymentStatusChange, contractStorage, onboardingReportStorage, personnelRecordStorage, employmentStatusStorage } from '../utils/storage';
+import { Flame, Menu, ChevronDown, ChevronRight, Lock, FileText, ClipboardList, RefreshCw, FileSignature, UserCheck, FileCheck2, Briefcase, Award } from 'lucide-react';
+import { Contract, OnboardingReport, PersonnelRecord, EmploymentStatusChange, WorkCertificate, contractStorage, onboardingReportStorage, personnelRecordStorage, employmentStatusStorage, workCertificateStorage } from '../utils/storage';
 
 interface ProfileSidebarProps {
   onShowMainSidebar: () => void;
@@ -11,19 +11,22 @@ interface ProfileSidebarProps {
   onOnboardingReportSelect: (r: OnboardingReport | null) => void;
   onPersonnelRecordSelect: (r: PersonnelRecord | null) => void;
   onEmploymentStatusChangeSelect: (c: EmploymentStatusChange | null) => void;
+  onWorkCertificateSelect: (w: WorkCertificate | null) => void;
   onSectionExpand: (s: string | null) => void;
 }
 
-export default function ProfileSidebar({ onShowMainSidebar, employeeNumber, onContractSelect, onExpandedItemChange, onOnboardingReportSelect, onPersonnelRecordSelect, onEmploymentStatusChangeSelect, onSectionExpand }: ProfileSidebarProps) {
+export default function ProfileSidebar({ onShowMainSidebar, employeeNumber, onContractSelect, onExpandedItemChange, onOnboardingReportSelect, onPersonnelRecordSelect, onEmploymentStatusChangeSelect, onWorkCertificateSelect, onSectionExpand }: ProfileSidebarProps) {
   const [contracts, setContracts] = useState<Contract[]>([]);
   const [onboardingReport, setOnboardingReport] = useState<OnboardingReport | null>(null);
   const [personnelRecord, setPersonnelRecord] = useState<PersonnelRecord | null>(null);
   const [employmentStatusChanges, setEmploymentStatusChanges] = useState<EmploymentStatusChange[]>([]);
+  const [workCertificates, setWorkCertificates] = useState<WorkCertificate[]>([]);
   const [expandedItem, setExpandedItem] = useState<string | null>(null);
   const [selectedContractId, setSelectedContractId] = useState<string | null>(null);
   const [selectedReportId, setSelectedReportId] = useState<string | null>(null);
   const [selectedPersonnelRecordId, setSelectedPersonnelRecordId] = useState<string | null>(null);
   const [selectedStatusChangeId, setSelectedStatusChangeId] = useState<string | null>(null);
+  const [selectedWorkCertificateId, setSelectedWorkCertificateId] = useState<string | null>(null);
 
   useEffect(() => {
     if (!employeeNumber) return;
@@ -31,9 +34,10 @@ export default function ProfileSidebar({ onShowMainSidebar, employeeNumber, onCo
     setOnboardingReport(onboardingReportStorage.getReport(employeeNumber));
     setPersonnelRecord(personnelRecordStorage.getRecord(employeeNumber));
     setEmploymentStatusChanges(employmentStatusStorage.getStatusChanges(employeeNumber));
-    setSelectedContractId(null); setSelectedReportId(null); setSelectedPersonnelRecordId(null); setSelectedStatusChangeId(null);
+    setWorkCertificates(workCertificateStorage.getCertificates(employeeNumber));
+    setSelectedContractId(null); setSelectedReportId(null); setSelectedPersonnelRecordId(null); setSelectedStatusChangeId(null); setSelectedWorkCertificateId(null);
     setExpandedItem(null);
-    onContractSelect(null); onOnboardingReportSelect(null); onPersonnelRecordSelect(null); onEmploymentStatusChangeSelect(null);
+    onContractSelect(null); onOnboardingReportSelect(null); onPersonnelRecordSelect(null); onEmploymentStatusChangeSelect(null); onWorkCertificateSelect(null);
     onExpandedItemChange(false);
   }, [employeeNumber]);
 
@@ -51,13 +55,15 @@ export default function ProfileSidebar({ onShowMainSidebar, employeeNumber, onCo
     }
   };
 
-  const handleContractClick = (c: Contract) => { setSelectedContractId(c.id); setSelectedReportId(null); setSelectedPersonnelRecordId(null); setSelectedStatusChangeId(null); onContractSelect(c); onOnboardingReportSelect(null); onPersonnelRecordSelect(null); onEmploymentStatusChangeSelect(null); };
-  const handleOnboardingReportClick = (r: OnboardingReport) => { setSelectedReportId(r.id); setSelectedContractId(null); setSelectedPersonnelRecordId(null); setSelectedStatusChangeId(null); onOnboardingReportSelect(r); onContractSelect(null); onPersonnelRecordSelect(null); onEmploymentStatusChangeSelect(null); };
-  const handlePersonnelRecordClick = (r: PersonnelRecord) => { setSelectedPersonnelRecordId(r.id); setSelectedContractId(null); setSelectedReportId(null); setSelectedStatusChangeId(null); onPersonnelRecordSelect(r); onContractSelect(null); onOnboardingReportSelect(null); onEmploymentStatusChangeSelect(null); };
-  const handleEmploymentStatusChangeClick = (c: EmploymentStatusChange) => { setSelectedStatusChangeId(c.id); setSelectedContractId(null); setSelectedReportId(null); setSelectedPersonnelRecordId(null); onEmploymentStatusChangeSelect(c); onContractSelect(null); onOnboardingReportSelect(null); onPersonnelRecordSelect(null); };
+  const handleContractClick = (c: Contract) => { setSelectedContractId(c.id); setSelectedReportId(null); setSelectedPersonnelRecordId(null); setSelectedStatusChangeId(null); setSelectedWorkCertificateId(null); onContractSelect(c); onOnboardingReportSelect(null); onPersonnelRecordSelect(null); onEmploymentStatusChangeSelect(null); onWorkCertificateSelect(null); };
+  const handleOnboardingReportClick = (r: OnboardingReport) => { setSelectedReportId(r.id); setSelectedContractId(null); setSelectedPersonnelRecordId(null); setSelectedStatusChangeId(null); setSelectedWorkCertificateId(null); onOnboardingReportSelect(r); onContractSelect(null); onPersonnelRecordSelect(null); onEmploymentStatusChangeSelect(null); onWorkCertificateSelect(null); };
+  const handlePersonnelRecordClick = (r: PersonnelRecord) => { setSelectedPersonnelRecordId(r.id); setSelectedContractId(null); setSelectedReportId(null); setSelectedStatusChangeId(null); setSelectedWorkCertificateId(null); onPersonnelRecordSelect(r); onContractSelect(null); onOnboardingReportSelect(null); onEmploymentStatusChangeSelect(null); onWorkCertificateSelect(null); };
+  const handleEmploymentStatusChangeClick = (c: EmploymentStatusChange) => { setSelectedStatusChangeId(c.id); setSelectedContractId(null); setSelectedReportId(null); setSelectedPersonnelRecordId(null); setSelectedWorkCertificateId(null); onEmploymentStatusChangeSelect(c); onContractSelect(null); onOnboardingReportSelect(null); onPersonnelRecordSelect(null); onWorkCertificateSelect(null); };
+  const handleWorkCertificateClick = (w: WorkCertificate) => { setSelectedWorkCertificateId(w.id); setSelectedContractId(null); setSelectedReportId(null); setSelectedPersonnelRecordId(null); setSelectedStatusChangeId(null); onWorkCertificateSelect(w); onContractSelect(null); onOnboardingReportSelect(null); onPersonnelRecordSelect(null); onEmploymentStatusChangeSelect(null); };
 
   const sortedContracts = [...contracts].sort((a, b) => new Date(a.startDate.split('/').reverse().join('-')).getTime() - new Date(b.startDate.split('/').reverse().join('-')).getTime());
   const sortedStatusChanges = [...employmentStatusChanges].sort((a, b) => new Date(a.dateOfIssue.split('/').reverse().join('-')).getTime() - new Date(b.dateOfIssue.split('/').reverse().join('-')).getTime());
+  const sortedWorkCertificates = [...workCertificates].sort((a, b) => new Date(a.dateOfIssue.split('/').reverse().join('-')).getTime() - new Date(b.dateOfIssue.split('/').reverse().join('-')).getTime());
 
   return (
     <div className="w-72 bg-[var(--bg-sidebar)] border-r border-[var(--border-color)] h-full overflow-y-auto">
@@ -212,6 +218,43 @@ export default function ProfileSidebar({ onShowMainSidebar, employeeNumber, onCo
                           <button key={c.id} onClick={() => handleEmploymentStatusChangeClick(c)} className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg transition-all text-left ${selectedStatusChangeId === c.id ? 'bg-[rgba(var(--primary-color-rgb),0.15)] shadow-sm' : 'hover:bg-[var(--bg-tertiary)]'}`}>
                             <RefreshCw className="w-3 h-3 text-[var(--text-secondary)] flex-shrink-0" />
                             <span className="text-xs font-medium text-[var(--text-primary)]">{c.dateOfIssue}</span>
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
+          {/* Current work certificates */}
+          <div className="rounded-xl overflow-hidden border border-[var(--border-color)] bg-[var(--bg-card)]">
+            <button onClick={() => handleExpandCollapse('workCertificates')} className="w-full flex items-center gap-3 p-3.5 hover:bg-[var(--bg-tertiary)] transition-all group">
+              <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: 'rgba(var(--primary-color-rgb), 0.1)' }}>
+                <Award className="w-4 h-4" style={{ color: 'var(--phoenix-500)' }} />
+              </div>
+              <span className="flex-1 text-left text-sm font-semibold text-[var(--text-primary)]">Work certificates</span>
+              <ChevronDown className={`w-4 h-4 text-[var(--text-tertiary)] transition-transform ${expandedItem === 'workCertificates' ? 'rotate-0' : '-rotate-90'}`} />
+            </button>
+            <AnimatePresence>
+              {expandedItem === 'workCertificates' && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: 'auto', opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.2, ease: 'easeInOut' }}
+                  className="overflow-hidden"
+                >
+                  <div className="px-3 pb-3 pt-1 border-t border-[var(--border-color)] bg-[var(--bg-secondary)]">
+                    {sortedWorkCertificates.length === 0 ? (
+                      <p className="text-xs text-[var(--text-tertiary)] italic px-3 py-3 text-center">(No certificates have been issued yet)</p>
+                    ) : (
+                      <div className="space-y-1.5 mt-2">
+                        {sortedWorkCertificates.map(w => (
+                          <button key={w.id} onClick={() => handleWorkCertificateClick(w)} className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg transition-all text-left ${selectedWorkCertificateId === w.id ? 'bg-[rgba(var(--primary-color-rgb),0.15)] shadow-sm' : 'hover:bg-[var(--bg-tertiary)]'}`}>
+                            <Award className="w-3 h-3 text-[var(--text-secondary)] flex-shrink-0" />
+                            <span className="text-xs font-medium text-[var(--text-primary)]">{w.dateOfIssue}</span>
                           </button>
                         ))}
                       </div>
