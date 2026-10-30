@@ -64,6 +64,12 @@ export default function AppearancesTab() {
   const [abbreviationsEditMode, setAbbreviationsEditMode] = useState(false);
   const [abbreviationsSaved, setAbbreviationsSaved] = useState(false);
 
+  // Annual leave settings
+  const [location, setLocation] = useState('No');
+  const [additionalDays, setAdditionalDays] = useState('10');
+  const [annualLeaveCalcType, setAnnualLeaveCalcType] = useState('type2');
+  const [annualLeaveSaved, setAnnualLeaveSaved] = useState(false);
+
   useEffect(() => {
     const savedPrimary = localStorage.getItem('phoenix-hr-primary-color');
     const savedSidebar = localStorage.getItem('phoenix-hr-sidebar-color');
@@ -103,6 +109,15 @@ export default function AppearancesTab() {
       setAbbreviationsSaved(true);
     }
     
+    // Load annual leave settings
+    const savedLocation = localStorage.getItem('phoenix-hr-location');
+    const savedAdditionalDays = localStorage.getItem('phoenix-hr-additional-days');
+    const savedAnnualLeaveCalcType = localStorage.getItem('phoenix-hr-annual-leave-calc-type');
+    
+    if (savedLocation) setLocation(savedLocation);
+    if (savedAdditionalDays) setAdditionalDays(savedAdditionalDays);
+    if (savedAnnualLeaveCalcType) setAnnualLeaveCalcType(savedAnnualLeaveCalcType);
+    
     setIsDarkMode(document.documentElement.classList.contains('dark'));
     const observer = new MutationObserver(() => setIsDarkMode(document.documentElement.classList.contains('dark')));
     observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
@@ -141,6 +156,9 @@ export default function AppearancesTab() {
   useEffect(() => { localStorage.setItem('phoenix-hr-first-day-of-month', firstDayOfMonth); }, [firstDayOfMonth]);
   useEffect(() => { localStorage.setItem('phoenix-hr-reintegration-limit', reintegrationLimit); }, [reintegrationLimit]);
   useEffect(() => { localStorage.setItem('phoenix-hr-compensatory-rest-warning', compensatoryRestWarning); }, [compensatoryRestWarning]);
+  useEffect(() => { localStorage.setItem('phoenix-hr-location', location); }, [location]);
+  useEffect(() => { localStorage.setItem('phoenix-hr-additional-days', additionalDays); }, [additionalDays]);
+  useEffect(() => { localStorage.setItem('phoenix-hr-annual-leave-calc-type', annualLeaveCalcType); }, [annualLeaveCalcType]);
 
   const handlePrimarySelect = (colorId) => {
     if (selectedSidebar !== 'default' && colorId === selectedSidebar) return;
@@ -242,6 +260,35 @@ export default function AppearancesTab() {
   const handleCancelAbbreviations = () => {
     setTempAbbreviations(attendanceAbbreviations);
     setAbbreviationsEditMode(false);
+  };
+
+  // Annual leave settings handlers
+  const handleLocationChange = (value) => {
+    setLocation(value);
+    // If location is "No", reset additional days to 10
+    if (value === 'No') {
+      setAdditionalDays('10');
+    }
+  };
+
+  const handleAdditionalDaysChange = (value) => {
+    const cleaned = value.replace(/\D/g, '').slice(0, 2);
+    const num = parseInt(cleaned);
+    if (cleaned === '' || (num >= 10 && num <= 99)) {
+      setAdditionalDays(cleaned);
+    }
+  };
+
+  const handleAnnualLeaveCalcTypeChange = (type) => {
+    setAnnualLeaveCalcType(type);
+  };
+
+  const handleSaveAnnualLeave = () => {
+    localStorage.setItem('phoenix-hr-location', location);
+    localStorage.setItem('phoenix-hr-additional-days', additionalDays);
+    localStorage.setItem('phoenix-hr-annual-leave-calc-type', annualLeaveCalcType);
+    setAnnualLeaveSaved(true);
+    setTimeout(() => setAnnualLeaveSaved(false), 3000);
   };
 
   return (
@@ -445,6 +492,71 @@ export default function AppearancesTab() {
             </>
           )}
           {abbreviationsSaved && !abbreviationsEditMode && <span className="flex items-center gap-1.5 text-emerald-600 text-sm font-medium"><Check className="w-4 h-4" />Saved successfully</span>}
+        </div>
+      </div>
+
+      {/* Annual Leave Settings */}
+      <div className="glass-card p-4">
+        <h3 className="font-semibold mb-1" style={{ color: 'var(--text-primary)' }}>Annual leave</h3>
+        <p className="text-xs mb-4" style={{ color: 'var(--text-tertiary)' }}>Configure annual leave policies for your company</p>
+        <div className="space-y-4">
+          <div>
+            <label className="block text-xs font-semibold mb-1.5" style={{ color: 'var(--text-secondary)' }}>Is your company operating in the south of Algeria?</label>
+            <select value={location} onChange={(e) => handleLocationChange(e.target.value)} className="w-full px-3 py-2.5 rounded-xl text-sm outline-none cursor-pointer transition-all focus:ring-2 focus:ring-orange-500/30" style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-primary)' }}>
+              <option value="No">No</option>
+              <option value="Yes">Yes</option>
+            </select>
+          </div>
+          <div>
+            <label className="block text-xs font-semibold mb-1.5" style={{ color: 'var(--text-secondary)' }}>How many additional annual leave days employees get in your company?</label>
+            <input 
+              type="text" 
+              value={additionalDays} 
+              onChange={(e) => handleAdditionalDaysChange(e.target.value)} 
+              disabled={location === 'No'}
+              min="10"
+              max="99"
+              className="w-32 px-3 py-2.5 rounded-xl text-sm outline-none transition-all focus:ring-2 focus:ring-orange-500/30 disabled:opacity-60 disabled:cursor-not-allowed" 
+              style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-primary)' }} 
+            />
+          </div>
+          <div>
+            <label className="block text-xs font-semibold mb-3" style={{ color: 'var(--text-secondary)' }}>How is annual leave calculated for an employee who has not completed a full month of service?</label>
+            <div className="space-y-3">
+              <label className="flex items-start gap-3 cursor-pointer p-3 rounded-xl transition-all hover:bg-[var(--bg-tertiary)]" style={{ border: annualLeaveCalcType === 'type1' ? '2px solid var(--phoenix-500)' : '1px solid var(--border-color)' }}>
+                <input 
+                  type="radio" 
+                  name="annualLeaveCalcType"
+                  checked={annualLeaveCalcType === 'type1'} 
+                  onChange={() => handleAnnualLeaveCalcTypeChange('type1')} 
+                  className="w-4 h-4 mt-0.5" 
+                  style={{ accentColor: 'var(--phoenix-500)' }} 
+                />
+                <div className="flex-1">
+                  <span className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>15-days rule</span>
+                  <p className="text-xs mt-1" style={{ color: 'var(--text-tertiary)' }}>Employees who work 15 or more days in a calendar month will accrue their full monthly annual leave allowance of 2.5 days</p>
+                </div>
+              </label>
+              <label className="flex items-start gap-3 cursor-pointer p-3 rounded-xl transition-all hover:bg-[var(--bg-tertiary)]" style={{ border: annualLeaveCalcType === 'type2' ? '2px solid var(--phoenix-500)' : '1px solid var(--border-color)' }}>
+                <input 
+                  type="radio" 
+                  name="annualLeaveCalcType"
+                  checked={annualLeaveCalcType === 'type2'} 
+                  onChange={() => handleAnnualLeaveCalcTypeChange('type2')} 
+                  className="w-4 h-4 mt-0.5" 
+                  style={{ accentColor: 'var(--phoenix-500)' }} 
+                />
+                <div className="flex-1">
+                  <span className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>Prata temporis</span>
+                  <p className="text-xs mt-1" style={{ color: 'var(--text-tertiary)' }}>Employees will be entitled to annual leave proportionate to the number of days worked</p>
+                </div>
+              </label>
+            </div>
+          </div>
+          <div className="flex gap-3 pt-2 items-center">
+            <button onClick={handleSaveAnnualLeave} className="px-4 py-2 rounded-xl text-white text-sm font-semibold transition-all hover:scale-105 hover:shadow-lg" style={{ background: 'var(--gradient-primary)' }}>Save</button>
+            {annualLeaveSaved && <span className="flex items-center gap-1.5 text-emerald-600 text-sm font-medium"><Check className="w-4 h-4" />Saved successfully</span>}
+          </div>
         </div>
       </div>
     </div>
