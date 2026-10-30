@@ -41,6 +41,7 @@ export default function AppearancesTab() {
   const [timeFormat, setTimeFormat] = useState('12h');
   const [hourlyPercentages, setHourlyPercentages] = useState([]);
   const [percentageInput, setPercentageInput] = useState('');
+  const [percentageError, setPercentageError] = useState('');
   const [tempPercentages, setTempPercentages] = useState([]);
   const [percentagesSaved, setPercentagesSaved] = useState(false);
   
@@ -160,7 +161,7 @@ export default function AppearancesTab() {
     // Only allow digits, max 2 characters
     const cleaned = value.replace(/\D/g, '').slice(0, 2);
     
-    // If we have exactly 2 digits and it's in the valid range
+    // If we have exactly 2 digits
     if (cleaned.length === 2) {
       const num = parseInt(cleaned);
       if (num >= 50 && num <= 99) {
@@ -168,10 +169,21 @@ export default function AppearancesTab() {
         if (!tempPercentages.includes(num)) {
           setTempPercentages(prev => [...prev, num].sort((a, b) => a - b));
         }
-        // Clear input immediately
+        // Clear input and error immediately
         setPercentageInput('');
+        setPercentageError('');
+        return;
+      } else if (num < 50) {
+        // Show error for values less than 50
+        setPercentageError('Percentage must be 50 or greater.');
+        setPercentageInput(cleaned);
         return;
       }
+    }
+    
+    // Clear error when input is being modified
+    if (cleaned.length < 2) {
+      setPercentageError('');
     }
     
     // Otherwise, just update the input with the cleaned value
@@ -282,8 +294,11 @@ export default function AppearancesTab() {
                   placeholder="Enter 2-digit number (50-99)"
                   maxLength={2}
                   className="w-full px-3 py-2.5 rounded-xl text-sm outline-none transition-all focus:ring-2 focus:ring-orange-500/30" 
-                  style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-primary)' }} 
+                  style={{ background: 'var(--bg-tertiary)', border: percentageError ? '1px solid #ef4444' : '1px solid var(--border-color)', color: 'var(--text-primary)' }} 
                 />
+                {percentageError && (
+                  <p className="text-xs text-red-500 mt-1">{percentageError}</p>
+                )}
               </div>
             </div>
             {tempPercentages.length > 0 && (
