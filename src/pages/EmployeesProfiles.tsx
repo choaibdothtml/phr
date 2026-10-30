@@ -159,18 +159,41 @@ export default function EmployeesProfiles() {
     navigate('/employees/list');
   };
 
+  const [showNoContractError, setShowNoContractError] = useState(false);
+  const [showReminder, setShowReminder] = useState(false);
+
   const handleNewContract = () => {
     if (!currentEmployee) return;
-    if (currentEmployee.status === 'terminated') {
-      setShowTerminatedError(true);
-      return;
-    }
-    if (expandedSection === 'onboarding') {
+    
+    if (expandedSection === 'employmentStatus') {
+      // Check if employee is terminated
+      if (currentEmployee.status === 'terminated') {
+        setShowTerminatedError(true);
+        return;
+      }
+      
+      // Check if employee has an active contract
+      const contracts = contractStorage.getContracts(currentEmployee.employeeNumber);
+      const hasActiveContract = contracts.some(c => !c.isExpired);
+      
+      if (!hasActiveContract) {
+        setShowNoContractError(true);
+        return;
+      }
+      
+      setShowEmploymentStatusForm(true);
+    } else if (expandedSection === 'onboarding') {
+      if (currentEmployee.status === 'terminated') {
+        setShowTerminatedError(true);
+        return;
+      }
       setShowOnboardingReportForm(true);
     } else if (expandedSection === 'contracts') {
+      if (currentEmployee.status === 'terminated') {
+        setShowTerminatedError(true);
+        return;
+      }
       setShowContractForm(true);
-    } else if (expandedSection === 'employmentStatus') {
-      setShowEmploymentStatusForm(true);
     }
   };
 
@@ -228,6 +251,19 @@ export default function EmployeesProfiles() {
     }
     
     setShowEmploymentStatusForm(false);
+    
+    // Show reminder about financial values
+    setShowReminder(true);
+  };
+
+  const handleEdit = () => {
+    if (selectedContract) {
+      setShowContractForm(true);
+    } else if (selectedOnboardingReport) {
+      setShowOnboardingReportForm(true);
+    } else if (selectedEmploymentStatusChange) {
+      setShowEmploymentStatusForm(true);
+    }
   };
 
   const handleDelete = () => {
@@ -237,6 +273,9 @@ export default function EmployeesProfiles() {
     } else if (selectedOnboardingReport) {
       setDeleteConfirmType('onboarding');
       setShowDeleteConfirm(true);
+    } else if (selectedEmploymentStatusChange) {
+      setDeleteConfirmType('employmentStatus');
+      setShowDeleteConfirm(true);
     }
   };
 
@@ -245,6 +284,8 @@ export default function EmployeesProfiles() {
       contractStorage.deleteContract(selectedContract.employeeNumber, selectedContract.id);
     } else if (deleteConfirmType === 'onboarding' && selectedOnboardingReport) {
       onboardingReportStorage.deleteReport(selectedOnboardingReport.employeeNumber);
+    } else if (deleteConfirmType === 'employmentStatus' && selectedEmploymentStatusChange) {
+      employmentStatusStorage.deleteStatusChange(selectedEmploymentStatusChange.employeeNumber, selectedEmploymentStatusChange.id);
     }
     setShowDeleteConfirm(false);
     setDeleteConfirmType(null);
@@ -319,24 +360,30 @@ export default function EmployeesProfiles() {
       <div className="px-6 pb-6 max-w-[1600px] mx-auto w-full">
         <div className="flex gap-3 justify-center">
           <button disabled={!hasLoadedProfile || !hasExpandedItem || expandedSection === 'personnel'} onClick={handleNewContract} className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed hover:scale-105" style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-primary)' }}><FilePlus className="w-4 h-4" />New</button>
-          <button disabled={(!selectedContract && !selectedOnboardingReport) || (selectedContract?.isExpired) || !!selectedPersonnelRecord} className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed hover:scale-105" style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-primary)' }}><Edit className="w-4 h-4" />Edit</button>
-          <button disabled={(!selectedContract && !selectedOnboardingReport) || (selectedContract?.isFirstContract) || (selectedContract?.isExpired) || !!selectedPersonnelRecord} onClick={handleDelete} className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed hover:scale-105" style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-primary)' }}><Trash2 className="w-4 h-4" />Delete</button>
-          <button disabled={!selectedContract && !selectedOnboardingReport && !selectedPersonnelRecord} className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed hover:scale-105" style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-primary)' }}><Eye className="w-4 h-4" />View</button>
-          <button disabled={!selectedContract && !selectedOnboardingReport && !selectedPersonnelRecord} onClick={handleExportPDF} className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed hover:scale-105" style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-primary)' }}><FileDown className="w-4 h-4" />Export as PDF</button>
-          <button disabled={!selectedContract && !selectedOnboardingReport && !selectedPersonnelRecord} onClick={handlePrint} className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed hover:scale-105" style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-primary)' }}><Printer className="w-4 h-4" />Print</button>
+          <button disabled={!selectedContract && !selectedOnboardingReport && !selectedPersonnelRecord && !selectedEmploymentStatusChange} onClick={handleEdit} className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed hover:scale-105" style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-primary)' }}><Edit className="w-4 h-4" />Edit</button>
+          <button disabled={(!selectedContract && !selectedOnboardingReport && !selectedEmploymentStatusChange) || (selectedContract?.isFirstContract) || (selectedContract?.isExpired) || !!selectedPersonnelRecord} onClick={handleDelete} className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed hover:scale-105" style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-primary)' }}><Trash2 className="w-4 h-4" />Delete</button>
+          <button disabled={!selectedContract && !selectedOnboardingReport && !selectedPersonnelRecord && !selectedEmploymentStatusChange} className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed hover:scale-105" style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-primary)' }}><Eye className="w-4 h-4" />View</button>
+          <button disabled={!selectedContract && !selectedOnboardingReport && !selectedPersonnelRecord && !selectedEmploymentStatusChange} onClick={handleExportPDF} className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed hover:scale-105" style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-primary)' }}><FileDown className="w-4 h-4" />Export as PDF</button>
+          <button disabled={!selectedContract && !selectedOnboardingReport && !selectedPersonnelRecord && !selectedEmploymentStatusChange} onClick={handlePrint} className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed hover:scale-105" style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-primary)' }}><Printer className="w-4 h-4" />Print</button>
         </div>
       </div>
       <AnimatePresence>
         {showError && (<><motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }} className="fixed inset-0 z-50" style={{ background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)' }} /><motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} transition={{ duration: 0.2, ease: "easeOut" }} className="fixed inset-0 z-50 flex items-center justify-center p-4"><div className="glass-card p-8 text-center max-w-sm w-full" style={{ background: 'var(--bg-card)' }}><div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ background: '#ef4444' }}><X className="w-8 h-8 text-white" strokeWidth={3} /></div><h3 className="font-semibold text-lg mb-2" style={{ color: 'var(--text-primary)' }}>Invalid employee number</h3><p className="text-sm mb-6" style={{ color: 'var(--text-secondary)' }}>The employee number you entered does not exist in our records.</p><button onClick={() => { setShowError(false); setProfile(prev => ({ ...prev, employeeNumber: '' })); numberInputRef.current?.focus(); }} className="px-6 py-2.5 rounded-xl text-white font-semibold text-sm transition-all hover:scale-105" style={{ background: 'var(--gradient-primary)' }}>Try typing again</button></div></motion.div></>)}
       </AnimatePresence>
-      {showContractForm && currentEmployee && (<ContractForm employee={currentEmployee} onClose={() => setShowContractForm(false)} onSave={handleContractSave} />)}
-      {showOnboardingReportForm && currentEmployee && (<OnboardingReportForm employee={currentEmployee} onClose={() => setShowOnboardingReportForm(false)} onSave={handleOnboardingReportSave} />)}
-      {showEmploymentStatusForm && currentEmployee && (<EmploymentStatusForm employee={currentEmployee} onClose={() => setShowEmploymentStatusForm(false)} onSave={handleEmploymentStatusSave} />)}
+      {showContractForm && currentEmployee && (<ContractForm employee={currentEmployee} contract={selectedContract} onClose={() => setShowContractForm(false)} onSave={handleContractSave} />)}
+      {showOnboardingReportForm && currentEmployee && (<OnboardingReportForm employee={currentEmployee} report={selectedOnboardingReport} onClose={() => setShowOnboardingReportForm(false)} onSave={handleOnboardingReportSave} />)}
+      {showEmploymentStatusForm && currentEmployee && (<EmploymentStatusForm employee={currentEmployee} statusChange={selectedEmploymentStatusChange} onClose={() => setShowEmploymentStatusForm(false)} onSave={handleEmploymentStatusSave} />)}
       <AnimatePresence>
         {showTerminatedError && (<><motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }} className="fixed inset-0 z-50" style={{ background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)' }} onClick={() => setShowTerminatedError(false)} /><motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} transition={{ duration: 0.2, ease: "easeOut" }} className="fixed inset-0 z-50 flex items-center justify-center p-4"><div className="glass-card p-8 text-center max-w-sm w-full" style={{ background: 'var(--bg-card)' }}><div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ background: '#ef4444' }}><X className="w-8 h-8 text-white" strokeWidth={3} /></div><h3 className="font-semibold text-lg mb-2" style={{ color: 'var(--text-primary)' }}>Unable to add contract</h3><p className="text-sm mb-6" style={{ color: 'var(--text-secondary)' }}>Unable to add a new contract for a terminated employee.</p><button onClick={() => setShowTerminatedError(false)} className="px-6 py-2.5 rounded-xl text-white font-semibold text-sm transition-all hover:scale-105" style={{ background: 'var(--gradient-primary)' }}>Ok</button></div></motion.div></>)}
       </AnimatePresence>
       <AnimatePresence>
-        {showDeleteConfirm && (<><motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }} className="fixed inset-0 z-50" style={{ background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)' }} onClick={() => setShowDeleteConfirm(false)} /><motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} transition={{ duration: 0.2, ease: "easeOut" }} className="fixed inset-0 z-50 flex items-center justify-center p-4"><div className="glass-card p-8 text-center max-w-sm w-full" style={{ background: 'var(--bg-card)' }}><div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ background: 'rgba(239, 68, 68, 0.1)' }}><Trash2 className="w-8 h-8 text-red-500" /></div><h3 className="text-lg font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>{deleteConfirmType === 'contract' ? 'Delete Contract' : 'Delete Onboarding Report'}</h3><p className="text-sm mb-6" style={{ color: 'var(--text-secondary)' }}>{deleteConfirmType === 'contract' ? 'Do you really want to delete this contract?' : 'Do you really want to delete this onboarding report?'}</p><div className="flex gap-3 justify-center"><button onClick={() => setShowDeleteConfirm(false)} className="px-6 py-2.5 rounded-xl text-sm font-semibold transition-all hover:scale-105" style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-secondary)' }}>No</button><button onClick={confirmDelete} className="px-6 py-2.5 rounded-xl text-white text-sm font-semibold transition-all hover:scale-105" style={{ background: '#ef4444' }}>Yes</button></div></div></motion.div></>)}
+        {showDeleteConfirm && (<><motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }} className="fixed inset-0 z-50" style={{ background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)' }} onClick={() => setShowDeleteConfirm(false)} /><motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} transition={{ duration: 0.2, ease: "easeOut" }} className="fixed inset-0 z-50 flex items-center justify-center p-4"><div className="glass-card p-8 text-center max-w-sm w-full" style={{ background: 'var(--bg-card)' }}><div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ background: 'rgba(239, 68, 68, 0.1)' }}><Trash2 className="w-8 h-8 text-red-500" /></div><h3 className="text-lg font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>{deleteConfirmType === 'contract' ? 'Delete Contract' : deleteConfirmType === 'onboarding' ? 'Delete Onboarding Report' : 'Delete Employment Status Change'}</h3><p className="text-sm mb-6" style={{ color: 'var(--text-secondary)' }}>{deleteConfirmType === 'contract' ? 'Do you really want to delete this contract?' : deleteConfirmType === 'onboarding' ? 'Do you really want to delete this onboarding report?' : 'Do you really want to delete this employment status change?'}</p><div className="flex gap-3 justify-center"><button onClick={() => setShowDeleteConfirm(false)} className="px-6 py-2.5 rounded-xl text-sm font-semibold transition-all hover:scale-105" style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-secondary)' }}>No</button><button onClick={confirmDelete} className="px-6 py-2.5 rounded-xl text-white text-sm font-semibold transition-all hover:scale-105" style={{ background: '#ef4444' }}>Yes</button></div></div></motion.div></>)}
+      </AnimatePresence>
+      <AnimatePresence>
+        {showNoContractError && (<><motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }} className="fixed inset-0 z-50" style={{ background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)' }} onClick={() => setShowNoContractError(false)} /><motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} transition={{ duration: 0.2, ease: "easeOut" }} className="fixed inset-0 z-50 flex items-center justify-center p-4"><div className="glass-card p-8 text-center max-w-sm w-full" style={{ background: 'var(--bg-card)' }}><div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ background: '#f59e0b' }}><AlertCircle className="w-8 h-8 text-white" strokeWidth={3} /></div><h3 className="font-semibold text-lg mb-2" style={{ color: 'var(--text-primary)' }}>No Active Contract</h3><p className="text-sm mb-6" style={{ color: 'var(--text-secondary)' }}>This employee doesn't have an active contract, please add a new contract first.</p><button onClick={() => setShowNoContractError(false)} className="px-6 py-2.5 rounded-xl text-white font-semibold text-sm transition-all hover:scale-105" style={{ background: 'var(--gradient-primary)' }}>Ok</button></div></motion.div></>)}
+      </AnimatePresence>
+      <AnimatePresence>
+        {showReminder && (<><motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }} className="fixed inset-0 z-50" style={{ background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)' }} onClick={() => setShowReminder(false)} /><motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} transition={{ duration: 0.2, ease: "easeOut" }} className="fixed inset-0 z-50 flex items-center justify-center p-4"><div className="glass-card p-8 text-center max-w-md w-full" style={{ background: 'var(--bg-card)' }}><div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ background: 'rgba(59, 130, 246, 0.1)' }}><AlertCircle className="w-8 h-8 text-blue-500" strokeWidth={3} /></div><h3 className="font-semibold text-lg mb-2" style={{ color: 'var(--text-primary)' }}>Reminder</h3><p className="text-sm mb-6" style={{ color: 'var(--text-secondary)' }}>Please change the financial values in the administrative decisions if the change you made affects employee's classification or degree.</p><button onClick={() => setShowReminder(false)} className="px-6 py-2.5 rounded-xl text-white font-semibold text-sm transition-all hover:scale-105" style={{ background: 'var(--gradient-primary)' }}>Ok</button></div></motion.div></>)}
       </AnimatePresence>
     </div>
   );

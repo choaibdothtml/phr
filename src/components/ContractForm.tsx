@@ -21,6 +21,8 @@ export default function ContractForm({ employee, contract, onClose, onSave }: Co
   const [isClosing, setIsClosing] = useState(false);
   const [showOverlapError, setShowOverlapError] = useState(false);
 
+  const isPermanent = employee.contractualStatus === 'Permanent';
+
   useEffect(() => {
     if (contract) {
       setFormData({
@@ -83,10 +85,12 @@ export default function ContractForm({ employee, contract, onClose, onSave }: Co
         }
       }
     }
-    if (!formData.duration) newErrors.duration = 'Duration is required';
-    else {
-      const dur = parseInt(formData.duration, 10);
-      if (isNaN(dur) || dur < 1 || dur > 99) newErrors.duration = 'Duration must be between 1 and 99';
+    if (!isPermanent) {
+      if (!formData.duration) newErrors.duration = 'Duration is required';
+      else {
+        const dur = parseInt(formData.duration, 10);
+        if (isNaN(dur) || dur < 1 || dur > 99) newErrors.duration = 'Duration must be between 1 and 99';
+      }
     }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -129,9 +133,9 @@ export default function ContractForm({ employee, contract, onClose, onSave }: Co
           </div>
           <div className="grid grid-cols-4 gap-4">
             <div><label className="block text-sm font-medium mb-1.5" style={{ color: 'var(--text-primary)' }}>Contract start day <span className="text-red-500">*</span></label><input type="text" value={formData.startDate} onChange={(e) => setFormData(prev => ({ ...prev, startDate: e.target.value }))} placeholder="xx/xx/xxxx" disabled={contract?.isFirstContract} className="w-full px-3 py-2.5 rounded-xl text-sm outline-none transition-all focus:ring-2 focus:ring-orange-500/30 disabled:opacity-60 disabled:cursor-not-allowed" style={{ background: 'var(--bg-tertiary)', border: errors.startDate ? '1px solid #ef4444' : '1px solid var(--border-color)', color: 'var(--text-primary)' }} />{errors.startDate && <p className="text-xs text-red-500 mt-1">{errors.startDate}</p>}</div>
-            <div><label className="block text-sm font-medium mb-1.5" style={{ color: 'var(--text-primary)' }}>Contract duration <span className="text-red-500">*</span></label><input type="number" min="1" max="99" value={formData.duration} onChange={(e) => setFormData(prev => ({ ...prev, duration: e.target.value }))} className="w-full px-3 py-2.5 rounded-xl text-sm outline-none transition-all focus:ring-2 focus:ring-orange-500/30" style={{ background: 'var(--bg-tertiary)', border: errors.duration ? '1px solid #ef4444' : '1px solid var(--border-color)', color: 'var(--text-primary)' }} />{errors.duration && <p className="text-xs text-red-500 mt-1">{errors.duration}</p>}</div>
-            <div><label className="block text-sm font-medium mb-1.5" style={{ color: 'var(--text-primary)' }}>Unit</label><select value={formData.durationUnit} onChange={(e) => setFormData(prev => ({ ...prev, durationUnit: e.target.value }))} className="w-full px-3 py-2.5 rounded-xl text-sm outline-none cursor-pointer transition-all focus:ring-2 focus:ring-orange-500/30" style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-primary)' }}><option value="days">Days</option><option value="months">Months</option><option value="years">Years</option></select></div>
-            <div><label className="block text-sm font-medium mb-1.5" style={{ color: 'var(--text-primary)' }}>Contract end date</label><input type="text" value={formData.endDate} readOnly className="w-full px-3 py-2.5 rounded-xl text-sm outline-none cursor-not-allowed opacity-60" style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-primary)' }} /></div>
+            <div><label className="block text-sm font-medium mb-1.5" style={{ color: 'var(--text-primary)' }}>Contract duration <span className="text-red-500">*</span></label><input type="number" min="1" max="99" value={formData.duration} onChange={(e) => setFormData(prev => ({ ...prev, duration: e.target.value }))} disabled={isPermanent} className="w-full px-3 py-2.5 rounded-xl text-sm outline-none transition-all focus:ring-2 focus:ring-orange-500/30 disabled:opacity-60 disabled:cursor-not-allowed" style={{ background: 'var(--bg-tertiary)', border: errors.duration ? '1px solid #ef4444' : '1px solid var(--border-color)', color: 'var(--text-primary)' }} />{errors.duration && <p className="text-xs text-red-500 mt-1">{errors.duration}</p>}</div>
+            <div><label className="block text-sm font-medium mb-1.5" style={{ color: 'var(--text-primary)' }}>Unit</label><select value={formData.durationUnit} onChange={(e) => setFormData(prev => ({ ...prev, durationUnit: e.target.value }))} disabled={isPermanent} className="w-full px-3 py-2.5 rounded-xl text-sm outline-none cursor-pointer transition-all focus:ring-2 focus:ring-orange-500/30 disabled:opacity-60 disabled:cursor-not-allowed" style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-primary)' }}><option value="days">Days</option><option value="months">Months</option><option value="years">Years</option></select></div>
+            <div><label className="block text-sm font-medium mb-1.5" style={{ color: 'var(--text-primary)' }}>Contract end date</label><input type="text" value={formData.endDate} readOnly disabled={isPermanent} className="w-full px-3 py-2.5 rounded-xl text-sm outline-none cursor-not-allowed opacity-60 disabled:opacity-60 disabled:cursor-not-allowed" style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-primary)' }} /></div>
           </div>
           <div><label className="block text-sm font-medium mb-1.5" style={{ color: 'var(--text-primary)' }}>Purpose of the appointment</label><textarea value={formData.purposeOfAppointment} onChange={(e) => handlePurposeChange(e.target.value)} rows={3} className="w-full px-3 py-2.5 rounded-xl text-sm outline-none transition-all focus:ring-2 focus:ring-orange-500/30 resize-none" style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-primary)' }} /></div>
         </div>
