@@ -515,7 +515,7 @@ export default function AppearancesTab() {
         <div className="glass-card p-4">
           <h3 className="font-semibold mb-1" style={{ color: 'var(--text-primary)' }}>Attendance</h3>
           <p className="text-xs mb-4" style={{ color: 'var(--text-tertiary)' }}>Specify the abbreviations which will be used in the attendance pages</p>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-3 gap-3">
             {[
               { key: 'present', label: 'Present' },
               { key: 'paidRest', label: 'Paid rest' },
@@ -544,7 +544,7 @@ export default function AppearancesTab() {
                   onChange={(e) => handleAbbreviationChange(key, e.target.value)}
                   disabled={!abbreviationsEditMode}
                   maxLength={3}
-                  className="w-20 px-2 py-1.5 rounded-lg text-sm outline-none transition-all focus:ring-2 focus:ring-orange-500/30 disabled:opacity-60 disabled:cursor-not-allowed"
+                  className="w-full px-2 py-1.5 rounded-lg text-sm outline-none transition-all focus:ring-2 focus:ring-orange-500/30 disabled:opacity-60 disabled:cursor-not-allowed"
                   style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-primary)' }}
                 />
               </div>
