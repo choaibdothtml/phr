@@ -378,7 +378,7 @@ export default function AppearancesTab() {
             </div>
           ))}
         </div>
-        <div className="flex gap-3 pt-4">
+        <div className="flex gap-3 pt-4 justify-center">
           {!abbreviationsEditMode ? (
             <button onClick={handleEditAbbreviations} className="px-4 py-2 rounded-xl text-white text-sm font-semibold transition-all hover:scale-105 hover:shadow-lg" style={{ background: 'var(--gradient-primary)' }}>Edit</button>
           ) : (
