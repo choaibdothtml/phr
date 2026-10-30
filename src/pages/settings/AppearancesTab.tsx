@@ -511,54 +511,56 @@ export default function AppearancesTab() {
       </div>
 
       {/* Attendance Abbreviations */}
-      <div className="glass-card p-4">
-        <h3 className="font-semibold mb-1" style={{ color: 'var(--text-primary)' }}>Attendance</h3>
-        <p className="text-xs mb-4" style={{ color: 'var(--text-tertiary)' }}>Specify the abbreviations which will be used in the attendance pages</p>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {[
-            { key: 'present', label: 'Present' },
-            { key: 'paidRest', label: 'Paid rest' },
-            { key: 'publicHoliday', label: 'Public holiday' },
-            { key: 'businessMission', label: 'Business mission' },
-            { key: 'training', label: 'Training' },
-            { key: 'weeklyRest', label: 'Weekly rest' },
-            { key: 'suspension', label: 'Suspension' },
-            { key: 'unauthorizedAbsence', label: 'Unauthorized absence' },
-            { key: 'authorizedAbsence', label: 'Authorized absence' },
-            { key: 'compensatoryRest', label: 'Compensatory rest' },
-            { key: 'annualLeave', label: 'Annual leave' },
-            { key: 'birthLeave', label: 'Birth leave' },
-            { key: 'deathLeave', label: 'Death leave' },
-            { key: 'unpaidLeave', label: 'Unpaid leave' },
-            { key: 'sickLeave', label: 'Sick leave' },
-            { key: 'workplaceAccident', label: 'Workplace accident' },
-            { key: 'nonWorkingDays', label: 'Non-working days' },
-            { key: 'badWeather', label: 'Bad weather' }
-          ].map(({ key, label }) => (
-            <div key={key}>
-              <label className="block text-xs font-semibold mb-1.5" style={{ color: 'var(--text-secondary)' }}>{label}</label>
-              <input
-                type="text"
-                value={tempAbbreviations[key]}
-                onChange={(e) => handleAbbreviationChange(key, e.target.value)}
-                disabled={!abbreviationsEditMode}
-                maxLength={3}
-                className="w-full px-3 py-2.5 rounded-xl text-sm outline-none transition-all focus:ring-2 focus:ring-orange-500/30 disabled:opacity-60 disabled:cursor-not-allowed"
-                style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-primary)' }}
-              />
-            </div>
-          ))}
-        </div>
-        <div className="flex gap-3 pt-4 justify-center">
-          {!abbreviationsEditMode ? (
-            <button onClick={handleEditAbbreviations} className="px-4 py-2 rounded-xl text-white text-sm font-semibold transition-all hover:scale-105 hover:shadow-lg" style={{ background: 'var(--gradient-primary)' }}>Edit</button>
-          ) : (
-            <>
-              <button onClick={handleCancelAbbreviations} className="px-4 py-2 rounded-xl text-sm font-medium transition-all hover:scale-105" style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-secondary)' }}>Cancel</button>
-              <button onClick={handleSaveAbbreviations} className="px-4 py-2 rounded-xl text-white text-sm font-semibold transition-all hover:scale-105 hover:shadow-lg" style={{ background: 'var(--gradient-primary)' }}>Save</button>
-            </>
-          )}
-          {abbreviationsSaved && !abbreviationsEditMode && <span className="flex items-center gap-1.5 text-emerald-600 text-sm font-medium"><Check className="w-4 h-4" />Saved successfully</span>}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="glass-card p-4">
+          <h3 className="font-semibold mb-1" style={{ color: 'var(--text-primary)' }}>Attendance</h3>
+          <p className="text-xs mb-4" style={{ color: 'var(--text-tertiary)' }}>Specify the abbreviations which will be used in the attendance pages</p>
+          <div className="grid grid-cols-2 gap-3">
+            {[
+              { key: 'present', label: 'Present' },
+              { key: 'paidRest', label: 'Paid rest' },
+              { key: 'publicHoliday', label: 'Public holiday' },
+              { key: 'businessMission', label: 'Business mission' },
+              { key: 'training', label: 'Training' },
+              { key: 'weeklyRest', label: 'Weekly rest' },
+              { key: 'suspension', label: 'Suspension' },
+              { key: 'unauthorizedAbsence', label: 'Unauthorized absence' },
+              { key: 'authorizedAbsence', label: 'Authorized absence' },
+              { key: 'compensatoryRest', label: 'Compensatory rest' },
+              { key: 'annualLeave', label: 'Annual leave' },
+              { key: 'birthLeave', label: 'Birth leave' },
+              { key: 'deathLeave', label: 'Death leave' },
+              { key: 'unpaidLeave', label: 'Unpaid leave' },
+              { key: 'sickLeave', label: 'Sick leave' },
+              { key: 'workplaceAccident', label: 'Workplace accident' },
+              { key: 'nonWorkingDays', label: 'Non-working days' },
+              { key: 'badWeather', label: 'Bad weather' }
+            ].map(({ key, label }) => (
+              <div key={key}>
+                <label className="block text-xs font-semibold mb-1" style={{ color: 'var(--text-secondary)' }}>{label}</label>
+                <input
+                  type="text"
+                  value={tempAbbreviations[key]}
+                  onChange={(e) => handleAbbreviationChange(key, e.target.value)}
+                  disabled={!abbreviationsEditMode}
+                  maxLength={3}
+                  className="w-20 px-2 py-1.5 rounded-lg text-sm outline-none transition-all focus:ring-2 focus:ring-orange-500/30 disabled:opacity-60 disabled:cursor-not-allowed"
+                  style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-primary)' }}
+                />
+              </div>
+            ))}
+          </div>
+          <div className="flex gap-3 pt-4 justify-center">
+            {!abbreviationsEditMode ? (
+              <button onClick={handleEditAbbreviations} className="px-4 py-2 rounded-xl text-white text-sm font-semibold transition-all hover:scale-105 hover:shadow-lg" style={{ background: 'var(--gradient-primary)' }}>Edit</button>
+            ) : (
+              <>
+                <button onClick={handleCancelAbbreviations} className="px-4 py-2 rounded-xl text-sm font-medium transition-all hover:scale-105" style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-secondary)' }}>Cancel</button>
+                <button onClick={handleSaveAbbreviations} className="px-4 py-2 rounded-xl text-white text-sm font-semibold transition-all hover:scale-105 hover:shadow-lg" style={{ background: 'var(--gradient-primary)' }}>Save</button>
+              </>
+            )}
+            {abbreviationsSaved && !abbreviationsEditMode && <span className="flex items-center gap-1.5 text-emerald-600 text-sm font-medium"><Check className="w-4 h-4" />Saved successfully</span>}
+          </div>
         </div>
       </div>
     </div>
