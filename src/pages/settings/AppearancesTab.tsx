@@ -42,6 +42,25 @@ export default function AppearancesTab() {
   const [hourlyPercentages, setHourlyPercentages] = useState([]);
   const [percentageInput, setPercentageInput] = useState('');
   const [tempPercentages, setTempPercentages] = useState([]);
+  
+  // New settings
+  const [firstDayOfWeek, setFirstDayOfWeek] = useState('Sunday');
+  const [firstDayOfMonth, setFirstDayOfMonth] = useState('21');
+  const [reintegrationLimit, setReintegrationLimit] = useState('Unlimited');
+  const [compensatoryRestWarning, setCompensatoryRestWarning] = useState('0');
+  const [additionalHoursCategories, setAdditionalHoursCategories] = useState({ cat1: false, cat2: false, cat3: false });
+  const [tempCategories, setTempCategories] = useState({ cat1: false, cat2: false, cat3: false });
+  const [categoriesSaved, setCategoriesSaved] = useState(false);
+  
+  const [attendanceAbbreviations, setAttendanceAbbreviations] = useState({
+    present: '', paidRest: '', publicHoliday: '', businessMission: '', training: '',
+    weeklyRest: '', suspension: '', unauthorizedAbsence: '', authorizedAbsence: '',
+    compensatoryRest: '', annualLeave: '', birthLeave: '', deathLeave: '', unpaidLeave: '',
+    sickLeave: '', workplaceAccident: '', nonWorkingDays: '', badWeather: ''
+  });
+  const [tempAbbreviations, setTempAbbreviations] = useState(attendanceAbbreviations);
+  const [abbreviationsEditMode, setAbbreviationsEditMode] = useState(false);
+  const [abbreviationsSaved, setAbbreviationsSaved] = useState(false);
 
   useEffect(() => {
     const savedPrimary = localStorage.getItem('phoenix-hr-primary-color');
@@ -49,6 +68,13 @@ export default function AppearancesTab() {
     const savedDateFormat = localStorage.getItem('phoenix-hr-date-format');
     const savedTimeFormat = localStorage.getItem('phoenix-hr-time-format');
     const savedPercentages = localStorage.getItem('phoenix-hr-hourly-percentages');
+    const savedFirstDayOfWeek = localStorage.getItem('phoenix-hr-first-day-of-week');
+    const savedFirstDayOfMonth = localStorage.getItem('phoenix-hr-first-day-of-month');
+    const savedReintegrationLimit = localStorage.getItem('phoenix-hr-reintegration-limit');
+    const savedCompensatoryRestWarning = localStorage.getItem('phoenix-hr-compensatory-rest-warning');
+    const savedCategories = localStorage.getItem('phoenix-hr-additional-hours-categories');
+    const savedAbbreviations = localStorage.getItem('phoenix-hr-attendance-abbreviations');
+    
     if (savedPrimary) setSelectedPrimary(savedPrimary);
     if (savedSidebar) setSelectedSidebar(savedSidebar);
     if (savedDateFormat) setDateFormat(savedDateFormat);
@@ -58,6 +84,23 @@ export default function AppearancesTab() {
       setHourlyPercentages(percentages);
       setTempPercentages(percentages);
     }
+    if (savedFirstDayOfWeek) setFirstDayOfWeek(savedFirstDayOfWeek);
+    if (savedFirstDayOfMonth) setFirstDayOfMonth(savedFirstDayOfMonth);
+    if (savedReintegrationLimit) setReintegrationLimit(savedReintegrationLimit);
+    if (savedCompensatoryRestWarning) setCompensatoryRestWarning(savedCompensatoryRestWarning);
+    if (savedCategories) {
+      const categories = JSON.parse(savedCategories);
+      setAdditionalHoursCategories(categories);
+      setTempCategories(categories);
+      setCategoriesSaved(true);
+    }
+    if (savedAbbreviations) {
+      const abbreviations = JSON.parse(savedAbbreviations);
+      setAttendanceAbbreviations(abbreviations);
+      setTempAbbreviations(abbreviations);
+      setAbbreviationsSaved(true);
+    }
+    
     setIsDarkMode(document.documentElement.classList.contains('dark'));
     const observer = new MutationObserver(() => setIsDarkMode(document.documentElement.classList.contains('dark')));
     observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
@@ -92,6 +135,10 @@ export default function AppearancesTab() {
 
   useEffect(() => { localStorage.setItem('phoenix-hr-date-format', dateFormat); }, [dateFormat]);
   useEffect(() => { localStorage.setItem('phoenix-hr-time-format', timeFormat); }, [timeFormat]);
+  useEffect(() => { localStorage.setItem('phoenix-hr-first-day-of-week', firstDayOfWeek); }, [firstDayOfWeek]);
+  useEffect(() => { localStorage.setItem('phoenix-hr-first-day-of-month', firstDayOfMonth); }, [firstDayOfMonth]);
+  useEffect(() => { localStorage.setItem('phoenix-hr-reintegration-limit', reintegrationLimit); }, [reintegrationLimit]);
+  useEffect(() => { localStorage.setItem('phoenix-hr-compensatory-rest-warning', compensatoryRestWarning); }, [compensatoryRestWarning]);
 
   const handlePrimarySelect = (colorId) => {
     if (selectedSidebar !== 'default' && colorId === selectedSidebar) return;
@@ -130,6 +177,44 @@ export default function AppearancesTab() {
   const handleCancelPercentages = () => {
     setTempPercentages(hourlyPercentages);
     setPercentageInput('');
+  };
+
+  // Additional hours categories handlers
+  const handleCategoryChange = (category) => {
+    setTempCategories(prev => ({ ...prev, [category]: !prev[category] }));
+  };
+
+  const handleSaveCategories = () => {
+    setAdditionalHoursCategories(tempCategories);
+    localStorage.setItem('phoenix-hr-additional-hours-categories', JSON.stringify(tempCategories));
+    setCategoriesSaved(true);
+  };
+
+  const handleRestoreCategories = () => {
+    setTempCategories(additionalHoursCategories);
+  };
+
+  // Attendance abbreviations handlers
+  const handleAbbreviationChange = (field, value) => {
+    const cleaned = value.replace(/[^a-zA-Z]/g, '').toUpperCase().slice(0, 3);
+    setTempAbbreviations(prev => ({ ...prev, [field]: cleaned }));
+  };
+
+  const handleSaveAbbreviations = () => {
+    setAttendanceAbbreviations(tempAbbreviations);
+    localStorage.setItem('phoenix-hr-attendance-abbreviations', JSON.stringify(tempAbbreviations));
+    setAbbreviationsEditMode(false);
+    setAbbreviationsSaved(true);
+  };
+
+  const handleEditAbbreviations = () => {
+    setAbbreviationsEditMode(true);
+    setAbbreviationsSaved(false);
+  };
+
+  const handleCancelAbbreviations = () => {
+    setTempAbbreviations(attendanceAbbreviations);
+    setAbbreviationsEditMode(false);
   };
 
   return (
@@ -176,6 +261,133 @@ export default function AppearancesTab() {
             {tempPercentages.length > 0 && (<div className="flex flex-wrap gap-2">{tempPercentages.map(percentage => (<div key={percentage} className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium" style={{ background: 'rgba(var(--primary-color-rgb), 0.1)', color: 'var(--text-primary)', border: '1px solid var(--border-color)' }}><span>{percentage}%</span><button onClick={() => handleRemovePercentage(percentage)} className="hover:opacity-70 transition-opacity" style={{ color: 'var(--text-secondary)' }}><X className="w-3.5 h-3.5" /></button></div>))}</div>)}
             <div className="flex gap-3 pt-2"><button onClick={handleCancelPercentages} className="px-4 py-2 rounded-xl text-sm font-medium transition-all hover:scale-105" style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-secondary)' }}>Cancel</button><button onClick={handleSavePercentages} className="px-4 py-2 rounded-xl text-white text-sm font-semibold transition-all hover:scale-105 hover:shadow-lg" style={{ background: 'var(--gradient-primary)' }}>Save</button></div>
           </div>
+        </div>
+      </div>
+
+      {/* Calendar and Work Settings */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="glass-card p-4">
+          <h3 className="font-semibold mb-1" style={{ color: 'var(--text-primary)' }}>Calendar settings</h3>
+          <p className="text-xs mb-4" style={{ color: 'var(--text-tertiary)' }}>Configure calendar and work week settings</p>
+          <div className="space-y-4">
+            <div>
+              <label className="block text-xs font-semibold mb-1.5" style={{ color: 'var(--text-secondary)' }}>What is the first day of the week?</label>
+              <select value={firstDayOfWeek} onChange={(e) => setFirstDayOfWeek(e.target.value)} className="w-full px-3 py-2.5 rounded-xl text-sm outline-none cursor-pointer transition-all focus:ring-2 focus:ring-orange-500/30" style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-primary)' }}>
+                <option value="Sunday">Sunday</option>
+                <option value="Monday">Monday</option>
+                <option value="Tuesday">Tuesday</option>
+                <option value="Wednesday">Wednesday</option>
+                <option value="Thursday">Thursday</option>
+                <option value="Friday">Friday</option>
+                <option value="Saturday">Saturday</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-xs font-semibold mb-1.5" style={{ color: 'var(--text-secondary)' }}>What's the first day of the month?</label>
+              <select value={firstDayOfMonth} onChange={(e) => setFirstDayOfMonth(e.target.value)} className="w-full px-3 py-2.5 rounded-xl text-sm outline-none cursor-pointer transition-all focus:ring-2 focus:ring-orange-500/30" style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-primary)' }}>
+                {Array.from({ length: 30 }, (_, i) => i + 1).map(day => (
+                  <option key={day} value={day.toString()}>{day}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div className="glass-card p-4">
+          <h3 className="font-semibold mb-1" style={{ color: 'var(--text-primary)' }}>HR policies</h3>
+          <p className="text-xs mb-4" style={{ color: 'var(--text-tertiary)' }}>Configure HR policy settings</p>
+          <div className="space-y-4">
+            <div>
+              <label className="block text-xs font-semibold mb-1.5" style={{ color: 'var(--text-secondary)' }}>How many times can HR reintegrate an employee after the termination of employment?</label>
+              <select value={reintegrationLimit} onChange={(e) => setReintegrationLimit(e.target.value)} className="w-full px-3 py-2.5 rounded-xl text-sm outline-none cursor-pointer transition-all focus:ring-2 focus:ring-orange-500/30" style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-primary)' }}>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="Unlimited">Unlimited</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-xs font-semibold mb-1.5" style={{ color: 'var(--text-secondary)' }}>Show a warning and a red cell whenever an employee's compensatory rest entitlement (days) exceeds:</label>
+              <input type="number" min="0" max="999" value={compensatoryRestWarning} onChange={(e) => setCompensatoryRestWarning(e.target.value)} className="w-32 px-3 py-2.5 rounded-xl text-sm outline-none transition-all focus:ring-2 focus:ring-orange-500/30" style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-primary)' }} />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Additional Hours Categories */}
+      <div className="glass-card p-4">
+        <h3 className="font-semibold mb-1" style={{ color: 'var(--text-primary)' }}>Additional hours categories</h3>
+        <p className="text-xs mb-4" style={{ color: 'var(--text-tertiary)' }}>Select the additional hours' categories you want to apply</p>
+        <div className="space-y-3">
+          <label className="flex items-center gap-3 cursor-pointer">
+            <input type="checkbox" checked={tempCategories.cat1} onChange={() => handleCategoryChange('cat1')} className="w-4 h-4 rounded" style={{ accentColor: 'var(--phoenix-500)' }} />
+            <span className="text-sm" style={{ color: 'var(--text-primary)' }}>Category 1: +50% of the hourly income</span>
+          </label>
+          <label className="flex items-center gap-3 cursor-pointer">
+            <input type="checkbox" checked={tempCategories.cat2} onChange={() => handleCategoryChange('cat2')} className="w-4 h-4 rounded" style={{ accentColor: 'var(--phoenix-500)' }} />
+            <span className="text-sm" style={{ color: 'var(--text-primary)' }}>Category 2: +75% of the hourly income</span>
+          </label>
+          <label className="flex items-center gap-3 cursor-pointer">
+            <input type="checkbox" checked={tempCategories.cat3} onChange={() => handleCategoryChange('cat3')} className="w-4 h-4 rounded" style={{ accentColor: 'var(--phoenix-500)' }} />
+            <span className="text-sm" style={{ color: 'var(--text-primary)' }}>Category 3: +100% of the hourly income</span>
+          </label>
+          <div className="flex gap-3 pt-2">
+            <button onClick={handleRestoreCategories} className="px-4 py-2 rounded-xl text-sm font-medium transition-all hover:scale-105" style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-secondary)' }}>Restore</button>
+            <button onClick={handleSaveCategories} className="px-4 py-2 rounded-xl text-white text-sm font-semibold transition-all hover:scale-105 hover:shadow-lg" style={{ background: 'var(--gradient-primary)' }}>Save</button>
+            {categoriesSaved && <span className="flex items-center gap-1.5 text-emerald-600 text-sm font-medium"><Check className="w-4 h-4" />Saved successfully</span>}
+          </div>
+        </div>
+      </div>
+
+      {/* Attendance Abbreviations */}
+      <div className="glass-card p-4">
+        <h3 className="font-semibold mb-1" style={{ color: 'var(--text-primary)' }}>Attendance</h3>
+        <p className="text-xs mb-4" style={{ color: 'var(--text-tertiary)' }}>Specify the abbreviations which will be used in the attendance pages</p>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {[
+            { key: 'present', label: 'Present' },
+            { key: 'paidRest', label: 'Paid rest' },
+            { key: 'publicHoliday', label: 'Public holiday' },
+            { key: 'businessMission', label: 'Business mission' },
+            { key: 'training', label: 'Training' },
+            { key: 'weeklyRest', label: 'Weekly rest' },
+            { key: 'suspension', label: 'Suspension' },
+            { key: 'unauthorizedAbsence', label: 'Unauthorized absence' },
+            { key: 'authorizedAbsence', label: 'Authorized absence' },
+            { key: 'compensatoryRest', label: 'Compensatory rest' },
+            { key: 'annualLeave', label: 'Annual leave' },
+            { key: 'birthLeave', label: 'Birth leave' },
+            { key: 'deathLeave', label: 'Death leave' },
+            { key: 'unpaidLeave', label: 'Unpaid leave' },
+            { key: 'sickLeave', label: 'Sick leave' },
+            { key: 'workplaceAccident', label: 'Workplace accident' },
+            { key: 'nonWorkingDays', label: 'Non-working days' },
+            { key: 'badWeather', label: 'Bad weather' }
+          ].map(({ key, label }) => (
+            <div key={key}>
+              <label className="block text-xs font-semibold mb-1.5" style={{ color: 'var(--text-secondary)' }}>{label}</label>
+              <input
+                type="text"
+                value={tempAbbreviations[key]}
+                onChange={(e) => handleAbbreviationChange(key, e.target.value)}
+                disabled={!abbreviationsEditMode}
+                maxLength={3}
+                className="w-full px-3 py-2.5 rounded-xl text-sm outline-none transition-all focus:ring-2 focus:ring-orange-500/30 disabled:opacity-60 disabled:cursor-not-allowed"
+                style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-primary)' }}
+              />
+            </div>
+          ))}
+        </div>
+        <div className="flex gap-3 pt-4">
+          {!abbreviationsEditMode ? (
+            <button onClick={handleEditAbbreviations} className="px-4 py-2 rounded-xl text-white text-sm font-semibold transition-all hover:scale-105 hover:shadow-lg" style={{ background: 'var(--gradient-primary)' }}>Edit</button>
+          ) : (
+            <>
+              <button onClick={handleCancelAbbreviations} className="px-4 py-2 rounded-xl text-sm font-medium transition-all hover:scale-105" style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)', color: 'var(--text-secondary)' }}>Cancel</button>
+              <button onClick={handleSaveAbbreviations} className="px-4 py-2 rounded-xl text-white text-sm font-semibold transition-all hover:scale-105 hover:shadow-lg" style={{ background: 'var(--gradient-primary)' }}>Save</button>
+            </>
+          )}
+          {abbreviationsSaved && !abbreviationsEditMode && <span className="flex items-center gap-1.5 text-emerald-600 text-sm font-medium"><Check className="w-4 h-4" />Saved successfully</span>}
         </div>
       </div>
     </div>
