@@ -44,15 +44,11 @@ export default function Settings() {
 
   return (
     <div ref={containerRef} className="p-6 max-w-[1600px] mx-auto space-y-6 animate-fade-in-up h-full overflow-y-auto">
-      <div className={`sticky top-0 z-10 transition-all duration-300 ${isScrolled ? 'bg-sticky-header' : ''}`} style={{ 
-        backdropFilter: isScrolled ? 'blur(12px)' : 'none',
-        WebkitBackdropFilter: isScrolled ? 'blur(12px)' : 'none',
-        marginLeft: '-24px',
-        marginRight: '-24px',
-        marginTop: '-24px',
-        paddingLeft: '24px',
-        paddingRight: '24px',
-        paddingTop: '24px'
+      <div className="sticky top-0 z-10" style={{ 
+        backdropFilter: 'blur(12px)',
+        WebkitBackdropFilter: 'blur(12px)',
+        backgroundColor: isScrolled ? 'rgba(var(--bg-primary-rgb), 0.8)' : 'transparent',
+        transition: 'background-color 0.3s ease'
       }}>
         <div className="flex justify-center gap-2 pb-2 border-b" style={{ borderColor: 'var(--border-color)' }}>
           {tabs.map(tab => {
