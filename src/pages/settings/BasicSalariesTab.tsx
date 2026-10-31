@@ -64,8 +64,8 @@ export default function BasicSalariesTab() {
 
   return (
     <div className="space-y-6">
-      <div className="glass-card overflow-hidden" style={{ maxHeight: 'calc(100vh - 250px)' }}>
-        <div className="overflow-auto h-full">
+      <div className="glass-card overflow-hidden">
+        <div className="overflow-auto" style={{ maxHeight: 'calc(100vh - 300px)' }}>
           <table className="border-collapse w-full">
             <thead className="sticky top-0 z-30" style={{ background: 'var(--bg-tertiary)' }}>
               <tr>
