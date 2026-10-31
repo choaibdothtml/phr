@@ -109,7 +109,12 @@ export default function EmployeeWizard() {
       processedValue = processedValue.replace(/\b\w/g, l => l.toUpperCase());
     } else if (field === 'studyField' || field === 'studyInstitution') {
       processedValue = value.replace(/[^a-zA-Z\s'éèàï-]/g, '');
-      processedValue = processedValue.split(' ').filter(word => word.length > 0).slice(0, 10).join(' ');
+      // Limit to 10 words but preserve spaces during typing
+      const wordCount = processedValue.trim().split(/\s+/).filter(w => w.length > 0).length;
+      if (wordCount > 10) {
+        const words = processedValue.trim().split(/\s+/).slice(0, 10);
+        processedValue = words.join(' ');
+      }
     } else if (field === 'email') {
       processedValue = value.toLowerCase();
     } else if (field === 'phoneNumber' || field === 'emergencyContactPhone') {
