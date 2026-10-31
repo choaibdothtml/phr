@@ -152,13 +152,12 @@ export default function Sidebar() {
           {collapsed ? (
             <>
               <div className="relative">
-                <button onClick={() => { setShowNotifications(!showNotifications); setShowProfile(false); }} className="w-full flex items-center justify-center px-3 py-2.5 rounded-xl transition-all hover:bg-[var(--bg-tertiary)]" title="Notifications">
-                  <div className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center relative" style={{ background: 'var(--bg-tertiary)' }}>
-                    <Bell className="w-4 h-4" style={{ color: 'var(--text-secondary)' }} />
-                    {unreadCount > 0 && <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-phoenix-500 text-white text-[10px] font-bold flex items-center justify-center">{unreadCount}</span>}
-                  </div>
-                </button>
-                {createPortal(<AnimatePresence>{showNotifications && (<><motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }} className="fixed inset-0 z-40" style={{ backdropFilter: 'blur(10px)', WebkitBackdropFilter: 'blur(10px)' }} onClick={() => setShowNotifications(false)} /><motion.div ref={notificationsDropdownRef} initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} transition={{ duration: 0.2, ease: "easeOut" }} className="fixed z-50 w-80 rounded-2xl overflow-hidden" style={{ background: 'var(--bg-popup)', border: '1px solid var(--border-color)', boxShadow: 'var(--shadow-lg)', left: '80px', bottom: '180px' }}>
+              <button onClick={() => { setShowNotifications(!showNotifications); setShowProfile(false); }} className="w-full flex items-center justify-center px-3 py-2.5 rounded-xl transition-all nav-item" title="Notifications">
+                <div className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center relative" style={{ background: 'var(--bg-tertiary)' }}>
+                  <Bell className="w-4 h-4" style={{ color: 'var(--text-secondary)' }} />
+                  {unreadCount > 0 && <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-phoenix-500 text-white text-[10px] font-bold flex items-center justify-center">{unreadCount}</span>}
+                </div>
+              </button>                {createPortal(<AnimatePresence>{showNotifications && (<><motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }} className="fixed inset-0 z-40" style={{ backdropFilter: 'blur(10px)', WebkitBackdropFilter: 'blur(10px)' }} onClick={() => setShowNotifications(false)} /><motion.div ref={notificationsDropdownRef} initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} transition={{ duration: 0.2, ease: "easeOut" }} className="fixed z-50 w-80 rounded-2xl overflow-hidden" style={{ background: 'var(--bg-popup)', border: '1px solid var(--border-color)', boxShadow: 'var(--shadow-lg)', left: '80px', bottom: '180px' }}>
                   <div className="p-4 flex items-center justify-between" style={{ borderBottom: '1px solid var(--border-color)' }}>
                     <div className="flex items-center gap-2"><h3 className="font-semibold text-sm" style={{ color: 'var(--text-primary)' }}>Notifications</h3>{unreadCount > 0 && <span className="text-[10px] font-semibold text-phoenix-500">{unreadCount} unread</span>}</div>
                     <div className="flex items-center gap-2">{unreadCount > 0 && <button onClick={markAllAsRead} className="flex items-center gap-1.5 text-[11px] font-medium hover:text-phoenix-500 transition-colors" style={{ color: 'var(--text-secondary)' }}><span>Mark all as read</span></button>}<button onClick={() => setShowNotifications(false)} className="w-6 h-6 rounded-lg flex items-center justify-center hover:bg-[var(--bg-tertiary)] transition-colors"><X className="w-4 h-4" style={{ color: 'var(--text-secondary)' }} /></button></div>
@@ -166,7 +165,7 @@ export default function Sidebar() {
                   <div className="max-h-64 overflow-y-auto">{notifications.map(n => (<div key={n.id} className="p-3 flex gap-3 transition-colors hover:bg-[var(--bg-tertiary)]" style={{ borderBottom: '1px solid var(--border-subtle)' }}><div className={`w-2 h-2 rounded-full mt-1.5 flex-shrink-0 ${!n.read ? 'pulse-dot' : 'opacity-0'}`} style={{ background: '#f97316' }} /><div className="min-w-0"><p className="text-xs font-medium truncate" style={{ color: 'var(--text-primary)' }}>{n.title}</p><p className="text-[11px] mt-0.5" style={{ color: 'var(--text-secondary)' }}>{n.message}</p></div></div>))}</div>
                 </motion.div></>)}</AnimatePresence>, document.body)}
               </div>
-              <button onClick={toggleTheme} className="w-full flex items-center justify-center px-3 py-2.5 rounded-xl transition-all hover:bg-[var(--bg-tertiary)]" title={theme === 'light' ? 'Dark Mode' : 'Light Mode'}>
+              <button onClick={toggleTheme} className="w-full flex items-center justify-center px-3 py-2.5 rounded-xl transition-all nav-item" title={theme === 'light' ? 'Dark Mode' : 'Light Mode'}>
                 <div className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: 'var(--bg-tertiary)' }}>
                   {theme === 'light' ? <Moon className="w-4 h-4" style={{ color: 'var(--text-secondary)' }} /> : <Sun className="w-4 h-4 text-phoenix-400" />}
                 </div>
@@ -175,14 +174,13 @@ export default function Sidebar() {
           ) : (
             <div className="flex items-center gap-1.5">
               <div className="flex-1">
-                <button onClick={toggleTheme} className="w-full flex items-center justify-center px-3 py-2.5 rounded-xl transition-all hover:bg-[var(--bg-tertiary)]" title={theme === 'light' ? 'Dark Mode' : 'Light Mode'}>
-                  <div className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: 'var(--bg-tertiary)' }}>
-                    {theme === 'light' ? <Moon className="w-4 h-4" style={{ color: 'var(--text-secondary)' }} /> : <Sun className="w-4 h-4 text-phoenix-400" />}
-                  </div>
-                </button>
-              </div>
+              <button onClick={toggleTheme} className="w-full flex items-center justify-center px-3 py-2.5 rounded-xl transition-all nav-item" title={theme === 'light' ? 'Dark Mode' : 'Light Mode'}>
+                <div className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: 'var(--bg-tertiary)' }}>
+                  {theme === 'light' ? <Moon className="w-4 h-4" style={{ color: 'var(--text-secondary)' }} /> : <Sun className="w-4 h-4 text-phoenix-400" />}
+                </div>
+              </button>              </div>
               <div className="relative flex-1">
-                <button onClick={() => { setShowNotifications(!showNotifications); setShowProfile(false); }} className="w-full flex items-center justify-center px-3 py-2.5 rounded-xl transition-all hover:bg-[var(--bg-tertiary)]" title="Notifications">
+                <button onClick={() => { setShowNotifications(!showNotifications); setShowProfile(false); }} className="w-full flex items-center justify-center px-3 py-2.5 rounded-xl transition-all nav-item" title="Notifications">
                   <div className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center relative" style={{ background: 'var(--bg-tertiary)' }}>
                     <Bell className="w-4 h-4" style={{ color: 'var(--text-secondary)' }} />
                     {unreadCount > 0 && <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-phoenix-500 text-white text-[10px] font-bold flex items-center justify-center">{unreadCount}</span>}
@@ -199,7 +197,7 @@ export default function Sidebar() {
             </div>
           )}
           <div className="relative">
-            <button onClick={() => { setShowProfile(!showProfile); setShowNotifications(false); }} className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all hover:bg-[var(--bg-tertiary)] group">
+            <button onClick={() => { setShowProfile(!showProfile); setShowNotifications(false); }} className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all nav-item group">
               <div className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: 'var(--gradient-primary)' }}><User className="w-4 h-4 text-white" /></div>
               {!collapsed && <div className="flex-1 min-w-0 text-left"><p className="text-sm font-semibold leading-tight truncate" style={{ color: 'var(--text-primary)' }}>{user?.name || 'User'}</p><p className="text-[10px] capitalize truncate" style={{ color: 'var(--text-tertiary)' }}>{user?.role || 'employee'}</p></div>}
             </button>
