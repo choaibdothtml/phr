@@ -44,11 +44,11 @@ export default function Settings() {
 
   return (
     <div ref={containerRef} className="p-6 max-w-[1600px] mx-auto space-y-6 animate-fade-in-up h-full overflow-y-auto">
-      <div className="sticky top-0 z-10 -mx-6 px-6 py-2 transition-all duration-300" style={{ 
-        background: isScrolled ? 'var(--bg-solid-primary)' : 'transparent',
-        boxShadow: isScrolled ? 'var(--shadow-md)' : 'none'
+      <div className={`sticky top-0 z-10 -mx-6 px-6 py-2 transition-all duration-300 ${isScrolled ? 'bg-sticky-header' : ''}`} style={{ 
+        backdropFilter: isScrolled ? 'blur(12px)' : 'none',
+        WebkitBackdropFilter: isScrolled ? 'blur(12px)' : 'none'
       }}>
-        <div className="flex justify-center gap-2 pb-2" style={{ borderBottom: isScrolled ? 'none' : '1px solid var(--border-color)' }}>
+        <div className="flex justify-center gap-2 pb-2 border-b" style={{ borderColor: 'var(--border-color)' }}>
           {tabs.map(tab => {
             const Icon = tab.icon;
             const isActive = activeTab === tab.id;
