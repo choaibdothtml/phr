@@ -18,6 +18,7 @@
 :root {
   --bg-primary: #ffffff;
   --bg-primary-rgb: 255, 255, 255;
+  --bg-gradient-top: #e2e8f0;
   --bg-secondary: #f8fafc;
   --bg-tertiary: #f1f5f9;
   --bg-card: rgba(255, 255, 255, 0.8);
@@ -45,6 +46,7 @@
 .dark {
   --bg-primary: #0a0e1a;
   --bg-primary-rgb: 10, 14, 26;
+  --bg-gradient-top: #020617;
   --bg-secondary: #0f1629;
   --bg-tertiary: #1a2038;
   --bg-card: rgba(15, 22, 41, 0.8);

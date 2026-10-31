@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { useState, useEffect, useRef } from 'react';
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Building2, Users, DollarSign, Landmark, Palette, Key, Database, Briefcase, FileText } from 'lucide-react';
 import DepartmentsTab from './settings/DepartmentsTab';
@@ -12,8 +12,6 @@ import AppearancesTab from './settings/AppearancesTab';
 
 export default function Settings() {
   const [activeTab, setActiveTab] = useState('departments');
-  const [isScrolled, setIsScrolled] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
 
   const tabs = [
     { id: 'departments', label: 'Departments', icon: Building2 },
@@ -27,26 +25,10 @@ export default function Settings() {
     { id: 'backup', label: 'Backup/Restore', icon: Database },
   ];
 
-  useEffect(() => {
-    const handleScroll = () => {
-      if (containerRef.current) {
-        const scrollTop = containerRef.current.scrollTop;
-        setIsScrolled(scrollTop > 10);
-      }
-    };
-
-    const container = containerRef.current;
-    if (container) {
-      container.addEventListener('scroll', handleScroll);
-      return () => container.removeEventListener('scroll', handleScroll);
-    }
-  }, []);
-
   return (
-    <div ref={containerRef} className="p-6 max-w-[1600px] mx-auto space-y-6 animate-fade-in-up h-full overflow-y-auto">
+    <div className="p-6 max-w-[1600px] mx-auto space-y-6 animate-fade-in-up h-full overflow-y-auto">
       <div className="sticky top-0 z-10" style={{ 
-        backgroundColor: isScrolled ? 'rgba(var(--bg-primary-rgb), 0.8)' : 'transparent',
-        transition: 'background-color 0.3s ease'
+        backgroundColor: 'var(--bg-gradient-top)'
       }}>
         <div className="flex justify-center gap-2 pb-2 border-b" style={{ borderColor: 'var(--border-color)' }}>
           {tabs.map(tab => {
