@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Building2, Users, DollarSign, Landmark, Palette, Key, Database, Briefcase, FileText } from 'lucide-react';
 import DepartmentsTab from './settings/DepartmentsTab';
@@ -12,6 +12,8 @@ import AppearancesTab from './settings/AppearancesTab';
 
 export default function Settings() {
   const [activeTab, setActiveTab] = useState('departments');
+  const [isScrolled, setIsScrolled] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const tabs = [
     { id: 'departments', label: 'Departments', icon: Building2 },
@@ -25,10 +27,28 @@ export default function Settings() {
     { id: 'backup', label: 'Backup/Restore', icon: Database },
   ];
 
+  useEffect(() => {
+    const handleScroll = () => {
+      if (containerRef.current) {
+        const scrollTop = containerRef.current.scrollTop;
+        setIsScrolled(scrollTop > 10);
+      }
+    };
+
+    const container = containerRef.current;
+    if (container) {
+      container.addEventListener('scroll', handleScroll);
+      return () => container.removeEventListener('scroll', handleScroll);
+    }
+  }, []);
+
   return (
-    <div className="p-6 max-w-[1600px] mx-auto space-y-6 animate-fade-in-up h-full">
-      <div className="sticky top-0 z-10 -mx-6 px-6 py-2" style={{ background: 'var(--bg-primary)' }}>
-        <div className="flex justify-center gap-2 border-b pb-2" style={{ borderColor: 'var(--border-color)' }}>
+    <div ref={containerRef} className="p-6 max-w-[1600px] mx-auto space-y-6 animate-fade-in-up h-full overflow-y-auto">
+      <div className="sticky top-0 z-10 -mx-6 px-6 py-2 transition-all duration-300" style={{ 
+        background: isScrolled ? 'var(--bg-solid-primary)' : 'transparent',
+        boxShadow: isScrolled ? 'var(--shadow-md)' : 'none'
+      }}>
+        <div className="flex justify-center gap-2 pb-2" style={{ borderBottom: isScrolled ? 'none' : '1px solid var(--border-color)' }}>
           {tabs.map(tab => {
             const Icon = tab.icon;
             const isActive = activeTab === tab.id;
