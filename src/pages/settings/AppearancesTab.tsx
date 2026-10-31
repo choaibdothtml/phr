@@ -538,7 +538,7 @@ export default function AppearancesTab() {
       </div>
 
       {/* Additional Hours Categories */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
         <div className="glass-card p-4">
           <h3 className="font-semibold mb-1" style={{ color: 'var(--text-primary)' }}>Additional hours categories</h3>
           <p className="text-xs mb-4" style={{ color: 'var(--text-tertiary)' }}>Select the additional hours' categories you want to apply</p>
