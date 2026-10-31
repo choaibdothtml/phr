@@ -1,5 +1,5 @@
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Home, UserPlus, Users, List, CalendarClock, Watch, DollarSign, Settings, LogOut, Flame, ChevronLeft, ChevronRight, Sun, Moon, Bell, User, Menu, X } from 'lucide-react';
+import { Home, UserPlus, Users, List, CalendarClock, CheckCircle, DollarSign, Settings, LogOut, Flame, ChevronLeft, ChevronRight, Sun, Moon, Bell, User, Menu, X } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -11,7 +11,7 @@ const navItems = [
   { path: '/employees', label: 'Add a new employee', icon: UserPlus },
   { path: '/employees/list', label: "Employees' list", icon: List },
   { path: '/employees/profiles', label: "Employees' profiles", icon: Users },
-  { path: '/attendance', label: 'Attendance', icon: CalendarClock },
+  { path: '/attendance', label: 'Attendance', icon: CheckCircle },
   { path: '/rest-entitlements', label: 'Rest entitlements/taken', icon: CalendarClock },
   { path: '/payroll', label: 'Payroll', icon: DollarSign },
   { path: '/settings', label: 'Settings', icon: Settings },
