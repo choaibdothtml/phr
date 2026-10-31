@@ -26,35 +26,39 @@ export default function Settings() {
   ];
 
   return (
-    <div className="p-6 max-w-[1600px] mx-auto space-y-6 animate-fade-in-up h-full overflow-y-auto">
-      <div className="sticky top-0 z-10 -mt-6 -mx-6 px-6 pt-0" style={{ 
+    <div className="h-full overflow-y-auto pt-0">
+      <div className="sticky top-0 z-10 mt-0" style={{ 
         backgroundColor: 'var(--bg-gradient-top)'
       }}>
-        <div className="flex justify-center gap-2 pb-2 border-b" style={{ borderColor: 'var(--border-color)' }}>
-          {tabs.map(tab => {
-            const Icon = tab.icon;
-            const isActive = activeTab === tab.id;
-            return (
-              <button key={tab.id} onClick={() => setActiveTab(tab.id)} className="flex items-center gap-2 px-4 py-3 text-sm font-medium transition-all relative rounded-t-lg" style={{ color: isActive ? 'var(--text-primary)' : 'var(--text-secondary)', borderBottom: isActive ? '2px solid var(--phoenix-500, #f97316)' : '2px solid transparent', background: isActive ? 'rgba(var(--primary-color-rgb), 0.1)' : 'transparent' }} onMouseEnter={(e) => { if (!isActive) e.currentTarget.style.background = 'rgba(var(--primary-color-rgb), 0.08)'; }} onMouseLeave={(e) => { if (!isActive) e.currentTarget.style.background = 'transparent'; }}>
-                <Icon className="w-4 h-4" />{tab.label}
-              </button>
-            );
-          })}
+        <div className="max-w-[1600px] mx-auto px-6">
+          <div className="flex justify-center gap-2 pb-2 border-b" style={{ borderColor: 'var(--border-color)' }}>
+            {tabs.map(tab => {
+              const Icon = tab.icon;
+              const isActive = activeTab === tab.id;
+              return (
+                <button key={tab.id} onClick={() => setActiveTab(tab.id)} className="flex items-center gap-2 px-4 py-3 text-sm font-medium transition-all relative rounded-t-lg" style={{ color: isActive ? 'var(--text-primary)' : 'var(--text-secondary)', borderBottom: isActive ? '2px solid var(--phoenix-500, #f97316)' : '2px solid transparent', background: isActive ? 'rgba(var(--primary-color-rgb), 0.1)' : 'transparent' }} onMouseEnter={(e) => { if (!isActive) e.currentTarget.style.background = 'rgba(var(--primary-color-rgb), 0.08)'; }} onMouseLeave={(e) => { if (!isActive) e.currentTarget.style.background = 'transparent'; }}>
+                  <Icon className="w-4 h-4" />{tab.label}
+                </button>
+              );
+            })}
+          </div>
         </div>
       </div>
-      <AnimatePresence mode="wait">
-        <motion.div key={activeTab} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.2 }} className="flex-1">
-          {activeTab === 'departments' && <DepartmentsTab />}
-          {activeTab === 'groups' && <GroupsClassificationsTab />}
-          {activeTab === 'jobTitles' && <JobTitlesTab />}
-          {activeTab === 'salaries' && <BasicSalariesTab />}
-          {activeTab === 'banks' && <BanksTab />}
-          {activeTab === 'adminDecisions' && <AdministrativeDecisionsTab />}
-          {activeTab === 'appearances' && <AppearancesTab />}
-          {activeTab === 'password' && <div className="glass-card p-6"><p className="text-sm" style={{ color: 'var(--text-tertiary)' }}>Coming soon...</p></div>}
-          {activeTab === 'backup' && <div className="glass-card p-6"><p className="text-sm" style={{ color: 'var(--text-tertiary)' }}>Coming soon...</p></div>}
-        </motion.div>
-      </AnimatePresence>
+      <div className="p-6 pt-0">
+        <AnimatePresence mode="wait">
+          <motion.div key={activeTab} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.2 }} className="flex-1">
+            {activeTab === 'departments' && <DepartmentsTab />}
+            {activeTab === 'groups' && <GroupsClassificationsTab />}
+            {activeTab === 'jobTitles' && <JobTitlesTab />}
+            {activeTab === 'salaries' && <BasicSalariesTab />}
+            {activeTab === 'banks' && <BanksTab />}
+            {activeTab === 'adminDecisions' && <AdministrativeDecisionsTab />}
+            {activeTab === 'appearances' && <AppearancesTab />}
+            {activeTab === 'password' && <div className="glass-card p-6"><p className="text-sm" style={{ color: 'var(--text-tertiary)' }}>Coming soon...</p></div>}
+            {activeTab === 'backup' && <div className="glass-card p-6"><p className="text-sm" style={{ color: 'var(--text-tertiary)' }}>Coming soon...</p></div>}
+          </motion.div>
+        </AnimatePresence>
+      </div>
     </div>
   );
 }
