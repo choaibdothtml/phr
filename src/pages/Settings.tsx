@@ -27,7 +27,7 @@ export default function Settings() {
 
   return (
     <div className="p-6 max-w-[1600px] mx-auto space-y-6 animate-fade-in-up h-full">
-      <div className="flex justify-center gap-2 border-b" style={{ borderColor: 'var(--border-color)' }}>
+      <div className="flex justify-center gap-2 border-b sticky top-0 z-10" style={{ borderColor: 'var(--border-color)', background: 'var(--bg-primary)' }}>
         {tabs.map(tab => {
           const Icon = tab.icon;
           const isActive = activeTab === tab.id;
