@@ -115,6 +115,8 @@ export default function EmployeeWizard() {
         const words = processedValue.trim().split(/\s+/).slice(0, 10);
         processedValue = words.join(' ');
       }
+      // Capitalize first letter of each word
+      processedValue = processedValue.replace(/\b\w/g, l => l.toUpperCase());
     } else if (field === 'email') {
       processedValue = value.toLowerCase();
     } else if (field === 'phoneNumber' || field === 'emergencyContactPhone') {
