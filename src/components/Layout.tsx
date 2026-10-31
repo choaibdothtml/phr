@@ -69,6 +69,14 @@ export default function Layout() {
 
     return () => observer.disconnect();
   }, []);
+
+  // Reset dynamic sidebar when navigating to Employees' profiles
+  useEffect(() => {
+    if (location.pathname === '/employees/profiles') {
+      setShowMainSidebar(false);
+    }
+  }, [location.pathname]);
+
   const [selectedContract, setSelectedContract] = useState<Contract | null>(null);
   const [selectedOnboardingReport, setSelectedOnboardingReport] = useState<OnboardingReport | null>(null);
   const [selectedPersonnelRecord, setSelectedPersonnelRecord] = useState<PersonnelRecord | null>(null);
