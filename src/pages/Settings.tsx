@@ -27,16 +27,18 @@ export default function Settings() {
 
   return (
     <div className="p-6 max-w-[1600px] mx-auto space-y-6 animate-fade-in-up h-full">
-      <div className="flex justify-center gap-2 border-b sticky top-0 z-10" style={{ borderColor: 'var(--border-color)', background: 'var(--bg-primary)' }}>
-        {tabs.map(tab => {
-          const Icon = tab.icon;
-          const isActive = activeTab === tab.id;
-          return (
-            <button key={tab.id} onClick={() => setActiveTab(tab.id)} className="flex items-center gap-2 px-4 py-3 text-sm font-medium transition-all relative rounded-t-lg" style={{ color: isActive ? 'var(--text-primary)' : 'var(--text-secondary)', borderBottom: isActive ? '2px solid var(--phoenix-500, #f97316)' : '2px solid transparent', background: isActive ? 'rgba(var(--primary-color-rgb), 0.1)' : 'transparent' }} onMouseEnter={(e) => { if (!isActive) e.currentTarget.style.background = 'rgba(var(--primary-color-rgb), 0.08)'; }} onMouseLeave={(e) => { if (!isActive) e.currentTarget.style.background = 'transparent'; }}>
-              <Icon className="w-4 h-4" />{tab.label}
-            </button>
-          );
-        })}
+      <div className="sticky top-0 z-10 -mx-6 px-6 py-2" style={{ background: 'var(--bg-primary)' }}>
+        <div className="flex justify-center gap-2 border-b pb-2" style={{ borderColor: 'var(--border-color)' }}>
+          {tabs.map(tab => {
+            const Icon = tab.icon;
+            const isActive = activeTab === tab.id;
+            return (
+              <button key={tab.id} onClick={() => setActiveTab(tab.id)} className="flex items-center gap-2 px-4 py-3 text-sm font-medium transition-all relative rounded-t-lg" style={{ color: isActive ? 'var(--text-primary)' : 'var(--text-secondary)', borderBottom: isActive ? '2px solid var(--phoenix-500, #f97316)' : '2px solid transparent', background: isActive ? 'rgba(var(--primary-color-rgb), 0.1)' : 'transparent' }} onMouseEnter={(e) => { if (!isActive) e.currentTarget.style.background = 'rgba(var(--primary-color-rgb), 0.08)'; }} onMouseLeave={(e) => { if (!isActive) e.currentTarget.style.background = 'transparent'; }}>
+                <Icon className="w-4 h-4" />{tab.label}
+              </button>
+            );
+          })}
+        </div>
       </div>
       <AnimatePresence mode="wait">
         <motion.div key={activeTab} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.2 }} className="flex-1">
