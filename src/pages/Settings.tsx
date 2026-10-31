@@ -27,7 +27,7 @@ export default function Settings() {
 
   return (
     <div className="p-6 max-w-[1600px] mx-auto space-y-6 animate-fade-in-up h-full overflow-y-auto">
-      <div className="sticky top-0 z-10" style={{ 
+      <div className="sticky top-0 z-10 -mt-6 -mx-6 px-6 pt-6" style={{ 
         backgroundColor: 'var(--bg-gradient-top)'
       }}>
         <div className="flex justify-center gap-2 pb-2 border-b" style={{ borderColor: 'var(--border-color)' }}>
