@@ -69,7 +69,7 @@ export default function BasicSalariesTab() {
           <table className="border-collapse w-full">
             <thead className="sticky top-0 z-30" style={{ background: 'var(--bg-tertiary)' }}>
               <tr>
-                <th className="sticky left-0 z-40 px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider" style={{ background: 'var(--bg-tertiary)', color: 'var(--text-tertiary)', borderRight: '2px solid var(--border-color)', borderBottom: '2px solid var(--border-color)', minWidth: '120px' }}>Classification / degree</th>
+                <th className="sticky left-0 z-40 px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider" style={{ background: 'var(--bg-tertiary)', color: 'var(--text-tertiary)', borderRight: '2px solid var(--border-color)', borderBottom: '2px solid var(--border-color)', minWidth: '120px' }}></th>
                 {degrees.map(degree => (<th key={degree} className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider" style={{ background: 'var(--bg-tertiary)', color: 'var(--text-tertiary)', borderBottom: '2px solid var(--border-color)', minWidth: '100px' }}>Degree {degree}</th>))}
               </tr>
             </thead>
