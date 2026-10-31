@@ -71,7 +71,7 @@ export default function AdministrativeDecisionsTab() {
                 <tr style={{ background: 'var(--bg-tertiary)' }}>
                   <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider" style={{ color: 'var(--text-tertiary)' }}>Administrative decision label</th>
                   <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider" style={{ color: 'var(--text-tertiary)' }}>Discontinuance decision</th>
-                  <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider" style={{ color: 'var(--text-tertiary)' }}>Edit</th>
+                  <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider w-20" style={{ color: 'var(--text-tertiary)' }}>Edit</th>
                 </tr>
               </thead>
               <tbody>
@@ -80,9 +80,11 @@ export default function AdministrativeDecisionsTab() {
                     <td className="px-4 py-3 text-sm" style={{ color: 'var(--text-primary)' }}>{decision.name}</td>
                     <td className="px-4 py-3 text-sm" style={{ color: 'var(--text-secondary)' }}>{decision.discontinuanceDecision ? 'Yes' : 'No'}</td>
                     <td className="px-4 py-3 text-right">
-                      <button onClick={() => handleEdit(decision)} disabled={decision.isDefault} className="w-8 h-8 rounded-lg flex items-center justify-center transition-all hover:scale-110 disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:scale-100" style={{ background: 'rgba(59, 130, 246, 0.1)' }} title={decision.isDefault ? 'This decision cannot be edited' : 'Edit'}>
-                        <Edit2 className="w-4 h-4 text-blue-500" />
-                      </button>
+                      <div className="flex justify-end">
+                        <button onClick={() => handleEdit(decision)} disabled={decision.isDefault} className="w-8 h-8 rounded-lg flex items-center justify-center transition-all hover:scale-110 disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:scale-100" style={{ background: 'rgba(59, 130, 246, 0.1)' }} title={decision.isDefault ? 'This decision cannot be edited' : 'Edit'}>
+                          <Edit2 className="w-4 h-4 text-blue-500" />
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}
