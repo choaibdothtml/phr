@@ -40,6 +40,7 @@ export default function Sidebar() {
   const notificationsDropdownRef = useRef<HTMLDivElement>(null);
   const employeeMenuRef = useRef<HTMLDivElement>(null);
   const employeeButtonRef = useRef<HTMLButtonElement>(null);
+  const employeeDropdownRef = useRef<HTMLDivElement>(null);
   const [menuPosition, setMenuPosition] = useState({ top: 0, left: 0 });
 
   useEffect(() => {
@@ -89,6 +90,7 @@ export default function Sidebar() {
       const target = event.target as Node;
       if (notificationsDropdownRef.current && notificationsDropdownRef.current.contains(target)) return;
       if (employeeMenuRef.current && employeeMenuRef.current.contains(target)) return;
+      if (employeeDropdownRef.current && employeeDropdownRef.current.contains(target)) return;
       if (sidebarRef.current && !sidebarRef.current.contains(target)) { closeDropdowns(); }
       else { setShowEmployeeMenu(false); }
     };
@@ -130,7 +132,7 @@ export default function Sidebar() {
                   </div>
                   {!collapsed && <span className="text-sm font-medium flex-1 text-left" style={{ color: isActive ? 'var(--text-primary)' : 'var(--text-secondary)' }}>{item.label}</span>}
                 </button>
-                {showEmployeeMenu && !collapsed && createPortal(<AnimatePresence><motion.div initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -10 }} transition={{ duration: 0.2 }} className="fixed w-56 rounded-xl overflow-hidden z-[9999]" style={{ background: 'var(--bg-sidebar)', border: '1px solid var(--border-color)', boxShadow: 'var(--shadow-lg)', left: `${menuPosition.left}px`, top: `${menuPosition.top}px` }}>
+                {showEmployeeMenu && !collapsed && createPortal(<AnimatePresence><motion.div ref={employeeDropdownRef} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -10 }} transition={{ duration: 0.2 }} className="fixed w-56 rounded-xl overflow-hidden z-[9999]" style={{ background: 'var(--bg-sidebar)', border: '1px solid var(--border-color)', boxShadow: 'var(--shadow-lg)', left: `${menuPosition.left}px`, top: `${menuPosition.top}px` }}>
                   <button onClick={() => { setShowEmployeeMenu(false); navigate('/employees'); }} className="w-full px-4 py-3 text-left text-sm font-medium transition-colors flex items-center gap-3" style={{ color: 'var(--text-primary)', borderBottom: '1px solid var(--border-subtle)' }} onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(var(--primary-color-rgb), 0.1)'} onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}><UserPlus className="w-4 h-4" style={{ color: 'var(--phoenix-500, #f97316)' }} />Add a new employee</button>
                   <button onClick={() => { setShowEmployeeMenu(false); navigate('/employees/edit'); }} className="w-full px-4 py-3 text-left text-sm font-medium transition-colors flex items-center gap-3" style={{ color: 'var(--text-primary)' }} onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(var(--primary-color-rgb), 0.1)'} onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}><Users className="w-4 h-4" style={{ color: 'var(--phoenix-500, #f97316)' }} />Edit an existing employee</button>
                 </motion.div></AnimatePresence>, document.body)}
