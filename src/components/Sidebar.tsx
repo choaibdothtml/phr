@@ -91,8 +91,8 @@ export default function Sidebar() {
       if (notificationsDropdownRef.current && notificationsDropdownRef.current.contains(target)) return;
       if (employeeMenuRef.current && employeeMenuRef.current.contains(target)) return;
       if (employeeDropdownRef.current && employeeDropdownRef.current.contains(target)) return;
-      if (sidebarRef.current && !sidebarRef.current.contains(target)) { closeDropdowns(); }
-      else { setShowEmployeeMenu(false); }
+      closeDropdowns();
+      setShowEmployeeMenu(false);
     };
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
