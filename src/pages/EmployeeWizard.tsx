@@ -577,8 +577,10 @@ export default function EmployeeWizard() {
     }
     if (step === 'payment') {
       return (<div className="space-y-6">
-        <FormField label="Bank name" required error={errors.bankName}><Select value={formData.bankName} onChange={(e) => handleInputChange('bankName', e.target.value)} error={errors.bankName}><option value="">Select bank</option>{banks.map(bank => (<option key={bank.id} value={bank.name}>{bank.name}</option>))}</Select></FormField>
-        <FormField label="Account number" required error={errors.accountNumber}><Input value={formData.accountNumber} onChange={(e) => handleInputChange('accountNumber', e.target.value)} onBlur={() => handleBlur('accountNumber')} disabled={!formData.bankName} placeholder="xxx xxxxx xxxxxxxxxxxx" maxLength={23} error={errors.accountNumber} className={!formData.bankName ? 'cursor-not-allowed opacity-60' : ''} /></FormField>
+        <div className="grid grid-cols-2 gap-6">
+          <FormField label="Bank name" required error={errors.bankName}><Select value={formData.bankName} onChange={(e) => handleInputChange('bankName', e.target.value)} error={errors.bankName}><option value="">Select bank</option>{banks.map(bank => (<option key={bank.id} value={bank.name}>{bank.name}</option>))}</Select></FormField>
+          <FormField label="Account number" required error={errors.accountNumber}><Input value={formData.accountNumber} onChange={(e) => handleInputChange('accountNumber', e.target.value)} onBlur={() => handleBlur('accountNumber')} disabled={!formData.bankName} placeholder="xxx xxxxx xxxxxxxxxxxx" maxLength={23} error={errors.accountNumber} className={!formData.bankName ? 'cursor-not-allowed opacity-60' : ''} /></FormField>
+        </div>
       </div>);
     }
     return null;
