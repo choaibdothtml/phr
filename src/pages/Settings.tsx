@@ -27,7 +27,7 @@ export default function Settings() {
 
   return (
     <div className="h-full overflow-y-auto pt-0">
-      <div className="sticky top-0 z-10 mt-0" style={{ 
+      <div className="sticky top-0 z-10 mb-6" style={{ 
         backgroundColor: 'var(--bg-gradient-top)'
       }}>
         <div className="max-w-[1600px] mx-auto px-6">
