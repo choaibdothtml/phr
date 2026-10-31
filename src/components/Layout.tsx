@@ -1,5 +1,5 @@
 import { Outlet, useLocation } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Sidebar from './Sidebar';
 import ProfileSidebar from './ProfileSidebar';
@@ -14,6 +14,61 @@ export default function Layout() {
   const location = useLocation();
   const isProfilesPage = location.pathname === '/employees/profiles';
   const [showMainSidebar, setShowMainSidebar] = useState(false);
+
+  // Apply sidebar color whenever theme changes
+  useEffect(() => {
+    const applySidebarColor = () => {
+      const savedSidebarColor = localStorage.getItem('phoenix-hr-sidebar-color');
+      if (savedSidebarColor) {
+        const isDark = document.documentElement.classList.contains('dark');
+        const sidebarColorsDark: Record<string, string> = {
+          'default': '',
+          'snow': '#0f1629',
+          'mist': '#111827',
+          'pearl': '#0a0e1a',
+          'lavender': '#1a1625',
+          'sky': '#0c1929',
+          'mint': '#0a1f1d',
+          'blush': '#1f0f10',
+          'cream': '#1a1508',
+          'slate': '#0f172a',
+        };
+        
+        const sidebarColorsLight: Record<string, string> = {
+          'default': '',
+          'snow': '#ffffff',
+          'mist': '#f4f6f9',
+          'pearl': '#f1f5f9',
+          'lavender': '#f5f3ff',
+          'sky': '#f0f9ff',
+          'mint': '#f0fdfa',
+          'blush': '#fef2f2',
+          'cream': '#fffbeb',
+          'slate': '#f8fafc',
+        };
+        
+        const color = isDark ? sidebarColorsDark[savedSidebarColor] : sidebarColorsLight[savedSidebarColor];
+        if (color) {
+          document.documentElement.style.setProperty('--bg-sidebar', color);
+        }
+      }
+    };
+
+    // Apply on mount
+    applySidebarColor();
+
+    // Watch for theme changes
+    const observer = new MutationObserver(() => {
+      applySidebarColor();
+    });
+
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['class']
+    });
+
+    return () => observer.disconnect();
+  }, []);
   const [selectedContract, setSelectedContract] = useState<Contract | null>(null);
   const [selectedOnboardingReport, setSelectedOnboardingReport] = useState<OnboardingReport | null>(null);
   const [selectedPersonnelRecord, setSelectedPersonnelRecord] = useState<PersonnelRecord | null>(null);
