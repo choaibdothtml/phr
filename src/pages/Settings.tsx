@@ -45,8 +45,6 @@ export default function Settings() {
   return (
     <div ref={containerRef} className="p-6 max-w-[1600px] mx-auto space-y-6 animate-fade-in-up h-full overflow-y-auto">
       <div className="sticky top-0 z-10" style={{ 
-        backdropFilter: 'blur(12px)',
-        WebkitBackdropFilter: 'blur(12px)',
         backgroundColor: isScrolled ? 'rgba(var(--bg-primary-rgb), 0.8)' : 'transparent',
         transition: 'background-color 0.3s ease'
       }}>
